@@ -1,0 +1,36 @@
+@-webkit-keyframes spinner {
+	0% {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes spinner {
+	0% {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+
+.container {
+	display: inline-block;
+}
+
+.container div {
+	width: 50px;
+	height: 50px;
+	border: 10px solid #cfcfcf;
+	border-top: 10px solid #149bfc;
+	border-radius: 50%;
+	-webkit-animation: spinner 1.5s linear infinite;
+	animation: spinner 1.5s linear infinite;
+}
+/*# sourceMappingURL=LoadingSpinner.module.css.map */
