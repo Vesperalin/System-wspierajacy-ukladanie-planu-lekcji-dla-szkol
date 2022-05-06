@@ -10,6 +10,7 @@ import Schedules from './pages/schedules/Schedules';
 import Subjects from './pages/subjects/Subjects';
 import Teachers from './pages/teachers/Teachers';
 import Login from './pages/login/Login';
+import Classrooms from './pages/classrooms/Classrooms';
 
 const App = () => {
 	return (
@@ -24,6 +25,7 @@ const App = () => {
 				<Route path='/subjects' element={<Subjects />} />
 				<Route path='/teachers' element={<Teachers />} />
 				<Route path='/login' element={<Login />} />
+				<Route path='/classrooms' element={<Classrooms />} />
 			</Routes>
 		</div>
 	);
