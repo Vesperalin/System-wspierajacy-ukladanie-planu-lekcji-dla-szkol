@@ -1,1 +1,5 @@
-/* No CSS *//*# sourceMappingURL=App.module.css.map */
+.app {
+	min-height: 100vh;
+	background-color: #f0f0f0;
+}
+/*# sourceMappingURL=App.module.css.map */
