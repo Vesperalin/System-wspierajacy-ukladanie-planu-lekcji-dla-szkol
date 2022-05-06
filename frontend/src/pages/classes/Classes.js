@@ -3,6 +3,7 @@ import { useState } from 'react';
 import ElementsTable from '../../components/elements-table/ElementsTable';
 import style from './Classes.module.scss';
 import Button from '../../components/button/Button';
+import LoadingSpinner from '../../components/loading-spinner/LoadingSpinner';
 
 const mockedClasses = [
 	{ ID_Class: 'IIa', Year: 2021 },
@@ -35,7 +36,7 @@ const Classes = () => {
 			<div className={style['table-wrapper']}>
 				<ElementsTable
 					elements={classes}
-					title='Subjects'
+					title='Classes'
 					headers={elementHeaders}
 					actions={[
 						['Delete', onDelete],
@@ -46,8 +47,12 @@ const Classes = () => {
 			</div>
 		);
 	} else {
-		// loading bar
-		return <>Classes</>;
+		return (
+			<div className={style['spinner-wrapper']}>
+				<LoadingSpinner />
+				<p>Loading ...</p>
+			</div>
+		);
 	}
 };
 

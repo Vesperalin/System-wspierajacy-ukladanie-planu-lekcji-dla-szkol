@@ -3,6 +3,7 @@ import { useState } from 'react';
 import ElementsTable from '../../components/elements-table/ElementsTable';
 import style from './Subjects.module.scss';
 import Button from '../../components/button/Button';
+import LoadingSpinner from '../../components/loading-spinner/LoadingSpinner';
 
 const mockedSubjects = [
 	{ ID_Subject: 2, Subject_name: 'Biology' },
@@ -46,8 +47,12 @@ const Subjects = () => {
 			</div>
 		);
 	} else {
-		// loading bar
-		return <>Subjects</>;
+		return (
+			<div className={style['spinner-wrapper']}>
+				<LoadingSpinner />
+				<p>Loading ...</p>
+			</div>
+		);
 	}
 };
 
