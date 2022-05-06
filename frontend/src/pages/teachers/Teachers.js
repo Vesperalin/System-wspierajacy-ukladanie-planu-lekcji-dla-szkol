@@ -30,7 +30,7 @@ const Teachers = () => {
 	};
 
 	if (teachers.length > 0) {
-		const elementHeaders = ['Name', 'Surname', 'Card'];
+		const elementHeaders = ['Card', 'Name', 'Surname'];
 		return (
 			<div className={style['table-wrapper']}>
 				<ElementsTable
