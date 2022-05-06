@@ -1,27 +1,27 @@
 import { useState } from 'react';
 
 import ElementsTable from '../../components/elements-table/ElementsTable';
-import style from './Classes.module.scss';
+import style from './Classroms.module.scss';
 import Button from '../../components/button/Button';
 
-const mockedClasses = [
-	{ ID_Class: 'IIa', Year: 2021 },
-	{ ID_Class: 'Ib', Year: 2022 },
-	{ ID_Class: 'IIIb', Year: 2019 },
-	{ ID_Class: 'IIc', Year: 2021 },
+const mockedClassrooms = [
+	{ Classroom_no: 23 },
+	{ Classroom_no: 43 },
+	{ Classroom_no: 45 },
+	{ Classroom_no: 21 },
 ];
 
-const Classes = () => {
-	const [classes, setClasses] = useState(mockedClasses);
+const Classrooms = () => {
+	const [classrooms, setClassrooms] = useState(mockedClassrooms);
 
-	const onDelete = school_class => {
+	const onDelete = classroom => {
 		// tu będzie obsługa dla delete
-		console.log(school_class);
+		console.log(classroom);
 	};
 
-	const onEdit = school_class => {
+	const onEdit = classroom => {
 		// tu będzie obsługa dla edit
-		console.log(school_class);
+		console.log(classroom);
 	};
 
 	const onAdd = () => {
@@ -29,13 +29,13 @@ const Classes = () => {
 		console.log('add');
 	};
 
-	if (classes.length > 0) {
-		const elementHeaders = ['Class', 'Year'];
+	if (classrooms.length > 0) {
+		const elementHeaders = ['Classroom number'];
 		return (
 			<div className={style['table-wrapper']}>
 				<ElementsTable
-					elements={classes}
-					title='Subjects'
+					elements={classrooms}
+					title='Classrooms'
 					headers={elementHeaders}
 					actions={[
 						['Delete', onDelete],
@@ -47,8 +47,8 @@ const Classes = () => {
 		);
 	} else {
 		// loading bar
-		return <>Classes</>;
+		return <>Classrooms</>;
 	}
 };
 
-export default Classes;
+export default Classrooms;
