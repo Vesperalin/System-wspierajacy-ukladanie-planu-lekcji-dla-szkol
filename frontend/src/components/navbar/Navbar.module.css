@@ -1,0 +1,86 @@
+.header {
+	background: #149bfc;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: justify;
+	-ms-flex-pack: justify;
+	justify-content: space-between;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	position: -webkit-sticky;
+	position: sticky;
+	z-index: 1;
+}
+
+.header h1 {
+	font-size: 3.5rem;
+}
+
+.header div {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: justify;
+	-ms-flex-pack: justify;
+	justify-content: space-between;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+}
+
+.header div nav {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	margin-right: 60px;
+}
+
+.header .navlink,
+.header .login {
+	text-decoration: none;
+	padding: 8px 15px;
+	font-weight: bold;
+	font-size: 1.1rem;
+	border-radius: 5px;
+}
+
+.header .navlink {
+	color: #fff;
+	margin: 5px;
+}
+
+.header .navlink:focus,
+.header .navlink:hover {
+	text-decoration: underline;
+	background-color: #038aeb;
+}
+
+.header .login {
+	background-color: #fff;
+	margin-right: 25px;
+}
+
+.header .login:focus,
+.header .login:hover {
+	background-color: #eee;
+}
+
+.header .header {
+	padding: 0 20px;
+}
+
+.header .header:focus,
+.header .header:hover {
+	text-decoration: none;
+	background-color: #149bfc;
+	color: #eee;
+}
+/*# sourceMappingURL=Navbar.module.css.map */

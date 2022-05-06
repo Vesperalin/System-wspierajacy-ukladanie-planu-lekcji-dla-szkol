@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap');
+.home-wrapper {
+	overflow: hidden;
+	height: 100vh;
+	position: absolute;
+	top: 0;
+}
+
+.home-wrapper img {
+	display: inline-block;
+	width: 105%;
+}
+
+.home-wrapper .panel-wrapper {
+	position: absolute;
+	width: 100%;
+	top: 30vh;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+}
+
+.home-wrapper .panel-wrapper .panel {
+	background-color: rgba(255, 255, 255, 0.7);
+	padding: 80px;
+	border-radius: 30px;
+}
+
+.home-wrapper .panel-wrapper .panel h2 {
+	font-family: 'Merriweather', serif;
+	font-size: 3rem;
+	text-align: center;
+	font-weight: bold;
+	margin: 15px;
+}
+/*# sourceMappingURL=Home.module.css.map */
