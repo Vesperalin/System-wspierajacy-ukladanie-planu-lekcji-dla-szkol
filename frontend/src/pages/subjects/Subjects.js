@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import ElementsTable from '../../components/elements-table/ElementsTable';
 import style from './Subjects.module.scss';
@@ -14,6 +15,7 @@ const mockedSubjects = [
 
 const Subjects = () => {
 	const [subjects, setSubjects] = useState(mockedSubjects);
+	const navigate = useNavigate();
 
 	const onDelete = subject => {
 		// tu będzie obsługa dla delete
@@ -21,13 +23,11 @@ const Subjects = () => {
 	};
 
 	const onEdit = subject => {
-		// tu będzie obsługa dla edit
-		console.log(subject);
+		navigate('/edit-subject', { state: { subject: subject } });
 	};
 
 	const onAdd = () => {
-		// tu będzie obsługa dla add
-		console.log('add');
+		navigate('/add-subject');
 	};
 
 	if (subjects.length > 0) {

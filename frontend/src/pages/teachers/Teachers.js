@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import ElementsTable from '../../components/elements-table/ElementsTable';
 import style from './Teachers.module.scss';
@@ -14,6 +15,7 @@ const mockedTeachers = [
 
 const Teachers = () => {
 	const [teachers, setTeachers] = useState(mockedTeachers);
+	const navigate = useNavigate();
 
 	const onDelete = teacher => {
 		// tu będzie obsługa dla delete
@@ -21,13 +23,11 @@ const Teachers = () => {
 	};
 
 	const onEdit = teacher => {
-		// tu będzie obsługa dla edit
-		console.log(teacher);
+		navigate('/edit-teacher', { state: { teacher: teacher } });
 	};
 
 	const onAdd = () => {
-		// tu będzie obsługa dla add
-		console.log('add');
+		navigate('/add-teacher');
 	};
 
 	if (teachers.length > 0) {
