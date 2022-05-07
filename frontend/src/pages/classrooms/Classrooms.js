@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import ElementsTable from '../../components/elements-table/ElementsTable';
 import style from './Classroms.module.scss';
@@ -14,6 +15,7 @@ const mockedClassrooms = [
 
 const Classrooms = () => {
 	const [classrooms, setClassrooms] = useState(mockedClassrooms);
+	const navigate = useNavigate();
 
 	const onDelete = classroom => {
 		// tu będzie obsługa dla delete
@@ -21,13 +23,11 @@ const Classrooms = () => {
 	};
 
 	const onEdit = classroom => {
-		// tu będzie obsługa dla edit
-		console.log(classroom);
+		navigate('/edit-classroom', { state: { classroom: classroom } });
 	};
 
 	const onAdd = () => {
-		// tu będzie obsługa dla add
-		console.log('add');
+		navigate('/add-classroom');
 	};
 
 	if (classrooms.length > 0) {

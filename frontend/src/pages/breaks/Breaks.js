@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import style from './Breaks.module.scss';
 import Button from '../../components/button/Button';
@@ -41,25 +42,24 @@ const mockedBreaks = [
 
 const Breaks = () => {
 	const [breaks, setBreaks] = useState(mockedBreaks);
+	const navigate = useNavigate();
 
-	const onDelete = breaks => {
+	const onDelete = breakk => {
 		// tu będzie obsługa dla delete
-		console.log(breaks);
+		console.log(breakk);
 	};
 
-	const onEdit = breaks => {
-		// tu będzie obsługa dla edit
-		console.log(breaks);
+	const onEdit = breakk => {
+		navigate('/edit-break', { state: { breakk: breakk } });
 	};
 
 	const onAdd = () => {
-		// tu będzie obsługa dla add
-		console.log('add');
+		navigate('/add-break');
 	};
 
 	if (breaks.length > 0) {
 		return (
-			<div className={style.wrapper}>
+			<div className={style['main-wrapper']}>
 				<div>
 					<div className={style['table-wrapper']}>
 						<h1>Breaks</h1>
@@ -74,19 +74,22 @@ const Breaks = () => {
 									</tr>
 								</thead>
 								<tbody>
-									{breaks.map(b => {
+									{breaks.map(breakk => {
 										return (
-											<tr key={b.ID_Break}>
-												<td>{b.Break_no}</td>
+											<tr key={breakk.ID_Break}>
+												<td>{breakk.Break_no}</td>
 												<td>
-													{b.Start_hour}:{b.Start_minute}
+													{breakk.Start_hour}:{breakk.Start_minute}
 												</td>
 												<td>
-													{b.End_hour}:{b.End_minute}
+													{breakk.End_hour}:{breakk.End_minute}
 												</td>
 												<td>
-													<Button onClick={() => onDelete(b)} text='Delete' />
-													<Button onClick={() => onEdit(b)} text='Edit' />
+													<Button
+														onClick={() => onDelete(breakk)}
+														text='Delete'
+													/>
+													<Button onClick={() => onEdit(breakk)} text='Edit' />
 												</td>
 											</tr>
 										);
