@@ -1,18 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import style from './SubjectForm.module.scss';
+import style from './ClassroomForm.module.scss';
 
-const isNotEmpty = value => value.trim() !== '';
+const isPositive = value => value >= 0;
 
-const SubjectForm = props => {
+const ClassroomForm = props => {
 	const navigate = useNavigate();
-	const [isSubjectValid, setIsSubjectValid] = useState(true);
+	const [isClassroomValid, setIsClassroomValid] = useState(true);
 
 	const onSubmitHandler = event => {
 		event.preventDefault();
 
-		if (!isSubjectValid) {
+		if (!isClassroomValid) {
 			props.setErrorMessage(
 				'The input is invalid. Year must be positive and class name not empty!',
 			);
@@ -20,35 +20,35 @@ const SubjectForm = props => {
 		} else {
 			props.setErrorMessage('');
 			props.onSubmit();
-			navigate('/subjects');
+			navigate('/classrooms');
 		}
 	};
 
-	const onSubjectHandler = event => {
-		const subject = event.target.value;
+	const onClassroomHandler = event => {
+		const classroom = event.target.value;
 
-		if (isNotEmpty(subject)) {
-			setIsSubjectValid(true);
+		if (isPositive(classroom)) {
+			setIsClassroomValid(true);
 		} else {
-			setIsSubjectValid(false);
+			setIsClassroomValid(false);
 		}
 
-		props.setSubjectName(subject);
+		props.setClassroomNumber(classroom);
 	};
 
-	const subjectStyleClasses = `${isSubjectValid ? '' : style.invalid}`;
+	const classroomStyleClasses = `${isClassroomValid ? '' : style.invalid}`;
 
 	return (
 		<div className={style.content} onSubmit={onSubmitHandler}>
 			<h1>{props.formTitle}</h1>
 			<form>
-				<label htmlFor='subject-name'>Subject name</label>
+				<label htmlFor='classroom'>Classroom number</label>
 				<input
-					id='subject-name'
+					id='classroom'
 					type='text'
-					value={props.subjectName}
-					onChange={onSubjectHandler}
-					className={subjectStyleClasses}
+					value={props.classroomNumber}
+					onChange={onClassroomHandler}
+					className={classroomStyleClasses}
 					required
 				/>
 				<div className={style['action-button-wrapper']}>
@@ -58,11 +58,11 @@ const SubjectForm = props => {
 			{props.errorMessage !== '' && (
 				<p className={style.error}>{props.errorMessage}</p>
 			)}
-			<button onClick={() => navigate('/subjects')} className={style.button}>
+			<button onClick={() => navigate('/classrooms')} className={style.button}>
 				&larr; Back
 			</button>
 		</div>
 	);
 };
 
-export default SubjectForm;
+export default ClassroomForm;
