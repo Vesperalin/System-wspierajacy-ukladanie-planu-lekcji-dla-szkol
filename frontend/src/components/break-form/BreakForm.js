@@ -3,22 +3,16 @@ import { useNavigate } from 'react-router-dom';
 
 import style from './BreakForm.module.scss';
 
-const isPositive = value => value >= 0;
+const isNotEmpty = value => value.trim() !== '';
 
 const BreakForm = props => {
 	const navigate = useNavigate();
-	const [isStartHourValid, setIsStartHourValid] = useState(true);
-	const [isStartMinuteValid, setIsStarMinuteValid] = useState(true);
-	const [isEndHourValid, setIsEndHourValid] = useState(true);
-	const [isEndMinuteValid, setIsEndMinuteValid] = useState(true);
+	const [isStartTimeValid, setIsStartTimeValid] = useState(true);
+	const [isEndTimeValid, setIsEndTimeValid] = useState(true);
 
 	const onSubmitHandler = event => {
 		event.preventDefault();
-		const ifInputValid =
-			isStartHourValid &&
-			isStartMinuteValid &&
-			isEndHourValid &&
-			isEndMinuteValid;
+		const ifInputValid = isStartTimeValid && isEndTimeValid;
 
 		if (!ifInputValid) {
 			props.setErrorMessage('The input is invalid. Numbers must be positive!');
@@ -30,97 +24,53 @@ const BreakForm = props => {
 		}
 	};
 
-	const onStartHourHandler = event => {
-		const startHour = event.target.value;
+	const onStartTimeHandler = event => {
+		const startTime = event.target.value;
 
-		if (isPositive(startHour)) {
-			setIsStartHourValid(true);
+		if (isNotEmpty(startTime)) {
+			setIsStartTimeValid(true);
 		} else {
-			setIsStartHourValid(false);
+			setIsStartTimeValid(false);
 		}
 
-		props.setStartHour(startHour);
+		props.setStartTime(startTime);
 	};
 
-	const onStartMinuteHandler = event => {
-		const startMinute = event.target.value;
+	const onEndTimeHandler = event => {
+		const endTime = event.target.value;
 
-		if (isPositive(startMinute)) {
-			setIsStarMinuteValid(true);
+		if (isNotEmpty(endTime)) {
+			setIsEndTimeValid(true);
 		} else {
-			setIsStarMinuteValid(false);
+			setIsEndTimeValid(false);
 		}
 
-		props.setStartMinute(startMinute);
+		props.setEndTime(endTime);
 	};
 
-	const onEndHourHandler = event => {
-		const endHour = event.target.value;
-
-		if (isPositive(endHour)) {
-			setIsEndHourValid(true);
-		} else {
-			setIsEndHourValid(false);
-		}
-
-		props.setEndHour(endHour);
-	};
-
-	const onEndMinuterHandler = event => {
-		const endMinute = event.target.value;
-
-		if (isPositive(endMinute)) {
-			setIsEndMinuteValid(true);
-		} else {
-			setIsEndMinuteValid(false);
-		}
-
-		props.setEndMinute(endMinute);
-	};
-
-	const startHourStyleClasses = `${isStartHourValid ? '' : style.invalid}`;
-	const startMinuteStyleClasses = `${isStartMinuteValid ? '' : style.invalid}`;
-	const endHourStyleClasses = `${isEndHourValid ? '' : style.invalid}`;
-	const endMinuteStyleClasses = `${isEndMinuteValid ? '' : style.invalid}`;
+	const startTimeStyleClasses = `${isStartTimeValid ? '' : style.invalid}`;
+	const endTimeStyleClasses = `${isEndTimeValid ? '' : style.invalid}`;
 
 	return (
 		<div className={style.content} onSubmit={onSubmitHandler}>
 			<h1>{props.formTitle}</h1>
 			<form>
-				<label htmlFor='start-hour'>Start hour</label>
+				<label htmlFor='start-time'>Start time</label>
 				<input
-					id='start-hour'
-					type='number'
-					value={props.startHour}
-					onChange={onStartHourHandler}
-					className={startHourStyleClasses}
+					id='start-time'
+					type='time'
+					value={props.startTime}
+					onChange={onStartTimeHandler}
+					className={startTimeStyleClasses}
 					required
 				/>
-				<label htmlFor='start-minute'>Start minute</label>
+				<label htmlFor='end-time'>End time</label>
 				<input
-					id='start-minute'
-					type='number'
-					value={props.startMinute}
-					onChange={onStartMinuteHandler}
-					className={startMinuteStyleClasses}
-					required
-				/>
-				<label htmlFor='end-hour'>End hour</label>
-				<input
-					id='end-hour'
-					type='number'
-					value={props.endHour}
-					onChange={onEndHourHandler}
-					className={endHourStyleClasses}
-					required
-				/>
-				<label htmlFor='end-minute'>End minute</label>
-				<input
-					id='end-minute'
-					type='number'
-					value={props.endMinute}
-					onChange={onEndMinuterHandler}
-					className={endMinuteStyleClasses}
+					id='end-time'
+					type='time'
+					value={props.endTime}
+					onChange={onEndTimeHandler}
+					className={endTimeStyleClasses}
 					required
 				/>
 				<div className={style['action-button-wrapper']}>

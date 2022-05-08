@@ -79,10 +79,12 @@ const Breaks = () => {
 											<tr key={breakk.ID_Break}>
 												<td>{breakk.Break_no}</td>
 												<td>
-													{breakk.Start_hour}:{breakk.Start_minute}
+													{('0' + breakk.Start_hour).slice(-2)}:
+													{('0' + breakk.Start_minute).slice(-2)}
 												</td>
 												<td>
-													{breakk.End_hour}:{breakk.End_minute}
+													{('0' + breakk.End_hour).slice(-2)}:
+													{('0' + breakk.End_minute).slice(-2)}
 												</td>
 												<td>
 													<Button

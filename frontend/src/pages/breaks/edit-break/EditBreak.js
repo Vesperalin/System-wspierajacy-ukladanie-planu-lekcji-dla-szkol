@@ -5,12 +5,16 @@ import BreakForm from '../../../components/break-form/BreakForm';
 
 const EditBreak = () => {
 	const location = useLocation();
-	const [startHour, setStartHour] = useState(location.state.breakk.Start_hour);
-	const [startMinute, setStartMinute] = useState(
-		location.state.breakk.Start_minute,
+	const [startTime, setStartTime] = useState(
+		`${('0' + location.state.breakk.Start_hour).slice(-2)}:${(
+			'0' + location.state.breakk.Start_minute
+		).slice(-2)}`,
 	);
-	const [endHour, setEndHour] = useState(location.state.breakk.End_hour);
-	const [endMinute, setEndMinute] = useState(location.state.breakk.End_minute);
+	const [endTime, setEndTime] = useState(
+		`${('0' + location.state.breakk.End_hour).slice(-2)}:${(
+			'0' + location.state.breakk.End_minute
+		).slice(-2)}`,
+	);
 	const [errorMessage, setErrorMessage] = useState(''); // tu będzie info o niepowodzeniach - też z backendu
 
 	const onSubmit = () => {
@@ -21,14 +25,10 @@ const EditBreak = () => {
 		<BreakForm
 			onSubmit={onSubmit}
 			formTitle='Edit break'
-			startHour={startHour}
-			setStartHour={setStartHour}
-			startMinute={startMinute}
-			setStartMinute={setStartMinute}
-			endHour={endHour}
-			setEndHour={setEndHour}
-			endMinute={endMinute}
-			setEndMinute={setEndMinute}
+			startTime={startTime}
+			setStartTime={setStartTime}
+			endTime={endTime}
+			setEndTime={setEndTime}
 			actionText='Edit'
 			errorMessage={errorMessage}
 			setErrorMessage={setErrorMessage}
