@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import ElementsTable from '../../components/elements-table/ElementsTable';
-import style from './Classroms.module.scss';
+import style from './Classrooms.module.scss';
 import Button from '../../components/button/Button';
 import LoadingSpinner from '../../components/loading-spinner/LoadingSpinner';
 
