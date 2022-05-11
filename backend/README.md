@@ -18,7 +18,6 @@ Wszystkie komendy rozpoczynamy w terminalu "python manage.py ..."
   python manage.py runserver
 ```
 createsuperuser - służy do stworzenia konta admina, wykonywane tylko po pierwszej migracji
-sqlmigrate - wykonywane po zmianach w modelach
-makemigrations i migrate - wykonywane po każdych większych zmianach w kodzie
+makemigrations, sqlmigrate i migrate - wykonywane po zmianach w modelach
 runserver - służy do włączenia serwera, nie ma potrzeby wyłączania i włączania po każdej zmianie, wystarczy zapisanie zmian ctrl + S
     
