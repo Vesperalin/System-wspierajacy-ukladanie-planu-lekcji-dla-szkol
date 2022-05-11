@@ -1,21 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 import ElementsTable from '../../components/elements-table/ElementsTable';
 import style from './Subjects.module.scss';
 import Button from '../../components/button/Button';
 import LoadingSpinner from '../../components/loading-spinner/LoadingSpinner';
 
-const mockedSubjects = [
-	{ ID_Subject: 2, Subject_name: 'Biology' },
-	{ ID_Subject: 3, Subject_name: 'Chemistry' },
-	{ ID_Subject: 5, Subject_name: 'English' },
-	{ ID_Subject: 1, Subject_name: 'Geography' },
-];
-
 const Subjects = () => {
-	const [subjects, setSubjects] = useState(mockedSubjects);
+	const [subjects, setSubjects] = useState([]);
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		axios
+			.get('http://127.0.0.1:8000/api/subjects/')
+			.then(response => {
+				setSubjects(response.data);
+			})
+			.catch(error => {
+				// TODO - handle errors
+			});
+	}, []);
 
 	const onDelete = subject => {
 		// tu będzie obsługa dla delete

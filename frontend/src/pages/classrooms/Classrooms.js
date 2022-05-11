@@ -1,21 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 import ElementsTable from '../../components/elements-table/ElementsTable';
 import style from './Classroms.module.scss';
 import Button from '../../components/button/Button';
 import LoadingSpinner from '../../components/loading-spinner/LoadingSpinner';
 
-const mockedClassrooms = [
-	{ Classroom_no: 23 },
-	{ Classroom_no: 43 },
-	{ Classroom_no: 45 },
-	{ Classroom_no: 21 },
-];
-
 const Classrooms = () => {
-	const [classrooms, setClassrooms] = useState(mockedClassrooms);
+	const [classrooms, setClassrooms] = useState([]);
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		axios
+			.get('http://127.0.0.1:8000/api/classrooms/')
+			.then(response => {
+				setClassrooms(response.data);
+			})
+			.catch(error => {
+				// TODO - handle errors
+			});
+	}, []);
 
 	const onDelete = classroom => {
 		// tu będzie obsługa dla delete

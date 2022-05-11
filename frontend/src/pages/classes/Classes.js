@@ -1,21 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 import ElementsTable from '../../components/elements-table/ElementsTable';
 import style from './Classes.module.scss';
 import Button from '../../components/button/Button';
 import LoadingSpinner from '../../components/loading-spinner/LoadingSpinner';
 
-const mockedClasses = [
-	{ ID_Class: 'IIa', Year: 2021 },
-	{ ID_Class: 'Ib', Year: 2022 },
-	{ ID_Class: 'IIIb', Year: 2019 },
-	{ ID_Class: 'IIc', Year: 2021 },
-];
-
 const Classes = () => {
-	const [classes, setClasses] = useState(mockedClasses);
+	const [classes, setClasses] = useState([]);
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		axios
+			.get('http://127.0.0.1:8000/api/classes/')
+			.then(response => {
+				setClasses(response.data);
+			})
+			.catch(error => {
+				// TODO - handle errors
+			});
+	}, []);
 
 	const onDelete = school_class => {
 		// tu będzie obsługa dla delete
