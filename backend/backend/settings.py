@@ -25,8 +25,6 @@ SECRET_KEY = 'django-insecure-8+oex)k30j==ap%#c@0(%v77j8#t50*b5ys^x6u7k3=_#ialg7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -59,17 +57,27 @@ DEFAULT_PERMISSION_CLASSES = [
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-CORS_ORIGIN_WHITELIST = [
-     'http://localhost:3000'
+ALLOWED_HOSTS = [
+    '*'
 ]
+
+CORS_ORIGIN_WHITELIST = [
+     'http://localhost:3000',
+     'http://localhost:8000'
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000'
+]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
