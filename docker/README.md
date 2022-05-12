@@ -35,7 +35,7 @@ source create-db.sql
 ## How to work with docker container
 While working on project, all you have to do is simply run docker and run docker container
 ```sh
-docker-compose up
+docker-compose up -d
 ```
 After finishing your work, close the container in another cmd tab:
 ```sh

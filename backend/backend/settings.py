@@ -101,7 +101,7 @@ DATABASES = {
         'NAME': 'school_plan',
         'USER': 'root',
         'PASSWORD': 'password',
-        'HOST': 'localhost',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
         'TEST': {
             'NAME': 'test_base',

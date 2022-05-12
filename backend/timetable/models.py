@@ -21,7 +21,8 @@ class Subject(models.Model):
 
 
 class Class(models.Model):
-    ID_Class = models.CharField(primary_key=True, max_length=20)
+    ID_Class = models.BigAutoField(primary_key=True)
+    Class_no = models.CharField(max_length=20)
     Year = models.PositiveIntegerField()
 
 
