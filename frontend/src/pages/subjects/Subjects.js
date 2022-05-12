@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import axios from 'axios';
 
 import ElementsTable from '../../components/elements-table/ElementsTable';
@@ -9,9 +9,11 @@ import LoadingSpinner from '../../components/loading-spinner/LoadingSpinner';
 
 const Subjects = () => {
 	const [subjects, setSubjects] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
 
 	useEffect(() => {
+		setIsLoading(true);
 		axios
 			.get('http://127.0.0.1:8000/api/subjects/')
 			.then(response => {
@@ -20,6 +22,7 @@ const Subjects = () => {
 			.catch(error => {
 				// TODO - handle errors
 			});
+		setIsLoading(false);
 	}, []);
 
 	const onDelete = subject => {
@@ -59,11 +62,20 @@ const Subjects = () => {
 				<Button onClick={onAdd} text='Add' />
 			</div>
 		);
-	} else {
+	} else if (isLoading) {
 		return (
 			<div className={style['spinner-wrapper']}>
 				<LoadingSpinner />
 				<p>Loading ...</p>
+			</div>
+		);
+	} else {
+		return (
+			<div className={style['spinner-wrapper']}>
+				<p>No classes defined.</p>
+				<NavLink className={style.navlink} to='/add-subject'>
+					Add subjects
+				</NavLink>
 			</div>
 		);
 	}
