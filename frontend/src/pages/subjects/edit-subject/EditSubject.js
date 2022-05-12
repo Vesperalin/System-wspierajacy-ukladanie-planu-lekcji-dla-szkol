@@ -1,9 +1,10 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 import SubjectForm from '../../../components/subject-form/SubjectForm';
 
 const EditSubject = () => {
+	const navigate = useNavigate();
 	const location = useLocation();
 	const [subjectName, setSubjectName] = useState(
 		location.state.subject.Subject_name,
@@ -12,6 +13,7 @@ const EditSubject = () => {
 
 	const onSubmit = () => {
 		console.log('submit formularza dla przedmiotów');
+		navigate('/subjects');
 	};
 
 	return (

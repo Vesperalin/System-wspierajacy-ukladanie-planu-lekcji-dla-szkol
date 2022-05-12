@@ -1,9 +1,10 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 import ClassroomForm from '../../../components/classroom-form/ClassroomForm';
 
 const EditClassroom = () => {
+	const navigate = useNavigate();
 	const location = useLocation();
 	const [classroomNumber, setClassroomNumber] = useState(
 		location.state.classroom.Classroom_no,
@@ -12,6 +13,7 @@ const EditClassroom = () => {
 
 	const onSubmit = () => {
 		console.log('submit formularza dla sal szkolnych');
+		navigate('/classrooms');
 	};
 
 	return (

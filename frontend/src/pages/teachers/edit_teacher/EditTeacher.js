@@ -1,9 +1,10 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 import TeacherForm from '../../../components/teacher-form/TeacherForm';
 
 const EditTeacher = () => {
+	const navigate = useNavigate();
 	const location = useLocation();
 	const [cardNumber, setCardNumber] = useState(
 		location.state.teacher.ID_Teacher,
@@ -14,6 +15,7 @@ const EditTeacher = () => {
 
 	const onSubmit = () => {
 		console.log('submit formularza dla nauczycieli');
+		navigate('/teachers');
 	};
 
 	return (

@@ -20,7 +20,6 @@ const ClassroomForm = props => {
 		} else {
 			props.setErrorMessage('');
 			props.onSubmit();
-			navigate('/classrooms');
 		}
 	};
 

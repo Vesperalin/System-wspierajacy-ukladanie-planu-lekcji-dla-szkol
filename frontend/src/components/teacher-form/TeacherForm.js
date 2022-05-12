@@ -24,7 +24,6 @@ const TeacherForm = props => {
 		} else {
 			props.setErrorMessage('');
 			props.onSubmit();
-			navigate('/teachers');
 		}
 	};
 

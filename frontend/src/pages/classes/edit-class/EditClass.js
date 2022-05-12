@@ -1,9 +1,10 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 import ClassForm from '../../../components/class-form/ClassForm';
 
 const EditClass = () => {
+	const navigate = useNavigate();
 	const location = useLocation();
 	const [className, setClassName] = useState(
 		location.state.school_class.ID_Class,
@@ -13,6 +14,7 @@ const EditClass = () => {
 
 	const onSubmit = () => {
 		console.log('submit formularza dla klas');
+		navigate('/classes');
 	};
 
 	return (

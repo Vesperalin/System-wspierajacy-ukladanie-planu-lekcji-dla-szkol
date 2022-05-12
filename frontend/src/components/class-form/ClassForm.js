@@ -23,7 +23,6 @@ const ClassForm = props => {
 		} else {
 			props.setErrorMessage('');
 			props.onSubmit();
-			navigate('/classes');
 		}
 	};
 

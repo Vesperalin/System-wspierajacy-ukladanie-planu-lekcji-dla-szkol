@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import TeacherForm from '../../../components/teacher-form/TeacherForm';
 
 const AddTeacher = () => {
+	const navigate = useNavigate();
 	const [cardNumber, setCardNumber] = useState(0);
 	const [name, setName] = useState('');
 	const [surname, setSurname] = useState('');
@@ -10,6 +12,7 @@ const AddTeacher = () => {
 
 	const onSubmit = () => {
 		console.log('submit formularza dla nauczycieli');
+		navigate('/teachers');
 	};
 
 	return (

@@ -20,7 +20,6 @@ const SubjectForm = props => {
 		} else {
 			props.setErrorMessage('');
 			props.onSubmit();
-			navigate('/subjects');
 		}
 	};
 
