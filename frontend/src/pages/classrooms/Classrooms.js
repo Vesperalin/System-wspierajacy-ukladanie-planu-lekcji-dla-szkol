@@ -1,25 +1,43 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, NavLink } from 'react-router-dom';
+import axios from 'axios';
 
 import ElementsTable from '../../components/elements-table/ElementsTable';
-import style from './Classroms.module.scss';
+import style from './Classrooms.module.scss';
 import Button from '../../components/button/Button';
 import LoadingSpinner from '../../components/loading-spinner/LoadingSpinner';
 
-const mockedClassrooms = [
-	{ Classroom_no: 23 },
-	{ Classroom_no: 43 },
-	{ Classroom_no: 45 },
-	{ Classroom_no: 21 },
-];
-
 const Classrooms = () => {
-	const [classrooms, setClassrooms] = useState(mockedClassrooms);
+	const [classrooms, setClassrooms] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
 
+	useEffect(() => {
+		setIsLoading(true);
+		axios
+			.get('http://127.0.0.1:8000/api/classrooms/')
+			.then(response => {
+				setClassrooms(response.data);
+			})
+			.catch(error => {
+				// TODO - handle errors
+			});
+		setIsLoading(false);
+	}, []);
+
 	const onDelete = classroom => {
-		// tu będzie obsługa dla delete
-		console.log(classroom);
+		axios
+			.delete(`http://127.0.0.1:8000/api/classrooms/${classroom.Classroom_no}/`)
+			.then(response => {
+				setClassrooms(prevClassrooms => {
+					return prevClassrooms.filter(
+						c => c.Classroom_no !== classroom.Classroom_no,
+					);
+				});
+			})
+			.catch(error => {
+				// TODO - handle errors
+			});
 	};
 
 	const onEdit = classroom => {
@@ -46,11 +64,20 @@ const Classrooms = () => {
 				<Button onClick={onAdd} text='Add' />
 			</div>
 		);
-	} else {
+	} else if (isLoading) {
 		return (
 			<div className={style['spinner-wrapper']}>
 				<LoadingSpinner />
 				<p>Loading ...</p>
+			</div>
+		);
+	} else {
+		return (
+			<div className={style['spinner-wrapper']}>
+				<p>No classes defined.</p>
+				<NavLink className={style.navlink} to='/add-class'>
+					Add classrooms
+				</NavLink>
 			</div>
 		);
 	}

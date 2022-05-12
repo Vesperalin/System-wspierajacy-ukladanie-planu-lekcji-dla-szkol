@@ -1,9 +1,11 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import axios from 'axios';
 
 import ClassroomForm from '../../../components/classroom-form/ClassroomForm';
 
 const EditClassroom = () => {
+	const navigate = useNavigate();
 	const location = useLocation();
 	const [classroomNumber, setClassroomNumber] = useState(
 		location.state.classroom.Classroom_no,
@@ -11,7 +13,17 @@ const EditClassroom = () => {
 	const [errorMessage, setErrorMessage] = useState(''); // tu będzie info o niepowodzeniach - też z backendu
 
 	const onSubmit = () => {
-		console.log('submit formularza dla sal szkolnych');
+		axios
+			.put(
+				`http://127.0.0.1:8000/api/classrooms/${location.state.classroom.Classroom_no}/`,
+				{
+					Classroom_no: classroomNumber,
+				},
+			)
+			.then(response => navigate('/classrooms'))
+			.catch(error => {
+				// TODO - handle errors
+			});
 	};
 
 	return (

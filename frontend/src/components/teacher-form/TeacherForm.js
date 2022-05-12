@@ -3,18 +3,16 @@ import { useNavigate } from 'react-router-dom';
 
 import style from './TeacherForm.module.scss';
 
-const isPositive = value => value >= 0;
 const isNotEmpty = value => value.trim() !== '';
 
 const TeacherForm = props => {
 	const navigate = useNavigate();
-	const [isCardNumberValid, setIsCardNumberValid] = useState(true);
 	const [isNameValid, setIsNameValid] = useState(true);
 	const [isSurnameValid, setIsSurnameValid] = useState(true);
 
 	const onSubmitHandler = event => {
 		event.preventDefault();
-		const ifInputValid = isCardNumberValid && isNameValid && isSurnameValid;
+		const ifInputValid = isNameValid && isSurnameValid;
 
 		if (!ifInputValid) {
 			props.setErrorMessage(
@@ -24,20 +22,7 @@ const TeacherForm = props => {
 		} else {
 			props.setErrorMessage('');
 			props.onSubmit();
-			navigate('/teachers');
 		}
-	};
-
-	const onCardHandler = event => {
-		const card = event.target.value;
-
-		if (isPositive(card)) {
-			setIsCardNumberValid(true);
-		} else {
-			setIsCardNumberValid(false);
-		}
-
-		props.setCardNumber(card);
 	};
 
 	const onNameHandler = event => {
@@ -64,7 +49,6 @@ const TeacherForm = props => {
 		props.setSurname(surname);
 	};
 
-	const cardStyleClasses = `${isCardNumberValid ? '' : style.invalid}`;
 	const nameStyleClasses = `${isNameValid ? '' : style.invalid}`;
 	const surnameStyleClasses = `${isSurnameValid ? '' : style.invalid}`;
 
@@ -72,16 +56,6 @@ const TeacherForm = props => {
 		<div className={style.content} onSubmit={onSubmitHandler}>
 			<h1>{props.formTitle}</h1>
 			<form>
-				<label htmlFor='card'>Card number</label>
-				<input
-					id='card'
-					type='number'
-					value={props.cardNumber}
-					onChange={onCardHandler}
-					className={cardStyleClasses}
-					step='1'
-					required
-				/>
 				<label htmlFor='name'>Name</label>
 				<input
 					id='name'

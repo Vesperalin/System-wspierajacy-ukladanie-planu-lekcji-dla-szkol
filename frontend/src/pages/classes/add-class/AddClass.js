@@ -1,14 +1,25 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 import ClassForm from '../../../components/class-form/ClassForm';
 
 const AddClass = () => {
+	const navigate = useNavigate();
 	const [className, setClassName] = useState('');
 	const [year, setYear] = useState(2022);
 	const [errorMessage, setErrorMessage] = useState(''); // tu będzie info o niepowodzeniach - też z backendu
 
 	const onSubmit = () => {
-		console.log('submit formularza dla klas');
+		axios
+			.post('http://127.0.0.1:8000/api/classes/', {
+				ID_Class: className,
+				Year: year,
+			})
+			.then(response => navigate('/classes'))
+			.catch(error => {
+				// TODO - handle errors
+			});
 	};
 
 	return (

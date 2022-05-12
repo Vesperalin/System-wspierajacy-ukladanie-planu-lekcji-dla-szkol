@@ -1,25 +1,41 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, NavLink } from 'react-router-dom';
+import axios from 'axios';
 
 import ElementsTable from '../../components/elements-table/ElementsTable';
 import style from './Teachers.module.scss';
 import Button from '../../components/button/Button';
 import LoadingSpinner from '../../components/loading-spinner/LoadingSpinner';
 
-const mockedTeachers = [
-	{ ID_Teacher: 1231421, Name: 'Anna', Surname: 'Kowalska' },
-	{ ID_Teacher: 4324235, Name: 'Olga', Surname: 'Tokarczuk' },
-	{ ID_Teacher: 2346243, Name: 'Halina', Surname: 'Siemińska' },
-	{ ID_Teacher: 2645435, Name: 'Andrzej', Surname: 'Mazur' },
-];
-
 const Teachers = () => {
-	const [teachers, setTeachers] = useState(mockedTeachers);
+	const [teachers, setTeachers] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
 
+	useEffect(() => {
+		setIsLoading(true);
+		axios
+			.get('http://127.0.0.1:8000/api/teachers/')
+			.then(response => {
+				setTeachers(response.data);
+			})
+			.catch(error => {
+				// TODO - handle errors
+			});
+		setIsLoading(false);
+	}, []);
+
 	const onDelete = teacher => {
-		// tu będzie obsługa dla delete
-		console.log(teacher);
+		axios
+			.delete(`http://127.0.0.1:8000/api/teachers/${teacher.ID_Teacher}/`)
+			.then(response => {
+				setTeachers(prevTeachers => {
+					return prevTeachers.filter(t => t.ID_Teacher !== teacher.ID_Teacher);
+				});
+			})
+			.catch(error => {
+				// TODO - handle errors
+			});
 	};
 
 	const onEdit = teacher => {
@@ -46,11 +62,20 @@ const Teachers = () => {
 				<Button onClick={onAdd} text='Add' />
 			</div>
 		);
-	} else {
+	} else if (isLoading) {
 		return (
 			<div className={style['spinner-wrapper']}>
 				<LoadingSpinner />
 				<p>Loading ...</p>
+			</div>
+		);
+	} else {
+		return (
+			<div className={style['spinner-wrapper']}>
+				<p>No classes defined.</p>
+				<NavLink className={style.navlink} to='/add-class'>
+					Add teachers
+				</NavLink>
 			</div>
 		);
 	}

@@ -1,25 +1,41 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, NavLink } from 'react-router-dom';
+import axios from 'axios';
 
 import ElementsTable from '../../components/elements-table/ElementsTable';
 import style from './Subjects.module.scss';
 import Button from '../../components/button/Button';
 import LoadingSpinner from '../../components/loading-spinner/LoadingSpinner';
 
-const mockedSubjects = [
-	{ ID_Subject: 2, Subject_name: 'Biology' },
-	{ ID_Subject: 3, Subject_name: 'Chemistry' },
-	{ ID_Subject: 5, Subject_name: 'English' },
-	{ ID_Subject: 1, Subject_name: 'Geography' },
-];
-
 const Subjects = () => {
-	const [subjects, setSubjects] = useState(mockedSubjects);
+	const [subjects, setSubjects] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
 
+	useEffect(() => {
+		setIsLoading(true);
+		axios
+			.get('http://127.0.0.1:8000/api/subjects/')
+			.then(response => {
+				setSubjects(response.data);
+			})
+			.catch(error => {
+				// TODO - handle errors
+			});
+		setIsLoading(false);
+	}, []);
+
 	const onDelete = subject => {
-		// tu będzie obsługa dla delete
-		console.log(subject);
+		axios
+			.delete(`http://127.0.0.1:8000/api/subjects/${subject.ID_Subject}/`)
+			.then(response => {
+				setSubjects(prevSubjects => {
+					return prevSubjects.filter(s => s.ID_Subject !== subject.ID_Subject);
+				});
+			})
+			.catch(error => {
+				// TODO - handle errors
+			});
 	};
 
 	const onEdit = subject => {
@@ -46,11 +62,20 @@ const Subjects = () => {
 				<Button onClick={onAdd} text='Add' />
 			</div>
 		);
-	} else {
+	} else if (isLoading) {
 		return (
 			<div className={style['spinner-wrapper']}>
 				<LoadingSpinner />
 				<p>Loading ...</p>
+			</div>
+		);
+	} else {
+		return (
+			<div className={style['spinner-wrapper']}>
+				<p>No classes defined.</p>
+				<NavLink className={style.navlink} to='/add-subject'>
+					Add subjects
+				</NavLink>
 			</div>
 		);
 	}
