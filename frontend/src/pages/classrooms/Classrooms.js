@@ -23,8 +23,18 @@ const Classrooms = () => {
 	}, []);
 
 	const onDelete = classroom => {
-		// tu będzie obsługa dla delete
-		console.log(classroom);
+		axios
+			.delete(`http://127.0.0.1:8000/api/classrooms/${classroom.Classroom_no}/`)
+			.then(response => {
+				setClassrooms(prevClassrooms => {
+					return prevClassrooms.filter(
+						c => c.Classroom_no !== classroom.Classroom_no,
+					);
+				});
+			})
+			.catch(error => {
+				// TODO - handle errors
+			});
 	};
 
 	const onEdit = classroom => {

@@ -23,8 +23,16 @@ const Subjects = () => {
 	}, []);
 
 	const onDelete = subject => {
-		// tu będzie obsługa dla delete
-		console.log(subject);
+		axios
+			.delete(`http://127.0.0.1:8000/api/subjects/${subject.ID_Subject}/`)
+			.then(response => {
+				setSubjects(prevSubjects => {
+					return prevSubjects.filter(s => s.ID_Subject !== subject.ID_Subject);
+				});
+			})
+			.catch(error => {
+				// TODO - handle errors
+			});
 	};
 
 	const onEdit = subject => {

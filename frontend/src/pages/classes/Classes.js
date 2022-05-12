@@ -23,8 +23,16 @@ const Classes = () => {
 	}, []);
 
 	const onDelete = school_class => {
-		// tu będzie obsługa dla delete
-		console.log(school_class);
+		axios
+			.delete(`http://127.0.0.1:8000/api/classes/${school_class.ID_Class}/`)
+			.then(response => {
+				setClasses(prevClasses => {
+					return prevClasses.filter(c => c.ID_Class !== school_class.ID_Class);
+				});
+			})
+			.catch(error => {
+				// TODO - handle errors
+			});
 	};
 
 	const onEdit = school_class => {

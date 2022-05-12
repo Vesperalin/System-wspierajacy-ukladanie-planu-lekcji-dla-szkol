@@ -23,8 +23,16 @@ const Teachers = () => {
 	}, []);
 
 	const onDelete = teacher => {
-		// tu będzie obsługa dla delete
-		console.log(teacher);
+		axios
+			.delete(`http://127.0.0.1:8000/api/teachers/${teacher.ID_Teacher}/`)
+			.then(response => {
+				setTeachers(prevTeachers => {
+					return prevTeachers.filter(t => t.ID_Teacher !== teacher.ID_Teacher);
+				});
+			})
+			.catch(error => {
+				// TODO - handle errors
+			});
 	};
 
 	const onEdit = teacher => {
