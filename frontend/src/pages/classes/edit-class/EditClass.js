@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import axios from 'axios';
 
 import ClassForm from '../../../components/class-form/ClassForm';
 
@@ -13,8 +14,18 @@ const EditClass = () => {
 	const [errorMessage, setErrorMessage] = useState(''); // tu będzie info o niepowodzeniach - też z backendu
 
 	const onSubmit = () => {
-		console.log('submit formularza dla klas');
-		navigate('/classes');
+		axios
+			.put(
+				`http://127.0.0.1:8000/api/classes/${location.state.school_class.ID_Class}/`,
+				{
+					ID_Class: className,
+					Year: year,
+				},
+			)
+			.then(response => navigate('/classes'))
+			.catch(error => {
+				// TODO - handle errors
+			});
 	};
 
 	return (

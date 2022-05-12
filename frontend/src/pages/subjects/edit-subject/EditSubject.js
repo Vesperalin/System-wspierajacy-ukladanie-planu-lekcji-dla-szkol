@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import axios from 'axios';
 
 import SubjectForm from '../../../components/subject-form/SubjectForm';
 
@@ -12,8 +13,17 @@ const EditSubject = () => {
 	const [errorMessage, setErrorMessage] = useState(''); // tu będzie info o niepowodzeniach - też z backendu
 
 	const onSubmit = () => {
-		console.log('submit formularza dla przedmiotów');
-		navigate('/subjects');
+		axios
+			.put(
+				`http://127.0.0.1:8000/api/subjects/${location.state.subject.ID_Subject}/`,
+				{
+					Subject_name: subjectName,
+				},
+			)
+			.then(response => navigate('/subjects'))
+			.catch(error => {
+				// TODO - handle errors
+			});
 	};
 
 	return (
