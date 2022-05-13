@@ -10,6 +10,7 @@ import LoadingSpinner from '../../components/loading-spinner/LoadingSpinner';
 const Classrooms = () => {
 	const [classrooms, setClassrooms] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
+	const [errorMessage, setErrorMessage] = useState('');
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -20,7 +21,13 @@ const Classrooms = () => {
 				setClassrooms(response.data);
 			})
 			.catch(error => {
-				// TODO - handle errors
+				if (error.response.status === 400) {
+					setErrorMessage(error.response.data.message);
+				} else if (error.response.status === 404) {
+					setErrorMessage(error.response.data.detail);
+				} else {
+					setErrorMessage('Unknown error occurred');
+				}
 			});
 		setIsLoading(false);
 	}, []);
@@ -37,7 +44,13 @@ const Classrooms = () => {
 			})
 			.catch(error => {
 				console.log(error);
-				// TODO - handle errors
+				if (error.response.status === 400) {
+					setErrorMessage(error.response.data.message);
+				} else if (error.response.status === 404) {
+					setErrorMessage(error.response.data.detail);
+				} else {
+					setErrorMessage('Unknown error occurred');
+				}
 			});
 	};
 
@@ -55,6 +68,7 @@ const Classrooms = () => {
 					headers={elementHeaders}
 					actions={[['Delete', onDelete]]}
 				/>
+				{errorMessage !== '' && <p className={style.error}>{errorMessage}</p>}
 				<Button onClick={onAdd} text='Add' />
 			</div>
 		);

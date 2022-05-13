@@ -11,7 +11,7 @@ const EditClass = () => {
 		location.state.school_class.Class_no,
 	);
 	const [year, setYear] = useState(location.state.school_class.Year);
-	const [errorMessage, setErrorMessage] = useState(''); // tu będzie info o niepowodzeniach - też z backendu
+	const [errorMessage, setErrorMessage] = useState('');
 
 	const onSubmit = () => {
 		axios
@@ -24,7 +24,13 @@ const EditClass = () => {
 			)
 			.then(response => navigate('/classes'))
 			.catch(error => {
-				// TODO - handle errors
+				if (error.response.status === 400) {
+					setErrorMessage(error.response.data.message);
+				} else if (error.response.status === 404) {
+					setErrorMessage(error.response.data.detail);
+				} else {
+					setErrorMessage('Unknown error occurred');
+				}
 			});
 	};
 

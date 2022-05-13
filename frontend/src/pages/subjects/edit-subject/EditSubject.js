@@ -10,7 +10,7 @@ const EditSubject = () => {
 	const [subjectName, setSubjectName] = useState(
 		location.state.subject.Subject_name,
 	);
-	const [errorMessage, setErrorMessage] = useState(''); // tu będzie info o niepowodzeniach - też z backendu
+	const [errorMessage, setErrorMessage] = useState('');
 
 	const onSubmit = () => {
 		axios
@@ -22,7 +22,13 @@ const EditSubject = () => {
 			)
 			.then(response => navigate('/subjects'))
 			.catch(error => {
-				// TODO - handle errors
+				if (error.response.status === 400) {
+					setErrorMessage(error.response.data.message);
+				} else if (error.response.status === 404) {
+					setErrorMessage(error.response.data.detail);
+				} else {
+					setErrorMessage('Unknown error occurred');
+				}
 			});
 	};
 

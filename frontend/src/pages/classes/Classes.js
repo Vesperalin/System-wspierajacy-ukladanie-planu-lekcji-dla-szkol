@@ -10,6 +10,7 @@ import LoadingSpinner from '../../components/loading-spinner/LoadingSpinner';
 const Classes = () => {
 	const [classes, setClasses] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
+	const [errorMessage, setErrorMessage] = useState('');
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -20,7 +21,13 @@ const Classes = () => {
 				setClasses(response.data);
 			})
 			.catch(error => {
-				// TODO - handle errors
+				if (error.response.status === 400) {
+					setErrorMessage(error.response.data.message);
+				} else if (error.response.status === 404) {
+					setErrorMessage(error.response.data.detail);
+				} else {
+					setErrorMessage('Unknown error occurred');
+				}
 			});
 		setIsLoading(false);
 	}, []);
@@ -34,7 +41,13 @@ const Classes = () => {
 				});
 			})
 			.catch(error => {
-				// TODO - handle errors
+				if (error.response.status === 400) {
+					setErrorMessage(error.response.data.message);
+				} else if (error.response.status === 404) {
+					setErrorMessage(error.response.data.detail);
+				} else {
+					setErrorMessage('Unknown error occurred');
+				}
 			});
 	};
 
@@ -57,6 +70,7 @@ const Classes = () => {
 						['Edit', onEdit],
 					]}
 				/>
+				{errorMessage !== '' && <p className={style.error}>{errorMessage}</p>}
 				<Button onClick={onAdd} text='Add' />
 			</div>
 		);
