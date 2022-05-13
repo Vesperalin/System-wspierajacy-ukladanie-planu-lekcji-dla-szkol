@@ -13,7 +13,7 @@ const AddClass = () => {
 	const onSubmit = () => {
 		axios
 			.post('http://127.0.0.1:8000/api/classes/', {
-				ID_Class: className,
+				Class_no: className,
 				Year: year,
 			})
 			.then(response => navigate('/classes'))
