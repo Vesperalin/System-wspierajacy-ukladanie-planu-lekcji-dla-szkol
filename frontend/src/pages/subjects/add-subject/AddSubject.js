@@ -7,8 +7,7 @@ import SubjectForm from '../../../components/subject-form/SubjectForm';
 const AddSubject = () => {
 	const navigate = useNavigate();
 	const [subjectName, setSubjectName] = useState('');
-	const [errorMessage, setErrorMessage] = useState(''); // tu będzie info o niepowodzeniach - też z backendu
-
+	const [errorMessage, setErrorMessage] = useState('');
 	const onSubmit = () => {
 		axios
 			.post('http://127.0.0.1:8000/api/subjects/', {
@@ -16,7 +15,13 @@ const AddSubject = () => {
 			})
 			.then(response => navigate('/subjects'))
 			.catch(error => {
-				// TODO - handle errors
+				if (error.response.status === 400) {
+					setErrorMessage(error.response.data.message);
+				} else if (error.response.status === 404) {
+					setErrorMessage(error.response.data.detail);
+				} else {
+					setErrorMessage('Unknown error occurred');
+				}
 			});
 	};
 

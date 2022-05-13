@@ -16,7 +16,6 @@ import EditSubject from './pages/subjects/edit-subject/EditSubject';
 import AddTeacher from './pages/teachers/add-teacher/AddTeacher';
 import EditTeacher from './pages/teachers/edit_teacher/EditTeacher';
 import AddClassroom from './pages/classrooms/add-classroom/AddClassroom';
-import EditClassroom from './pages/classrooms/edit-classroom/EditClassroom';
 
 const App = () => {
 	return (
@@ -37,7 +36,6 @@ const App = () => {
 				<Route path='/login' element={<Login />} />
 				<Route path='/classrooms' element={<Classrooms />} />
 				<Route path='/add-classroom' element={<AddClassroom />} />
-				<Route path='/edit-classroom' element={<EditClassroom />} />
 			</Routes>
 		</div>
 	);

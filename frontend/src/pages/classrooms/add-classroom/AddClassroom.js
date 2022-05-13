@@ -7,7 +7,7 @@ import ClassroomForm from '../../../components/classroom-form/ClassroomForm';
 const AddClassroom = () => {
 	const navigate = useNavigate();
 	const [classroomNumber, setClassroomNumber] = useState(0);
-	const [errorMessage, setErrorMessage] = useState(''); // tu będzie info o niepowodzeniach - też z backendu
+	const [errorMessage, setErrorMessage] = useState('');
 
 	const onSubmit = () => {
 		axios
@@ -16,8 +16,13 @@ const AddClassroom = () => {
 			})
 			.then(response => navigate('/classrooms'))
 			.catch(error => {
-				// TODO error handling
-				console.log(error);
+				if (error.response.status === 400) {
+					setErrorMessage(error.response.data.message);
+				} else if (error.response.status === 404) {
+					setErrorMessage(error.response.data.detail);
+				} else {
+					setErrorMessage('Unknown error occurred');
+				}
 			});
 	};
 
