@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, NavLink } from 'react-router-dom';
 import axios from 'axios';
 
-import ElementsTable from '../../components/elements-table/ElementsTable';
+import ClassesTable from '../../components/classes-table/ClassesTable';
 import style from './Classes.module.scss';
 import Button from '../../components/button/Button';
 import LoadingSpinner from '../../components/loading-spinner/LoadingSpinner';
@@ -47,13 +47,11 @@ const Classes = () => {
 	};
 
 	if (classes.length > 0) {
-		const elementHeaders = ['Class', 'Year'];
 		return (
 			<div className={style['table-wrapper']}>
-				<ElementsTable
+				<ClassesTable
 					elements={classes}
 					title='Classes'
-					headers={elementHeaders}
 					actions={[
 						['Delete', onDelete],
 						['Edit', onEdit],

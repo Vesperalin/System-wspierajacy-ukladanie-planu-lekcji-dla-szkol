@@ -8,7 +8,7 @@ const EditClass = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const [className, setClassName] = useState(
-		location.state.school_class.ID_Class,
+		location.state.school_class.Class_no,
 	);
 	const [year, setYear] = useState(location.state.school_class.Year);
 	const [errorMessage, setErrorMessage] = useState(''); // tu będzie info o niepowodzeniach - też z backendu
@@ -18,7 +18,7 @@ const EditClass = () => {
 			.put(
 				`http://127.0.0.1:8000/api/classes/${location.state.school_class.ID_Class}/`,
 				{
-					ID_Class: className,
+					Class_no: className,
 					Year: year,
 				},
 			)
