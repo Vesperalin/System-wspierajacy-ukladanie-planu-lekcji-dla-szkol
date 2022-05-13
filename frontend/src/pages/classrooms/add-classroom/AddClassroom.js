@@ -16,7 +16,8 @@ const AddClassroom = () => {
 			})
 			.then(response => navigate('/classrooms'))
 			.catch(error => {
-				// TODO - handle errors
+				// TODO error handling
+				console.log(error);
 			});
 	};
 

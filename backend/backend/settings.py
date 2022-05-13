@@ -72,6 +72,10 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_ALL_ORIGINS = True
 
+REST_FRAMEWORK = {
+    'NON_FIELD_ERRORS_KEY': 'message',
+}
+
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [

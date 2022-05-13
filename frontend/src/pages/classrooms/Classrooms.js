@@ -36,6 +36,7 @@ const Classrooms = () => {
 				});
 			})
 			.catch(error => {
+				console.log(error);
 				// TODO - handle errors
 			});
 	};
