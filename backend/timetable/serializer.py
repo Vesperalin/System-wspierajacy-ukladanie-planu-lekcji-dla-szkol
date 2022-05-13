@@ -36,7 +36,8 @@ class SubjectSerializer(serializers.ModelSerializer):
         fields = ['ID_Subject', 'Subject_name']
     
     def validate_Subject_name(self, value):
-        if Subject.objects.filter(Subject_name__iexact=value).exists():
+        subject_name = value.lower()
+        if Subject.objects.filter(Subject_name__iexact=subject_name).exists():
             raise CustomValidation('Subject with specified name already exists.', 'message', 400)
         return value
 
