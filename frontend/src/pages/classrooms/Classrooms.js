@@ -41,10 +41,6 @@ const Classrooms = () => {
 			});
 	};
 
-	const onEdit = classroom => {
-		navigate('/edit-classroom', { state: { classroom: classroom } });
-	};
-
 	const onAdd = () => {
 		navigate('/add-classroom');
 	};
@@ -57,10 +53,7 @@ const Classrooms = () => {
 					elements={classrooms}
 					title='Classrooms'
 					headers={elementHeaders}
-					actions={[
-						['Delete', onDelete],
-						['Edit', onEdit],
-					]}
+					actions={[['Delete', onDelete]]}
 				/>
 				<Button onClick={onAdd} text='Add' />
 			</div>
