@@ -86,7 +86,7 @@ const Subjects = () => {
 	} else {
 		return (
 			<div className={style['spinner-wrapper']}>
-				<p>No classes defined.</p>
+				<p>No subjects defined.</p>
 				<NavLink className={style.navlink} to='/add-subject'>
 					Add subjects
 				</NavLink>

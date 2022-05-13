@@ -82,7 +82,7 @@ const Classrooms = () => {
 	} else {
 		return (
 			<div className={style['spinner-wrapper']}>
-				<p>No classes defined.</p>
+				<p>No classrooms defined.</p>
 				<NavLink className={style.navlink} to='/add-class'>
 					Add classrooms
 				</NavLink>
