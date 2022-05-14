@@ -144,3 +144,4 @@ cython_debug/
 
 # Other
 backend/.idea/
+.DS_Store
