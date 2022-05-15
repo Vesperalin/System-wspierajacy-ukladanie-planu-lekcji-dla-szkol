@@ -87,7 +87,7 @@ const Teachers = () => {
 		return (
 			<div className={style['spinner-wrapper']}>
 				<p>No teachers defined.</p>
-				<NavLink className={style.navlink} to='/add-class'>
+				<NavLink className={style.navlink} to='/add-teacher'>
 					Add teachers
 				</NavLink>
 			</div>

@@ -14,7 +14,7 @@ import EditClass from './pages/classes/edit-class/EditClass';
 import AddSubject from './pages/subjects/add-subject/AddSubject';
 import EditSubject from './pages/subjects/edit-subject/EditSubject';
 import AddTeacher from './pages/teachers/add-teacher/AddTeacher';
-import EditTeacher from './pages/teachers/edit_teacher/EditTeacher';
+import EditTeacher from './pages/teachers/edit-teacher/EditTeacher';
 import AddClassroom from './pages/classrooms/add-classroom/AddClassroom';
 
 const App = () => {
