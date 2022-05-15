@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 /*
-w card i w schedule będzie
+w lesson i w schedule będzie
 {
   teacher: obiekt nauczyciela,
   subject: obiekt przedmiotu,
@@ -11,28 +11,34 @@ w card i w schedule będzie
 
 const scheduleSlice = createSlice({
 	name: 'schedule',
-	initialState: { chosenSchedule: [[], [], [], [], []], createdCards: [] },
+	initialState: { chosenSchedule: [[], [], [], [], []], createdLessons: [], nextLessonIndex: 1 },
 	reducers: {
 		clearSchedule(state) {
 			state.chosenSchedule = [];
-			state.createdCards = [];
+			state.createdLessons = [];
 		},
-		addCard(state, action) {
+		addLesson(state, action) {
+			const teacher = action.payload.teacher;
+			const subject = action.payload.subject;
+			const classroom = action.payload.classroom;
+
+			state.createdLessons.push({ teacher, subject, classroom, id: state.nextLessonIndex });
+
+			state.nextLessonIndex += 1;
+		},
+		addLessonToSchedule(state, action) {
 			// TODO
 		},
-		addCardToSchedule(state, action) {
+		deleteLesson(state, action) {
 			// TODO
 		},
-		deleteCard(state, action) {
+		deleteLessonFromSchedule(state, action) {
 			// TODO
 		},
-		deleteCardFromSchedule(state, action) {
-			// TODO
-		},
-		editCard(state, action) {
+		editLesson(state, action) {
 			// TODO - o ile robimy
 		},
-		editCardOnSchedule(state, action) {
+		editLessonOnSchedule(state, action) {
 			// TODO - o ile robimy
 		},
 	},

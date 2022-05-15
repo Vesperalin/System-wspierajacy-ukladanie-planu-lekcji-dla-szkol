@@ -16,6 +16,9 @@ import EditSubject from './pages/subjects/edit-subject/EditSubject';
 import AddTeacher from './pages/teachers/add-teacher/AddTeacher';
 import EditTeacher from './pages/teachers/edit-teacher/EditTeacher';
 import AddClassroom from './pages/classrooms/add-classroom/AddClassroom';
+import ScheduleCreator from './pages/schedules/creators/ScheduleCreator';
+import ScheduleEditor from './pages/schedules/creators/ScheduleEditor';
+import SchedulePreview from './pages/schedules/SchedulePreview';
 
 const App = () => {
 	return (
@@ -27,6 +30,9 @@ const App = () => {
 				<Route path='/add-class' element={<AddClass />} />
 				<Route path='/edit-class' element={<EditClass />} />
 				<Route path='/schedules' element={<Schedules />} />
+				<Route path='/add-schedule' element={<ScheduleCreator />} />
+				<Route path='/edit-schedule' element={<ScheduleEditor />} />
+				<Route path='/preview-schedule' element={<SchedulePreview />} />
 				<Route path='/subjects' element={<Subjects />} />
 				<Route path='/add-subject' element={<AddSubject />} />
 				<Route path='/edit-subject' element={<EditSubject />} />

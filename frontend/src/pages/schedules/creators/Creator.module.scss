@@ -1,0 +1,12 @@
+.wrapper {
+  display: flex;
+
+  .toolbox-wrapper {
+    flex-basis: 18%;
+  }
+
+  .panel-wrapper {
+    flex-basis: 82%;
+    background-color: orange;
+  }
+}

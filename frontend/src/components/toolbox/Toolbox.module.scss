@@ -1,0 +1,17 @@
+.toolbox-wrapper {
+  background-color: aquamarine;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.select {
+  padding-top: 20px;
+  width: 70%;
+}
+
+.error {
+  color: rgb(201, 0, 0);
+  font-size: 1.2rem;
+  margin: 10px 0 0 0;
+}
