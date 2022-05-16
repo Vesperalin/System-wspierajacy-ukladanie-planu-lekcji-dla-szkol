@@ -1,12 +1,21 @@
 import React from 'react';
+import { useDrag } from 'react-dnd';
 
 import style from './LessonCard.module.scss';
 import editImage from '../../assets/edit.png';
 import deleteImage from '../../assets/delete.png';
 
 const LessonCard = props => {
+	const [{ isDragging }, dragRef] = useDrag(() => ({
+		type: 'lesson',
+		item: { id: props.lesson.id },
+		collect: monitor => ({
+			isDragging: !!monitor.isDragging(),
+		}),
+	}));
+
 	return (
-		<div className={style['card']}>
+		<div className={style['card']} ref={dragRef}>
 			<div className={style['upper']}>
 				<p>{props.lesson.subject.Subject_name}</p>
 				<div>
