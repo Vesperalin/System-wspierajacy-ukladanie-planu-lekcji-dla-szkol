@@ -32,7 +32,7 @@ const ScheduleCreator = () => {
 		console.log(a);
 		// logika dodawania
 		const lessons = createdLessons.filter(l => id === l.id);
-		setBoard(board => [...board, board[0]]);
+		setBoard(board => [...board, lessons[0]]);
 	};
 
 	const onOpenEditClassModalHandler = lesson => {
@@ -55,16 +55,17 @@ const ScheduleCreator = () => {
 				/>
 			</div>
 			<div className={style['panel-wrapper']} ref={dropRef}>
-				{board.map(lesson => {
-					return (
-						<LessonCard
-							key={lesson.id}
-							lesson={lesson}
-							onOpenEditClassModalHandler={onOpenEditClassModalHandler}
-							onDeleteLessonHandler={onDeleteLessonHandler}
-						/>
-					);
-				})}
+				{board.length > 0 &&
+					board.map(lesson => {
+						return (
+							<LessonCard
+								key={lesson.id}
+								lesson={lesson}
+								onOpenEditClassModalHandler={onOpenEditClassModalHandler}
+								onDeleteLessonHandler={onDeleteLessonHandler}
+							/>
+						);
+					})}
 				{
 					// To normalnie działa - createdLessons widziane normalnie
 					//console.log(createdLessons)
