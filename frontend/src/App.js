@@ -1,4 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import style from './App.module.scss';
 import Navbar from './components/navbar/Navbar';
@@ -22,28 +24,30 @@ import SchedulePreview from './pages/schedules/SchedulePreview';
 
 const App = () => {
 	return (
-		<div className={style.app}>
-			<Navbar />
-			<Routes>
-				<Route path='/' element={<Home />} />
-				<Route path='/classes' element={<Classes />} />
-				<Route path='/add-class' element={<AddClass />} />
-				<Route path='/edit-class' element={<EditClass />} />
-				<Route path='/schedules' element={<Schedules />} />
-				<Route path='/add-schedule' element={<ScheduleCreator />} />
-				<Route path='/edit-schedule' element={<ScheduleEditor />} />
-				<Route path='/preview-schedule' element={<SchedulePreview />} />
-				<Route path='/subjects' element={<Subjects />} />
-				<Route path='/add-subject' element={<AddSubject />} />
-				<Route path='/edit-subject' element={<EditSubject />} />
-				<Route path='/teachers' element={<Teachers />} />
-				<Route path='/add-teacher' element={<AddTeacher />} />
-				<Route path='/edit-teacher' element={<EditTeacher />} />
-				<Route path='/login' element={<Login />} />
-				<Route path='/classrooms' element={<Classrooms />} />
-				<Route path='/add-classroom' element={<AddClassroom />} />
-			</Routes>
-		</div>
+		<DndProvider backend={HTML5Backend}>
+			<div className={style.app}>
+				<Navbar />
+				<Routes>
+					<Route path='/' element={<Home />} />
+					<Route path='/classes' element={<Classes />} />
+					<Route path='/add-class' element={<AddClass />} />
+					<Route path='/edit-class' element={<EditClass />} />
+					<Route path='/schedules' element={<Schedules />} />
+					<Route path='/add-schedule' element={<ScheduleCreator />} />
+					<Route path='/edit-schedule' element={<ScheduleEditor />} />
+					<Route path='/preview-schedule' element={<SchedulePreview />} />
+					<Route path='/subjects' element={<Subjects />} />
+					<Route path='/add-subject' element={<AddSubject />} />
+					<Route path='/edit-subject' element={<EditSubject />} />
+					<Route path='/teachers' element={<Teachers />} />
+					<Route path='/add-teacher' element={<AddTeacher />} />
+					<Route path='/edit-teacher' element={<EditTeacher />} />
+					<Route path='/login' element={<Login />} />
+					<Route path='/classrooms' element={<Classrooms />} />
+					<Route path='/add-classroom' element={<AddClassroom />} />
+				</Routes>
+			</div>
+		</DndProvider>
 	);
 };
 

@@ -1,14 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-/*
-w lesson i w schedule będzie
-{
-  teacher: obiekt nauczyciela,
-  subject: obiekt przedmiotu,
-  classroom: obiekt sali
-}
-*/
-
 const scheduleSlice = createSlice({
 	name: 'schedule',
 	initialState: { chosenSchedule: [[], [], [], [], []], createdLessons: [], nextLessonIndex: 1 },
@@ -26,20 +17,26 @@ const scheduleSlice = createSlice({
 
 			state.nextLessonIndex += 1;
 		},
-		addLessonToSchedule(state, action) {
-			// TODO
-		},
 		deleteLesson(state, action) {
-			// TODO
-		},
-		deleteLessonFromSchedule(state, action) {
-			// TODO
+			const lessonToDelete = action.payload;
+			state.createdLessons = state.createdLessons.filter(lesson => lesson.id !== lessonToDelete.id);
 		},
 		editLesson(state, action) {
-			// TODO - o ile robimy
-		},
-		editLessonOnSchedule(state, action) {
-			// TODO - o ile robimy
+			const lessonEditData = action.payload;
+
+			const foundLessonIndex = state.createdLessons.findIndex(
+				lesson =>
+					lesson.classroom.Classroom_no === lessonEditData.prevClassroom.Classroom_no &&
+					lesson.subject.ID_Subject === lessonEditData.prevSubject.ID_Subject &&
+					lesson.teacher.ID_Teacher === lessonEditData.prevTeacher.ID_Teacher,
+			);
+
+			state.createdLessons[foundLessonIndex] = {
+				id: state.createdLessons[foundLessonIndex].id,
+				teacher: lessonEditData.teacher,
+				subject: lessonEditData.subject,
+				classroom: lessonEditData.classroom,
+			};
 		},
 	},
 });
