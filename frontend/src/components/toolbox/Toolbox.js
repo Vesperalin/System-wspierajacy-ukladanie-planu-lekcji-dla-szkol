@@ -7,6 +7,8 @@ import Select from 'react-select';
 import Button from '../button/Button';
 import style from './Toolbox.module.scss';
 import { scheduleSliceActions } from '../../store/schedule-slice';
+import editImage from '../../assets/edit.png';
+import deleteImage from '../../assets/delete.png';
 
 const Toolbox = () => {
 	const createdLessons = useSelector(state => state.schedule.createdLessons);
@@ -68,7 +70,9 @@ const Toolbox = () => {
 				scheduleSliceActions.addLesson({
 					teacher: teachers.find(t => t.ID_Teacher === selectedTeacher.value),
 					subject: subjects.find(s => s.ID_Subject === selectedSubject.value),
-					classroom: classrooms.find(c => c.Classroom_no === selectedClassroom.value),
+					classroom: classrooms.find(
+						c => c.Classroom_no === selectedClassroom.value,
+					),
 				}),
 			);
 			setShowModal(false);
@@ -119,24 +123,32 @@ const Toolbox = () => {
 						onChange={setSelectedClassroom}
 						options={classroomsOptions}
 					/>
-					{selectionError !== '' && <p className={style.error}>{selectionError}</p>}
+					{selectionError !== '' && (
+						<p className={style.error}>{selectionError}</p>
+					)}
 				</Modal>
 			)}
-			<div>
-				<Button text='+ Add' onClick={onOpenModalHandler} />
-				<div>
-					{createdLessons.map(lesson => {
-						return (
-							<div key={lesson.id}>
+			<Button text='+ Add' onClick={onOpenModalHandler} />
+			<div className={style['card-wrapper']}>
+				{createdLessons.map(lesson => {
+					return (
+						<div className={style['card']} key={lesson.id}>
+							<div className={style['upper']}>
 								<p>{lesson.subject.Subject_name}</p>
-								<p>{`${lesson.teacher.Name} ${lesson.teacher.Surname}`}</p>
-								<p>{lesson.classroom.Classroom_no}</p>
+								<div>
+									<img src={editImage} alt='edit' />
+									<img src={deleteImage} alt='edit' />
+								</div>
 							</div>
-						);
-					})}
-				</div>
+							<div className={style['lower']}>
+								<p>{`${lesson.teacher.Name} ${lesson.teacher.Surname}`}</p>
+								<p>s. {lesson.classroom.Classroom_no}</p>
+							</div>
+						</div>
+					);
+				})}
 			</div>
-			<div>{errorMessage !== '' ? <p>{errorMessage}</p> : <div></div>}</div>
+			<div>{errorMessage !== '' && <p>{errorMessage}</p>}</div>
 		</div>
 	);
 };
