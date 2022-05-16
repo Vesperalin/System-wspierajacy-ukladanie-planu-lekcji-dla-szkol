@@ -55,7 +55,7 @@ class Lesson(models.Model):
     ID_Lessons = models.BigAutoField(primary_key=True)
     FK_Teacher = models.ForeignKey(Teacher, on_delete=models.SET_NULL, null=True)
     FK_Subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
-    FK_Class = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True)
+    FK_Class = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True, related_name='lessons')
     FK_Classroom = models.ForeignKey(Classroom, on_delete=models.SET_NULL, null=True)
     Weekday = models.CharField(max_length=40, choices=WEEKDAY, default=MONDAY)
     Hour = models.PositiveIntegerField()

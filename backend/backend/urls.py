@@ -29,6 +29,7 @@ router.register(r'classes', views.ClassView, 'class')
 router.register(r'lessons', views.LessonView, 'lesson')
 router.register(r'lesson_programs', views.LessonsProgramView, 'lesson_program')
 router.register(r'breaks', views.BreakView, 'break')
+router.register(r'classes_lesson', views.ClassWithLessonView, 'class_with_lesson')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

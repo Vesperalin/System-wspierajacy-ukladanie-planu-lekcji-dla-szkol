@@ -1,6 +1,7 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.db.models import Exists, OuterRef
 
 from timetable.models import Classroom
 from timetable.serializer import *
@@ -41,3 +42,10 @@ class LessonView(viewsets.ModelViewSet):
 class BreakView(viewsets.ModelViewSet):
     serializer_class = BreakSerializer
     queryset = Break.objects.all()
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['Start_hour', 'Start_minute']
+    ordering = ['Start_hour', 'Start_minute']
+
+class ClassWithLessonView(viewsets.ReadOnlyModelViewSet):
+    serializer_class = ClassSerializer
+    queryset = Class.objects.filter(Exists(Lesson.objects.filter(FK_Class=OuterRef('pk'))))
