@@ -1,3 +1,4 @@
+import { useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useDrop } from 'react-dnd';
@@ -11,7 +12,10 @@ const ScheduleCreator = () => {
 	const chosenSchedule = useSelector(state => state.schedule.chosenSchedule);
 	const [showEditClassModal, setShowEditClassModal] = useState(false);
 	const [chosenClassForEdit, setChosenClassForEdit] = useState({});
+	const location = useLocation();
 	const dispatch = useDispatch();
+
+	//console.log(location.state.school_class.Class_no);
 
 	const [{ isOver }, dropRef] = useDrop(() => ({
 		accept: 'lesson',
