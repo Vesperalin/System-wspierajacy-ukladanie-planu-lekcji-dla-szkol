@@ -41,7 +41,7 @@ const ClassChoice = () => {
 	};
 
 	const classesOptions = classes.map(school_class => ({
-		value: school_class.ID_Class,
+		value: school_class,
 		label: `${school_class.Class_no} ${school_class.Year}`,
 	}));
 

@@ -15,8 +15,6 @@ const ScheduleCreator = () => {
 	const location = useLocation();
 	const dispatch = useDispatch();
 
-	//console.log(location.state.school_class.Class_no);
-
 	const [{ isOver }, dropRef] = useDrop(() => ({
 		accept: 'lesson',
 		drop: item => onDropHandler(item.id),
@@ -49,6 +47,7 @@ const ScheduleCreator = () => {
 				/>
 			</div>
 			<div className={style['panel-wrapper']} ref={dropRef}>
+				<h1>{`${location.state.school_class.value.Class_no} - ${location.state.school_class.value.Year}`}</h1>
 				{
 					chosenSchedule[0].length > 0 && console.log(chosenSchedule[0])
 					// TODO - to potem zamienić na siatkę to co tu w środku
