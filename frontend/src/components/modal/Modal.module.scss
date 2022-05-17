@@ -14,7 +14,6 @@
 	left: 10%;
 	width: 80%;
 	z-index: 100;
-	overflow: hidden;
 	background-color: white;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
 	border-radius: 10px;
@@ -23,6 +22,8 @@
 .header {
 	background: #038aeb;
 	padding: 1rem;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
 }
 
 .header h2 {
@@ -77,4 +78,10 @@
 .secondary-button:hover,
 .secondary-button:focus {
 	cursor: pointer;
+}
+
+.body {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }

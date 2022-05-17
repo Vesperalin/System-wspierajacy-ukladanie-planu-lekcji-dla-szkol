@@ -1,0 +1,15 @@
+.wrapper {
+	display: flex;
+	margin-top: 20px;
+
+	.toolbox-wrapper {
+		flex-basis: 18%;
+		display: flex;
+		justify-content: center;
+	}
+
+	.panel-wrapper {
+		flex-basis: 82%;
+		background-color: orange;
+	}
+}

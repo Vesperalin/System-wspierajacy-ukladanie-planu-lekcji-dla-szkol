@@ -1,0 +1,24 @@
+.toolbox-wrapper {
+	background-color: #fff;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 90%;
+	border-radius: 10px;
+	padding-top: 15px;
+}
+
+.card-wrapper {
+	width: 90%;
+	height: 70vh;
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.error {
+	color: rgb(201, 0, 0);
+	font-size: 1.2rem;
+	margin: 10px 0 0 0;
+}

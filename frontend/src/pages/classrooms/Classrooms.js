@@ -37,9 +37,7 @@ const Classrooms = () => {
 			.delete(`http://127.0.0.1:8000/api/classrooms/${classroom.Classroom_no}/`)
 			.then(response => {
 				setClassrooms(prevClassrooms => {
-					return prevClassrooms.filter(
-						c => c.Classroom_no !== classroom.Classroom_no,
-					);
+					return prevClassrooms.filter(c => c.Classroom_no !== classroom.Classroom_no);
 				});
 			})
 			.catch(error => {
@@ -83,7 +81,7 @@ const Classrooms = () => {
 		return (
 			<div className={style['spinner-wrapper']}>
 				<p>No classrooms defined.</p>
-				<NavLink className={style.navlink} to='/add-class'>
+				<NavLink className={style.navlink} to='/add-classroom'>
 					Add classrooms
 				</NavLink>
 			</div>
