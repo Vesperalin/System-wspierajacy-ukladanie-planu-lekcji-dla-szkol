@@ -21,6 +21,7 @@ import AddClassroom from './pages/classrooms/add-classroom/AddClassroom';
 import ScheduleCreator from './pages/schedules/creators/ScheduleCreator';
 import ScheduleEditor from './pages/schedules/creators/ScheduleEditor';
 import SchedulePreview from './pages/schedules/SchedulePreview';
+import ClassChoice from './pages/schedules/class-choice/ClassChoice';
 
 const App = () => {
 	return (
@@ -34,6 +35,7 @@ const App = () => {
 					<Route path='/edit-class' element={<EditClass />} />
 					<Route path='/schedules' element={<Schedules />} />
 					<Route path='/add-schedule' element={<ScheduleCreator />} />
+					<Route path='/choose-class-for-schedule' element={<ClassChoice />} />
 					<Route path='/edit-schedule' element={<ScheduleEditor />} />
 					<Route path='/preview-schedule' element={<SchedulePreview />} />
 					<Route path='/subjects' element={<Subjects />} />
