@@ -1,15 +1,38 @@
+import React, { useCallback } from 'react'
 import googleLogo from '../../assets/google_logo.png';
 
 import style from './Login.module.scss';
 
 const Login = () => {
+	const openGoogleLoginPage = useCallback(() => {
+		const googleAuthUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
+		const redirectUri = 'api/v1/auth/login/google/';
+
+		const scope = [
+			'https://www.googleapis.com/auth/userinfo.email'
+		].join(' ');
+
+		const params = {
+			response_type: 'code',
+			client_id: '680389344500-dqirfvbjdkp9n833kmbcbtvar34vr1on.apps.googleusercontent.com',
+			redirect_uri: `http://localhost:8000/${redirectUri}`,
+			prompt: 'select_account',
+			access_type: 'offline',
+			scope
+		};
+
+		const urlParams = new URLSearchParams(params).toString();
+
+		window.location = `${googleAuthUrl}?${urlParams}`;
+	}, []);
+
 	return (
 		<div className={style.wrapper}>
 			<h1>Login</h1>
 			<div className={style.panel}>
 				<div className={style.action}>
 					<h3>Log in to app:</h3>
-					<button>
+					<button onClick={openGoogleLoginPage}>
 						<img className={style.logo} src={googleLogo} alt='google' />
 						<p>Sign In with Google</p>
 					</button>
