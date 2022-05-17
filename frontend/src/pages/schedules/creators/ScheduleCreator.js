@@ -7,6 +7,7 @@ import Toolbox from '../../../components/toolbox/Toolbox';
 import style from './Creator.module.scss';
 import LessonCard from '../../../components/lesson-card/LessonCard';
 import { scheduleSliceActions } from '../../../store/schedule-slice';
+import ScheduleWindow from '../../../components/schedule-window/ScheduleWindow';
 
 const ScheduleCreator = () => {
 	const chosenSchedule = useSelector(state => state.schedule.chosenSchedule);
@@ -15,14 +16,7 @@ const ScheduleCreator = () => {
 	const location = useLocation();
 	const dispatch = useDispatch();
 
-	const [{ isOver }, dropRef] = useDrop(() => ({
-		accept: 'lesson',
-		drop: item => onDropHandler(item.id),
-		collect: monitor => ({
-			isOver: !!monitor.isOver(),
-		}),
-	}));
-
+	// TODO - wywalic to
 	const onDropHandler = id => {
 		dispatch(scheduleSliceActions.addLessonToSchedule(id));
 	};
@@ -46,13 +40,34 @@ const ScheduleCreator = () => {
 					setChosenClassForEdit={setChosenClassForEdit}
 				/>
 			</div>
-			<div className={style['panel-wrapper']} ref={dropRef}>
+			<div className={style['panel-wrapper']}>
 				<h1>{`${location.state.school_class.value.Class_no} - ${location.state.school_class.value.Year}`}</h1>
+				<div className={style['plan-wrapper']}>
+					{chosenSchedule.map((column, column_index) => {
+						return (
+							<div key={column_index}>
+								{chosenSchedule[column_index].map((lesson, row_index) => {
+									return (
+										<ScheduleWindow
+											key={`${column_index}${row_index}}`}
+											lesson={lesson}
+											column={column_index}
+											row={row_index}
+											onOpenEditClassModalHandler={onOpenEditClassModalHandler}
+											onDeleteLessonHandler={onDeleteLessonHandler}
+										/>
+									);
+								})}
+							</div>
+						);
+					})}
+				</div>
+
 				{
-					chosenSchedule[0].length > 0 && console.log(chosenSchedule[0])
+					//chosenSchedule[0].length > 0 && console.log(chosenSchedule[0])
 					// TODO - to potem zamienić na siatkę to co tu w środku
 				}
-				{chosenSchedule[0].length > 0 && (
+				{/* {chosenSchedule[0].length > 0 && (
 					<>
 						<LessonCard
 							lesson={chosenSchedule[0][0]}
@@ -60,7 +75,7 @@ const ScheduleCreator = () => {
 							onDeleteLessonHandler={onDeleteLessonHandler}
 						/>
 					</>
-				)}
+				)} */}
 			</div>
 		</div>
 	);

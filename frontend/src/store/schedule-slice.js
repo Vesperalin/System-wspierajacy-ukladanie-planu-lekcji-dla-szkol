@@ -1,10 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+// TODO - change chosenSchedule - should be based on breaks - from backend
 const scheduleSlice = createSlice({
 	name: 'schedule',
-	initialState: { chosenSchedule: [[], [], [], [], []], createdLessons: [], nextLessonIndex: 1 },
+	initialState: {
+		chosenSchedule: [
+			[{}, {}, {}, {}],
+			[{}, {}, {}, {}],
+			[{}, {}, {}, {}],
+			[{}, {}, {}, {}],
+			[{}, {}, {}, {}],
+		],
+		createdLessons: [],
+		nextLessonIndex: 1,
+	},
 	reducers: {
 		clearSchedule(state) {
+			// TODO - change chosenSchedule - should be based on breaks - from backend
 			state.chosenSchedule = [];
 			state.createdLessons = [];
 		},
@@ -41,8 +53,19 @@ const scheduleSlice = createSlice({
 		addLessonToSchedule(state, action) {
 			// TODO - przefiltrować chosenSchedule i usunąć ten kurs z innnego miejsca, bo moze ktos go przesunął z innego pola, a nie toolboxa
 			// TODO - state.chosenSchedule[0].push(lesson[0]); zmienić te 0 - podawać przez action sobie index
-			const lesson = state.createdLessons.filter(l => l.id === action.payload);
-			state.chosenSchedule[0].push(lesson[0]);
+			// const lesson = state.createdLessons.filter(l => l.id === action.payload);
+			// state.chosenSchedule[0].push(lesson[0]);
+			// state.createdLessons = state.createdLessons.filter(l => l.id !== lesson[0].id);
+			console.log(action.payload);
+			console.log(JSON.stringify(state.createdLessons));
+			const id = action.payload.id;
+			const column = action.payload.column;
+			const row = action.payload.row;
+			console.log(column);
+
+			const lesson = state.createdLessons.filter(l => l.id === id);
+			console.log(lesson);
+			state.chosenSchedule[column][row] = lesson[0];
 			state.createdLessons = state.createdLessons.filter(l => l.id !== lesson[0].id);
 		},
 	},
