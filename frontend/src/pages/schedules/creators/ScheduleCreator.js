@@ -8,8 +8,7 @@ import LessonCard from '../../../components/lesson-card/LessonCard';
 import { scheduleSliceActions } from '../../../store/schedule-slice';
 
 const ScheduleCreator = () => {
-	const [board, setBoard] = useState([]);
-	const createdLessons = useSelector(state => state.schedule.createdLessons);
+	const chosenSchedule = useSelector(state => state.schedule.chosenSchedule);
 	const [showEditClassModal, setShowEditClassModal] = useState(false);
 	const [chosenClassForEdit, setChosenClassForEdit] = useState({});
 	const dispatch = useDispatch();
@@ -23,16 +22,7 @@ const ScheduleCreator = () => {
 	}));
 
 	const onDropHandler = id => {
-		// id jest poprawne
-		console.log(id);
-		// Tu nie działa - createdLessons nie jest widziane
-		console.log(createdLessons);
-		const a = createdLessons.find(lesson => lesson.id === id);
-		// to tez nie jest widziane
-		console.log(a);
-		// logika dodawania
-		const lessons = createdLessons.filter(l => id === l.id);
-		setBoard(board => [...board, lessons[0]]);
+		dispatch(scheduleSliceActions.addLessonToSchedule(id));
 	};
 
 	const onOpenEditClassModalHandler = lesson => {
@@ -55,34 +45,19 @@ const ScheduleCreator = () => {
 				/>
 			</div>
 			<div className={style['panel-wrapper']} ref={dropRef}>
-				{board.length > 0 &&
-					board.map(lesson => {
-						return (
-							<LessonCard
-								key={lesson.id}
-								lesson={lesson}
-								onOpenEditClassModalHandler={onOpenEditClassModalHandler}
-								onDeleteLessonHandler={onDeleteLessonHandler}
-							/>
-						);
-					})}
 				{
-					// To normalnie działa - createdLessons widziane normalnie
-					//console.log(createdLessons)
+					chosenSchedule[0].length > 0 && console.log(chosenSchedule[0])
+					// TODO - to potem zamienić na siatkę to co tu w środku
 				}
-				{
-					// To normalnie działa - createdLessons widziane normalnie
-					// createdLessons.map(lesson => {
-					// 	return (
-					// 		<LessonCard
-					// 			key={lesson.id}
-					// 			lesson={lesson}
-					// 			onOpenEditClassModalHandler={onOpenEditClassModalHandler}
-					// 			onDeleteLessonHandler={onDeleteLessonHandler}
-					// 		/>
-					// 	);
-					// })
-				}
+				{chosenSchedule[0].length > 0 && (
+					<>
+						<LessonCard
+							lesson={chosenSchedule[0][0]}
+							onOpenEditClassModalHandler={onOpenEditClassModalHandler}
+							onDeleteLessonHandler={onDeleteLessonHandler}
+						/>
+					</>
+				)}
 			</div>
 		</div>
 	);

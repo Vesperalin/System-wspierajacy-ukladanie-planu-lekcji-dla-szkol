@@ -38,6 +38,13 @@ const scheduleSlice = createSlice({
 				classroom: lessonEditData.classroom,
 			};
 		},
+		addLessonToSchedule(state, action) {
+			// TODO - przefiltrować chosenSchedule i usunąć ten kurs z innnego miejsca, bo moze ktos go przesunął z innego pola, a nie toolboxa
+			// TODO - state.chosenSchedule[0].push(lesson[0]); zmienić te 0 - podawać przez action sobie index
+			const lesson = state.createdLessons.filter(l => l.id === action.payload);
+			state.chosenSchedule[0].push(lesson[0]);
+			state.createdLessons = state.createdLessons.filter(l => l.id !== lesson[0].id);
+		},
 	},
 });
 
