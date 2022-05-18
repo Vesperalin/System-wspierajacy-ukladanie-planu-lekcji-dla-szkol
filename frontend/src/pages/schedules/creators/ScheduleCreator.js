@@ -37,7 +37,6 @@ const ScheduleCreator = () => {
 			<div className={style['panel-wrapper']}>
 				<h1>{`${location.state.school_class.value.Class_no} - ${location.state.school_class.value.Year}`}</h1>
 				<div className={style['plan-wrapper']}>
-					{console.log(chosenSchedule)}
 					{chosenSchedule.map((column, column_index) => {
 						return (
 							<div key={column_index}>

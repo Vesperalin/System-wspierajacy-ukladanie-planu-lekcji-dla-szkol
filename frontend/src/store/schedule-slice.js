@@ -50,14 +50,29 @@ const scheduleSlice = createSlice({
 				classroom: lessonEditData.classroom,
 			};
 		},
+		revertLessonFromSchedule(state, action) {
+			const id = action.payload.id;
+
+			let lessonToMove = undefined;
+
+			for (let i = 0; i < state.chosenSchedule.length; i++) {
+				for (let j = 0; j < state.chosenSchedule[i].length; j++) {
+					if (Object.keys(state.chosenSchedule[i][j]).length !== 0) {
+						if (state.chosenSchedule[i][j].id === id) {
+							lessonToMove = state.chosenSchedule[i][j];
+							state.chosenSchedule[i][j] = {};
+						}
+					}
+				}
+			}
+
+			state.createdLessons.push(lessonToMove);
+		},
 		addLessonToSchedule(state, action) {
 			// TODO - nie działa na razie podmienianie,
 			const id = action.payload.id;
 			const column = action.payload.column;
 			const row = action.payload.row;
-
-			console.log(column);
-			console.log(row);
 
 			if (Object.keys(state.chosenSchedule[column][row]).length === 0) {
 				const lesson = state.createdLessons.filter(l => l.id === id);
@@ -74,7 +89,6 @@ const scheduleSlice = createSlice({
 						for (let j = 0; j < state.chosenSchedule[i].length; j++) {
 							if (Object.keys(state.chosenSchedule[i][j]).length !== 0) {
 								if (state.chosenSchedule[i][j].id === id) {
-									//console.log(JSON.stringify());
 									lessonToMove = state.chosenSchedule[i][j];
 									state.chosenSchedule[i][j] = {};
 								}
@@ -137,8 +151,6 @@ const scheduleSlice = createSlice({
 			const column = action.payload.column;
 			const row = action.payload.row;
 			state.chosenSchedule[column][row] = {};
-
-			console.log(JSON.stringify(state.chosenSchedule));
 		},
 	},
 });
