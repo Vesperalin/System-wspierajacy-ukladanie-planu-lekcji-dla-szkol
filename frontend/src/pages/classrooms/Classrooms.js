@@ -41,7 +41,6 @@ const Classrooms = () => {
 				});
 			})
 			.catch(error => {
-				console.log(error);
 				if (error.response.status === 400) {
 					setErrorMessage(error.response.data.message);
 				} else if (error.response.status === 404) {

@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 
-import Button from '../button/Button';
 import style from './Modal.module.scss';
 
 const Backdrop = props => {
