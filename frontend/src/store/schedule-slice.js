@@ -85,8 +85,9 @@ const scheduleSlice = createSlice({
 					}
 				}
 			}
-
-			state.createdLessons.push(lessonToMove);
+			if (lessonToMove !== undefined) {
+				state.createdLessons.push(lessonToMove);
+			}
 		},
 		addLessonToSchedule(state, action) {
 			// TODO - nie działa na razie podmienianie - póki co jest zabranianie podmieniania
@@ -178,7 +179,6 @@ const scheduleSlice = createSlice({
 			console.log('pending');
 		},
 		[getLessonsHours.fulfilled]: (state, { payload }) => {
-			console.log(payload.data);
 			state.lessonsHours = payload.data;
 			state.chosenSchedule = [[], [], [], [], []];
 
