@@ -49,3 +49,8 @@ class BreakView(viewsets.ModelViewSet):
 class ClassWithLessonView(viewsets.ReadOnlyModelViewSet):
     serializer_class = ClassSerializer
     queryset = Class.objects.filter(Exists(Lesson.objects.filter(FK_Class=OuterRef('pk'))))
+
+
+class ClassWithoutLessonView(viewsets.ReadOnlyModelViewSet):
+    serializer_class = ClassSerializer
+    queryset = Class.objects.exclude(lessons__isnull=False)
