@@ -11,6 +11,7 @@ class CustomValidation(APIException):
         self.status_code = status_code
         self.detail = {field: force_str(message)}
 
+
 class ClassroomSerializer(serializers.ModelSerializer):
     Classroom_no = serializers.IntegerField()
     class Meta:
@@ -67,7 +68,7 @@ class LessonSerializer(serializers.ModelSerializer):
         fields = ['ID_Lessons', 'FK_Teacher', 'FK_Subject', 'FK_Class', 'FK_Classroom', 'Weekday', 'Hour', 'Minute']
 
 
-class BreakSerializer(serializers.ModelSerializer):
+class LessonHourSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Break
-        fields = ['ID_Break', 'Break_no', 'Start_hour', 'Start_minute', 'End_hour', 'End_minute']
+        model = LessonHour
+        fields = ['ID_Lesson_hour', 'Lesson_no', 'Start_hour', 'Start_minute', 'End_hour', 'End_minute']
