@@ -1,23 +1,25 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+
+export const getLessonsHours = createAsyncThunk('add-schedule', async () => {
+	return axios.get('http://127.0.0.1:8000/api/breaks/').then(data => {
+		return data;
+	});
+});
 
 // TODO - change chosenSchedule - should be based on breaks - from backend
 const scheduleSlice = createSlice({
 	name: 'schedule',
 	initialState: {
-		chosenSchedule: [
-			[{}, {}, {}, {}],
-			[{}, {}, {}, {}],
-			[{}, {}, {}, {}],
-			[{}, {}, {}, {}],
-			[{}, {}, {}, {}],
-		],
+		chosenSchedule: [[], [], [], [], []],
 		createdLessons: [],
 		nextLessonIndex: 1,
+		lessonsHours: [],
 	},
 	reducers: {
 		clearSchedule(state) {
 			// TODO - change chosenSchedule - should be based on breaks - from backend
-			state.chosenSchedule = [];
+			state.chosenSchedule = [[], [], [], [], []];
 			state.createdLessons = [];
 		},
 		addLesson(state, action) {
@@ -168,6 +170,25 @@ const scheduleSlice = createSlice({
 			const column = action.payload.column;
 			const row = action.payload.row;
 			state.chosenSchedule[column][row] = {};
+		},
+	},
+	extraReducers: {
+		[getLessonsHours.pending]: state => {
+			console.log('pending');
+		},
+		[getLessonsHours.fulfilled]: (state, { payload }) => {
+			console.log(payload.data);
+			state.lessonsHours = payload.data;
+			state.chosenSchedule = [[], [], [], [], []];
+
+			for (let i = 0; i < payload.data.length; i++) {
+				for (let j = 0; j < 5; j++) {
+					state.chosenSchedule[j].push({});
+				}
+			}
+		},
+		[getLessonsHours.rejected]: state => {
+			console.log('rejected');
 		},
 	},
 });
