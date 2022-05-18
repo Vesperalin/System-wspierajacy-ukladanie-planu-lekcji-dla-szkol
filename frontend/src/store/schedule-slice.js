@@ -1,32 +1,36 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
 
-// TODO - change chosenSchedule - should be based on breaks - from backend
+export const getLessonsHours = createAsyncThunk('add-schedule', async () => {
+	return axios.get('http://127.0.0.1:8000/api/lesson_hours/').then(data => {
+		return data;
+	});
+});
+
 const scheduleSlice = createSlice({
 	name: 'schedule',
 	initialState: {
-		chosenSchedule: [
-			[{}, {}, {}, {}],
-			[{}, {}, {}, {}],
-			[{}, {}, {}, {}],
-			[{}, {}, {}, {}],
-			[{}, {}, {}, {}],
-		],
+		chosenSchedule: [[], [], [], [], []],
 		createdLessons: [],
 		nextLessonIndex: 1,
+		lessonsHours: [],
 	},
 	reducers: {
 		clearSchedule(state) {
-			// TODO - change chosenSchedule - should be based on breaks - from backend
-			state.chosenSchedule = [];
 			state.createdLessons = [];
+			state.chosenSchedule = [[], [], [], [], []];
+
+			for (let i = 0; i < state.lessonsHours.length; i++) {
+				for (let j = 0; j < 5; j++) {
+					state.chosenSchedule[j].push({});
+				}
+			}
 		},
 		addLesson(state, action) {
 			const teacher = action.payload.teacher;
 			const subject = action.payload.subject;
 			const classroom = action.payload.classroom;
-
 			state.createdLessons.push({ teacher, subject, classroom, id: state.nextLessonIndex });
-
 			state.nextLessonIndex += 1;
 		},
 		deleteLesson(state, action) {
@@ -50,7 +54,6 @@ const scheduleSlice = createSlice({
 				};
 			} else {
 				// element on schedule
-
 				for (let i = 0; i < state.chosenSchedule.length; i++) {
 					for (let j = 0; j < state.chosenSchedule[i].length; j++) {
 						if (Object.keys(state.chosenSchedule[i][j]).length !== 0) {
@@ -82,11 +85,12 @@ const scheduleSlice = createSlice({
 					}
 				}
 			}
-
-			state.createdLessons.push(lessonToMove);
+			if (lessonToMove !== undefined) {
+				state.createdLessons.push(lessonToMove);
+			}
 		},
 		addLessonToSchedule(state, action) {
-			// TODO - nie działa na razie podmienianie,
+			// TODO - nie działa na razie podmienianie - póki co jest zabranianie podmieniania
 			const id = action.payload.id;
 			const column = action.payload.column;
 			const row = action.payload.row;
@@ -168,6 +172,24 @@ const scheduleSlice = createSlice({
 			const column = action.payload.column;
 			const row = action.payload.row;
 			state.chosenSchedule[column][row] = {};
+		},
+	},
+	extraReducers: {
+		[getLessonsHours.pending]: state => {
+			console.log('pending');
+		},
+		[getLessonsHours.fulfilled]: (state, { payload }) => {
+			state.lessonsHours = payload.data;
+			state.chosenSchedule = [[], [], [], [], []];
+
+			for (let i = 0; i < payload.data.length; i++) {
+				for (let j = 0; j < 5; j++) {
+					state.chosenSchedule[j].push({});
+				}
+			}
+		},
+		[getLessonsHours.rejected]: state => {
+			console.log('rejected');
 		},
 	},
 });
