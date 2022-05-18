@@ -14,7 +14,6 @@ const ScheduleCreator = () => {
 	const location = useLocation();
 	const dispatch = useDispatch();
 
-	// TODO - change bo to modyfikuje w created lessons
 	const onOpenEditClassModalHandler = lesson => {
 		setChosenClassForEdit(lesson);
 		setShowEditClassModal(true);
@@ -22,6 +21,14 @@ const ScheduleCreator = () => {
 
 	const onDeleteLessonHandler = (column, row, lesson) => {
 		dispatch(scheduleSliceActions.deleteLessonFromSchedule({ column, row, lesson }));
+	};
+
+	const determineDayName = column_number => {
+		if (column_number === 0) return 'Monday';
+		else if (column_number === 1) return 'Tuesday';
+		else if (column_number === 2) return 'Wednesday';
+		else if (column_number === 3) return 'Thursday';
+		else if (column_number === 4) return 'Friday';
 	};
 
 	return (
@@ -40,12 +47,10 @@ const ScheduleCreator = () => {
 					{chosenSchedule.map((column, column_index) => {
 						return (
 							<div key={column_index}>
+								<p className={style['day-name']}>{determineDayName(column_index)}</p>
 								{chosenSchedule[column_index].map((lesson, row_index) => {
 									return (
 										<div key={`${column_index}${row_index}}`}>
-											<p>
-												{column_index} {row_index}
-											</p>
 											<ScheduleWindow
 												key={`${column_index}${row_index}}`}
 												lesson={lesson}

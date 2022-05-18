@@ -33,22 +33,39 @@ const scheduleSlice = createSlice({
 			const lessonToDelete = action.payload;
 			state.createdLessons = state.createdLessons.filter(lesson => lesson.id !== lessonToDelete.id);
 		},
-		editLesson(state, action) {
+		editLessonInToolboxAndSchedule(state, action) {
 			const lessonEditData = action.payload;
 
 			const foundLessonIndex = state.createdLessons.findIndex(
-				lesson =>
-					lesson.classroom.Classroom_no === lessonEditData.prevClassroom.Classroom_no &&
-					lesson.subject.ID_Subject === lessonEditData.prevSubject.ID_Subject &&
-					lesson.teacher.ID_Teacher === lessonEditData.prevTeacher.ID_Teacher,
+				lesson => lesson.id === lessonEditData.id,
 			);
 
-			state.createdLessons[foundLessonIndex] = {
-				id: state.createdLessons[foundLessonIndex].id,
-				teacher: lessonEditData.teacher,
-				subject: lessonEditData.subject,
-				classroom: lessonEditData.classroom,
-			};
+			// element in toolbox
+			if (foundLessonIndex !== -1) {
+				state.createdLessons[foundLessonIndex] = {
+					id: lessonEditData.id,
+					teacher: lessonEditData.teacher,
+					subject: lessonEditData.subject,
+					classroom: lessonEditData.classroom,
+				};
+			} else {
+				// element on schedule
+
+				for (let i = 0; i < state.chosenSchedule.length; i++) {
+					for (let j = 0; j < state.chosenSchedule[i].length; j++) {
+						if (Object.keys(state.chosenSchedule[i][j]).length !== 0) {
+							if (state.chosenSchedule[i][j].id === lessonEditData.id) {
+								state.chosenSchedule[i][j] = {
+									id: lessonEditData.id,
+									teacher: lessonEditData.teacher,
+									subject: lessonEditData.subject,
+									classroom: lessonEditData.classroom,
+								};
+							}
+						}
+					}
+				}
+			}
 		},
 		revertLessonFromSchedule(state, action) {
 			const id = action.payload.id;

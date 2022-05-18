@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { useDrop } from 'react-dnd';
 
 import Button from '../button/Button';
-import AddClassModal from '../class-modal/AddClassModal';
-import EditClassModal from '../class-modal/EditClassModal';
+import AddClassModal from '../lesson-modal/AddLessonModal';
+import EditClassModal from '../lesson-modal/EditLessonModal';
 import style from './Toolbox.module.scss';
 import { scheduleSliceActions } from '../../store/schedule-slice';
 import LessonCard from '../lesson-card/LessonCard';

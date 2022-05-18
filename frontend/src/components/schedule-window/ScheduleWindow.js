@@ -32,7 +32,6 @@ const ScheduleWindow = props => {
 					onDeleteLessonHandler={props.onDeleteLessonHandler}
 				/>
 			)}
-			{Object.keys(props.lesson).length === 0 && <p>nic</p>}
 		</div>
 	);
 };
