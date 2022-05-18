@@ -74,9 +74,9 @@ class Lesson(models.Model):
         ]
 
 
-class Break(models.Model):
-    ID_Break = models.BigAutoField(primary_key=True)
-    Break_no = models.PositiveIntegerField()
+class LessonHour(models.Model):
+    ID_Lesson_hour = models.BigAutoField(primary_key=True)
+    Lesson_no = models.PositiveIntegerField()
     Start_hour = models.PositiveIntegerField()
     Start_minute = models.PositiveIntegerField()
     End_hour = models.PositiveIntegerField()
