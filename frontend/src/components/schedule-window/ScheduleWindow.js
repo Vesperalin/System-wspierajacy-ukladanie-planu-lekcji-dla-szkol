@@ -25,7 +25,6 @@ const ScheduleWindow = props => {
 
 	return (
 		<div className={style.window} ref={dropRef}>
-			{/* {console.log(props.lesson)} */}
 			{Object.keys(props.lesson).length !== 0 && (
 				<LessonCard
 					lesson={props.lesson}
