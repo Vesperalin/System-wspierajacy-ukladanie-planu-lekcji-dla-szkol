@@ -1,12 +1,14 @@
 import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 
 import Toolbox from '../../../components/toolbox/Toolbox';
 import style from './Creator.module.scss';
 import { scheduleSliceActions } from '../../../store/schedule-slice';
 import ScheduleWindow from '../../../components/schedule-window/ScheduleWindow';
 import { getLessonsHours } from '../../../store/schedule-slice';
+import Button from '../../../components/button/Button';
 
 const ScheduleCreator = () => {
 	const chosenSchedule = useSelector(state => state.schedule.chosenSchedule);
@@ -45,6 +47,23 @@ const ScheduleCreator = () => {
 		return `${sh}:${sm}-${eh}:${em}`;
 	};
 
+	const onSaveScheduleHandler = () => {
+		// TODO - handle errors properly
+		axios
+			.post('http://127.0.0.1:8000/api/lesson_plans/', JSON.stringify(chosenSchedule))
+			.then(response => console.log(response))
+			.catch(error => {
+				console.log(error);
+				// if (error.response.status === 400) {
+				// 	setErrorMessage(error.response.data.message);
+				// } else if (error.response.status === 404) {
+				// 	setErrorMessage(error.response.data.detail);
+				// } else {
+				// 	setErrorMessage('Unknown error occurred');
+				// }
+			});
+	};
+
 	return (
 		<div className={style['wrapper']}>
 			<div className={style['toolbox-wrapper']}>
@@ -54,6 +73,7 @@ const ScheduleCreator = () => {
 					chosenClassForEdit={chosenClassForEdit}
 					setChosenClassForEdit={setChosenClassForEdit}
 				/>
+				<Button text='Save plan' onClick={onSaveScheduleHandler} />
 			</div>
 			<div className={style['panel-wrapper']}>
 				<h1>{`${location.state.school_class.value.Class_no} - ${location.state.school_class.value.Year}`}</h1>
