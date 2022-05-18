@@ -14,9 +14,8 @@ const ClassChoice = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		// TODO - change API endpoint
 		axios
-			.get('http://127.0.0.1:8000/api/classes/')
+			.get('http://127.0.0.1:8000/api/classes_no_lesson/')
 			.then(response => {
 				setClasses(response.data);
 			})
