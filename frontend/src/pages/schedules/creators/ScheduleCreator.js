@@ -75,7 +75,6 @@ const ScheduleCreator = () => {
 															lessonsHours[row_index].End_minute,
 														)}
 													</p>
-													{console.log(lessonsHours[row_index])}
 													<ScheduleWindow
 														key={`${column_index}${row_index}}`}
 														lesson={lesson}
