@@ -39,12 +39,13 @@ class LessonView(viewsets.ModelViewSet):
     queryset = Lesson.objects.all()
 
 
-class BreakView(viewsets.ModelViewSet):
-    serializer_class = BreakSerializer
-    queryset = Break.objects.all()
+class LessonHourView(viewsets.ModelViewSet):
+    serializer_class = LessonHourSerializer
+    queryset = LessonHour.objects.all()
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['Start_hour', 'Start_minute']
     ordering = ['Start_hour', 'Start_minute']
+
 
 class ClassWithLessonView(viewsets.ReadOnlyModelViewSet):
     serializer_class = ClassSerializer
