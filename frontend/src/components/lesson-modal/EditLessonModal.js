@@ -4,10 +4,10 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 
 import Modal from '../modal/Modal';
-import style from './ClassModal.module.scss';
+import style from './LessonModal.module.scss';
 import { scheduleSliceActions } from '../../store/schedule-slice';
 
-const AddClassModal = props => {
+const EditClassModal = props => {
 	const [subjects, setSubjects] = useState([]);
 	const [teachers, setTeachers] = useState([]);
 	const [classrooms, setClassrooms] = useState([]);
@@ -45,10 +45,10 @@ const AddClassModal = props => {
 	}, [setErrorMessage]);
 
 	const onCloseModalHandler = () => {
-		props.setShowAddClassModal(false);
+		props.setShowEditClassModal(false);
 	};
 
-	const onAddLessonHandler = () => {
+	const onEditLessonHandler = () => {
 		if (
 			Object.keys(selectedTeacher).length === 0 ||
 			Object.keys(selectedSubject).length === 0 ||
@@ -58,13 +58,17 @@ const AddClassModal = props => {
 		} else {
 			setSelectionError('');
 			dispatch(
-				scheduleSliceActions.addLesson({
+				scheduleSliceActions.editLessonInToolboxAndSchedule({
+					id: props.chosenClassForEdit.id,
 					teacher: teachers.find(t => t.ID_Teacher === selectedTeacher.value),
 					subject: subjects.find(s => s.ID_Subject === selectedSubject.value),
 					classroom: classrooms.find(c => c.Classroom_no === selectedClassroom.value),
+					prevTeacher: props.chosenClassForEdit.teacher,
+					prevSubject: props.chosenClassForEdit.subject,
+					prevClassroom: props.chosenClassForEdit.classroom,
 				}),
 			);
-			props.setShowAddClassModal(false);
+			props.setShowEditClassModal(false);
 		}
 	};
 
@@ -86,27 +90,37 @@ const AddClassModal = props => {
 	return (
 		<Modal
 			onClick={onCloseModalHandler}
-			title='Add lesson'
-			onAcceptText='Add'
+			title='Edit lesson'
+			onAcceptText='Edit'
 			onRejectText='Cancel'
-			onAccept={onAddLessonHandler}
+			onAccept={onEditLessonHandler}
 			onReject={onCloseModalHandler}
 		>
-			<h3>Teacher</h3>
+			<h3>
+				Teacher{' '}
+				<span>
+					(current:{' '}
+					{`${props.chosenClassForEdit.teacher.Name} ${props.chosenClassForEdit.teacher.Surname}`})
+				</span>
+			</h3>
 			<Select
 				className={style.select}
 				value={selectedTeacher}
 				onChange={setSelectedTeacher}
 				options={teachersOptions}
 			/>
-			<h3>Subject</h3>
+			<h3>
+				Subject <span>(current: {props.chosenClassForEdit.subject.Subject_name})</span>
+			</h3>
 			<Select
 				className={style.select}
 				value={selectedSubject}
 				onChange={setSelectedSubject}
 				options={subjectsOptions}
 			/>
-			<h3>Classroom</h3>
+			<h3>
+				Classroom <span>(current: {props.chosenClassForEdit.classroom.Classroom_no})</span>
+			</h3>
 			<Select
 				className={style.select}
 				value={selectedClassroom}
@@ -118,4 +132,4 @@ const AddClassModal = props => {
 	);
 };
 
-export default AddClassModal;
+export default EditClassModal;

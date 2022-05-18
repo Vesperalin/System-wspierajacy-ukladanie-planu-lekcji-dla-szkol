@@ -1,9 +1,10 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
+import { useDrop } from 'react-dnd';
 
 import Button from '../button/Button';
-import AddClassModal from '../class-modal/AddClassModal';
-import EditClassModal from '../class-modal/EditClassModal';
+import AddClassModal from '../lesson-modal/AddLessonModal';
+import EditClassModal from '../lesson-modal/EditLessonModal';
 import style from './Toolbox.module.scss';
 import { scheduleSliceActions } from '../../store/schedule-slice';
 import LessonCard from '../lesson-card/LessonCard';
@@ -13,6 +14,18 @@ const Toolbox = props => {
 	const [errorMessage, setErrorMessage] = useState('');
 	const [showAddClassModal, setShowAddClassModal] = useState(false);
 	const dispatch = useDispatch();
+
+	const [{ isOver }, dropRef] = useDrop(() => ({
+		accept: 'lesson',
+		drop: item => onDropHandler(item.id),
+		collect: monitor => ({
+			isOver: !!monitor.isOver(),
+		}),
+	}));
+
+	const onDropHandler = id => {
+		dispatch(scheduleSliceActions.revertLessonFromSchedule({ id: id }));
+	};
 
 	const onOpenAddClassModalHandler = () => {
 		setShowAddClassModal(true);
@@ -45,7 +58,7 @@ const Toolbox = props => {
 				/>
 			)}
 			<Button text='+ Add' onClick={onOpenAddClassModalHandler} />
-			<div className={style['card-wrapper']}>
+			<div className={style['card-wrapper']} ref={dropRef}>
 				{createdLessons.map(lesson => {
 					return (
 						<LessonCard
