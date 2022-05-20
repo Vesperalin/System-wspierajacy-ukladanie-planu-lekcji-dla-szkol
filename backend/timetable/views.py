@@ -1,16 +1,8 @@
 import ast
-import json
-import math
-import random
-
-from django.core.exceptions import ValidationError
 from rest_framework import viewsets, filters, status
 from rest_framework.decorators import api_view
-from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.db.models import Exists, OuterRef
-
-from timetable.models import Classroom
 from timetable.serializer import *
 from timetable.utils import assign_color, find_class_no
 

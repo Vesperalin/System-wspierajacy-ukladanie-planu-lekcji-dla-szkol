@@ -5,6 +5,8 @@ from rest_framework.validators import UniqueTogetherValidator
 from rest_framework.exceptions import APIException
 from django.utils.encoding import force_str
 
+from timetable.utils import validate_class_no
+
 
 class CustomValidation(APIException):
     def __init__(self, message, field, status_code) -> None:
@@ -60,6 +62,8 @@ class SubjectWithColorSerializer(serializers.ModelSerializer):
 
 
 class ClassSerializer(serializers.ModelSerializer):
+    Class_no = serializers.CharField()
+
     class Meta:
         model = Class
         fields = ['ID_Class', 'Class_no', 'Year']
@@ -70,6 +74,12 @@ class ClassSerializer(serializers.ModelSerializer):
                 message="You already have class with specified number and year."
             )
         ]
+
+    def validate_Class_no(self, value):
+        class_no = validate_class_no(value)
+        if not class_no:
+            raise CustomValidation('Invalid class name!', 'message', 400)
+        return value
 
 
 class LessonsProgramSerializer(serializers.ModelSerializer):

@@ -35,3 +35,25 @@ def find_class_no(class_id):
         class_no = 'V'
     return class_no
 
+
+def validate_class_no(_class):
+    class_no = None
+    if _class.startswith('III'):
+        class_no = 'III'
+    elif _class.startswith('II'):
+        class_no = 'II'
+    elif _class.startswith('IV'):
+        class_no = 'IV'
+    elif _class.startswith('I'):
+        class_no = 'I'
+    elif _class.startswith('VIII'):
+        class_no = 'VIII'
+    elif _class.startswith('VII'):
+        class_no = 'VII'
+    elif _class.startswith('VI'):
+        class_no = 'VI'
+    elif _class.startswith('V'):
+        class_no = 'V'
+    return class_no
+
+
