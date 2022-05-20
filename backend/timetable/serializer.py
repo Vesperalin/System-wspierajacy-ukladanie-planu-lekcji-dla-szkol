@@ -14,10 +14,11 @@ class CustomValidation(APIException):
 
 class ClassroomSerializer(serializers.ModelSerializer):
     Classroom_no = serializers.IntegerField()
+
     class Meta:
         model = Classroom
-        fields = ['Classroom_no',]
-    
+        fields = ['Classroom_no', ]
+
     def validate_Classroom_no(self, value):
         if Classroom.objects.filter(Classroom_no__iexact=value).exists():
             raise CustomValidation('Classroom with specified number already exists.', 'message', 400)
@@ -32,10 +33,25 @@ class TeacherSerializer(serializers.ModelSerializer):
 
 class SubjectSerializer(serializers.ModelSerializer):
     Subject_name = serializers.CharField()
+
     class Meta:
         model = Subject
         fields = ['ID_Subject', 'Subject_name']
-    
+
+    def validate_Subject_name(self, value):
+        subject_name = value.lower()
+        if Subject.objects.filter(Subject_name__iexact=subject_name).exists():
+            raise CustomValidation('Subject with specified name already exists.', 'message', 400)
+        return value
+
+
+class SubjectWithColorSerializer(serializers.ModelSerializer):
+    Subject_name = serializers.CharField()
+
+    class Meta:
+        model = Subject
+        fields = ['ID_Subject', 'Subject_name', 'Color']
+
     def validate_Subject_name(self, value):
         subject_name = value.lower()
         if Subject.objects.filter(Subject_name__iexact=subject_name).exists():
@@ -46,11 +62,11 @@ class SubjectSerializer(serializers.ModelSerializer):
 class ClassSerializer(serializers.ModelSerializer):
     class Meta:
         model = Class
-        fields = ['ID_Class', 'Class_no','Year']
+        fields = ['ID_Class', 'Class_no', 'Year']
         validators = [
             UniqueTogetherValidator(
                 queryset=Class.objects.all(),
-                fields=['Class_no','Year'],
+                fields=['Class_no', 'Year'],
                 message="You already have class with specified number and year."
             )
         ]
