@@ -1,4 +1,5 @@
 import ast
+import json
 
 from django.core.exceptions import ValidationError
 from rest_framework import viewsets, filters, status
@@ -97,4 +98,49 @@ def lessons_plan(request):
                         return Response("Invalid data for lesson starting: " + str(lesson.Weekday) + ', ' +
                                         str(lesson.Hour) + ':' + str(lesson.Minute) + '!!!',
                                         status=status.HTTP_400_BAD_REQUEST)
-        return Response("Schedule successfully saved!", status=status.HTTP_200_OK)
+
+        response = {
+            'warning': False,
+            'message': "Schedule successfully saved!"
+        }
+        return Response(response, status=status.HTTP_200_OK)
+
+
+@api_view(['GET', 'POST'])
+def subject_with_color(request):
+
+    if request.method == 'GET':
+        subjects = Subject.objects.all()
+        serializer = SubjectWithColorSerializer(subjects, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = SubjectWithColorSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def subject_with_color_detail(request, pk):
+
+    try:
+        subject = Subject.objects.get(pk=pk)
+    except Subject.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = SubjectWithColorSerializer(subject)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = SubjectWithColorSerializer(subject, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        subject.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

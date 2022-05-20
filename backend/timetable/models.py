@@ -18,7 +18,8 @@ class Teacher(models.Model):
 
 class Subject(models.Model):
     ID_Subject = models.BigAutoField(primary_key=True)
-    Subject_name = models.CharField(max_length=50)
+    Subject_name = models.CharField(max_length=20)
+    Color = models.CharField(max_length=10, blank=True, null=True)
 
 
 class Class(models.Model):
@@ -28,10 +29,30 @@ class Class(models.Model):
 
 
 class LessonsProgram(models.Model):
+    FIRST = 'I'
+    SECOND = 'II'
+    THIRD = 'III'
+    FOURTH = 'IV'
+    FIFTH = 'V'
+    SIXTH = 'VI'
+    SEVENTH = 'VII'
+    EIGHTH = 'VIII'
+
+    CLASSES = (
+        (FIRST, FIRST),
+        (SECOND, SECOND),
+        (THIRD, THIRD),
+        (FOURTH, FOURTH),
+        (FIFTH, FIFTH),
+        (SIXTH, SIXTH),
+        (SEVENTH, SEVENTH),
+        (EIGHTH, EIGHTH),
+    )
+
     ID_Lessons_program = models.BigAutoField(primary_key=True)
-    FK_Class = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True)
-    FK_Subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
-    Hours_no = models.PositiveIntegerField()
+    Class = models.CharField(max_length=20, choices=CLASSES, default=FIRST)
+    Subject = models.CharField(max_length=20, default="Subject")
+    Hours_no = models.PositiveIntegerField(default=0)
 
 
 def validate_hour(value):
