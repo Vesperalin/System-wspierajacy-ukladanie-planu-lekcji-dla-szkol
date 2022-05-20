@@ -1,5 +1,6 @@
 import ast
 import json
+import random
 
 from django.core.exceptions import ValidationError
 from rest_framework import viewsets, filters, status
@@ -11,8 +12,9 @@ from django.db.models import Exists, OuterRef
 from timetable.models import Classroom
 from timetable.serializer import *
 
+COLORS = ['#baffc9', '#ffffba', '#ffdfba', '#ffb3ba', '#bae1ff', '#dac5b3', 'e6f5fb', '#ffdaec', '#fafe92', '#ffb066',
+          '#ff9191', '#e679c8', '#f2bbad', '#afdfdb', '#e4b784', '#fcff85', '#f06e9a', '#7d6060', '#a0b395', '#ffcd94']
 
-# Create your views here.
 
 class ClassroomView(viewsets.ModelViewSet):
     serializer_class = ClassroomSerializer
@@ -108,9 +110,12 @@ def lessons_plan(request):
 
 @api_view(['GET', 'POST'])
 def subject_with_color(request):
-
     if request.method == 'GET':
+        used_colors = []
         subjects = Subject.objects.all()
+        for s in subjects:
+            assign_color(s, used_colors)
+            s.save()
         serializer = SubjectWithColorSerializer(subjects, many=True)
         return Response(serializer.data)
 
@@ -122,11 +127,25 @@ def subject_with_color(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+def assign_color(subject, used_colors):
+    color = random.choice(COLORS)
+    if color in used_colors:
+        assign_color(subject, used_colors)
+    else:
+        subject.Color = color
+        used_colors.append(color)
+
+
 @api_view(['GET', 'PUT', 'DELETE'])
 def subject_with_color_detail(request, pk):
-
     try:
         subject = Subject.objects.get(pk=pk)
+        if not subject.Color:
+            used_colors = []
+            subjects = Subject.objects.all()
+            for s in subjects:
+                assign_color(s, used_colors)
+                s.save()
     except Subject.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
