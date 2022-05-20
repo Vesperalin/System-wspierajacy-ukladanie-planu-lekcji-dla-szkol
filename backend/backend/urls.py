@@ -37,4 +37,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api/lesson_plans/', views.lessons_plan),
+    path('api/subjects_with_colors/', views.subject_with_color),
+    path('api/subjects_with_colors/<int:pk>', views.subject_with_color_detail),
 ]
