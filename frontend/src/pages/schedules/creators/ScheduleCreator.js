@@ -50,7 +50,10 @@ const ScheduleCreator = () => {
 	const onSaveScheduleHandler = () => {
 		// TODO - handle errors properly
 		axios
-			.post('http://127.0.0.1:8000/api/lesson_plans/', JSON.stringify(chosenSchedule))
+			.post(
+				'http://127.0.0.1:8000/api/lesson_plans/',
+				JSON.stringify({ class: location.state.school_class, schedule: chosenSchedule }),
+			)
 			.then(response => console.log(response))
 			.catch(error => {
 				console.log(error);
