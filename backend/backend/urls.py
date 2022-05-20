@@ -36,4 +36,5 @@ router.register(r'classes_no_lesson', views.ClassWithoutLessonView, 'class_witho
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('api/lesson_plans/', views.lessons_plan),
 ]

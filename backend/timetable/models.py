@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -33,6 +34,22 @@ class LessonsProgram(models.Model):
     Hours_no = models.PositiveIntegerField()
 
 
+def validate_hour(value):
+    if 0 > value > 23:
+        raise ValidationError(
+            'Hour must be in range 0-23',
+            params={'value': value},
+        )
+
+
+def validate_minute(value):
+    if 0 > value > 59:
+        raise ValidationError(
+            'Minutes must be in range 0-59',
+            params={'value': value},
+        )
+
+
 class Lesson(models.Model):
     MONDAY = 'mon'
     TUESDAY = 'tue'
@@ -58,8 +75,8 @@ class Lesson(models.Model):
     FK_Class = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True, related_name='lessons')
     FK_Classroom = models.ForeignKey(Classroom, on_delete=models.SET_NULL, null=True)
     Weekday = models.CharField(max_length=40, choices=WEEKDAY, default=MONDAY)
-    Hour = models.PositiveIntegerField()
-    Minute = models.PositiveIntegerField()
+    Hour = models.PositiveIntegerField(validators=[validate_hour])
+    Minute = models.PositiveIntegerField(validators=[validate_minute])
 
     class Meta:
         constraints = [
