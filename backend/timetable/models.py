@@ -77,8 +77,6 @@ class Lesson(models.Model):
     WEDNESDAY = 'wed'
     THURSDAY = 'thu'
     FRIDAY = 'fri'
-    SATURDAY = 'sat'
-    SUNDAY = 'sun'
 
     WEEKDAY = (
         (MONDAY, MONDAY),
@@ -86,8 +84,6 @@ class Lesson(models.Model):
         (WEDNESDAY, WEDNESDAY),
         (THURSDAY, THURSDAY),
         (FRIDAY, FRIDAY),
-        (SATURDAY, SATURDAY),
-        (SUNDAY, SUNDAY),
     )
 
     ID_Lessons = models.BigAutoField(primary_key=True)
