@@ -151,6 +151,7 @@ def lessons_plan_detail(request, pk):
     lesson_hours = LessonHour.objects.all()
 
     if request.method == 'GET':
+        id_counter = 0
         schedule = [[], [], [], [], []]
         for _ in lesson_hours:
             for lst in schedule:
@@ -167,7 +168,8 @@ def lessons_plan_detail(request, pk):
             schedule[position[0]][position[1]]['subject'] = subject_serializer.data
             classroom_serializer = ClassroomSerializer(lesson.FK_Classroom)
             schedule[position[0]][position[1]]['classroom'] = classroom_serializer.data
-            schedule[position[0]][position[1]]['id'] = -1
+            schedule[position[0]][position[1]]['id'] = id_counter
+            id_counter += 1
         return Response(schedule, status=status.HTTP_200_OK)
 
     elif request.method == 'PUT':
