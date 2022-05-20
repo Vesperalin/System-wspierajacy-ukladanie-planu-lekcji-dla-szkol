@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db.models import Exists, OuterRef
 from timetable.serializer import *
-from timetable.utils import assign_color, find_class_no
+from timetable.utils import assign_color, find_class_no, find_position_in_schedule
 
 
 class ClassroomView(viewsets.ModelViewSet):
@@ -63,6 +63,7 @@ def lessons_plan(request):
     if request.method == 'POST':
         keys = request.data.items()
         lst = list(keys)[0][0]
+        print(lst)
         lesson_info = ast.literal_eval(lst)
         class_id = lesson_info['class']['value']['ID_Class']
         schedule = lesson_info['schedule']
@@ -137,6 +138,119 @@ def lessons_plan(request):
         return Response(response, status=status.HTTP_200_OK)
 
 
+@api_view(['GET', 'PUT', 'DELETE'])
+def lessons_plan_detail(request, pk):
+    try:
+        _class = Class.objects.get(pk=pk)
+        lessons = Lesson.objects.filter(FK_Class=_class)
+
+    except Class.DoesNotExist:
+        return Response("Requested class doesn't exist!", status=status.HTTP_404_NOT_FOUND)
+
+    days = Lesson._meta.get_field('Weekday').choices
+    lesson_hours = LessonHour.objects.all()
+
+    if request.method == 'GET':
+        schedule = [[], [], [], [], []]
+        for _ in lesson_hours:
+            for lst in schedule:
+                lst.append({})
+
+        for lesson in lessons:
+            position = find_position_in_schedule(lesson)
+            if position[0] is None or position[1] is None:
+                return Response("Lesson position in schedule doesn't exist!", status=status.HTTP_400_BAD_REQUEST)
+
+            teacher_serializer = TeacherSerializer(lesson.FK_Teacher)
+            schedule[position[0]][position[1]]['teacher'] = teacher_serializer.data
+            subject_serializer = SubjectSerializer(lesson.FK_Subject)
+            schedule[position[0]][position[1]]['subject'] = subject_serializer.data
+            classroom_serializer = ClassroomSerializer(lesson.FK_Classroom)
+            schedule[position[0]][position[1]]['classroom'] = classroom_serializer.data
+            schedule[position[0]][position[1]]['id'] = -1
+        return Response(schedule, status=status.HTTP_200_OK)
+
+    elif request.method == 'PUT':
+        keys = request.data.items()
+        lst = list(keys)[0][0]
+        lesson_info = ast.literal_eval(lst)
+        class_id = _class.ID_Class
+        schedule = lesson_info['schedule']
+
+        lessons_to_save = []
+
+        for i in range(len(schedule)):
+            for j in range(len(schedule[i])):
+                if schedule[i][j] != {}:
+                    teacher_id = schedule[i][j]['teacher']['ID_Teacher']
+                    subject_id = schedule[i][j]['subject']['ID_Subject']
+                    classroom_id = schedule[i][j]['classroom']['Classroom_no']
+                    weekday = days[i][0]
+                    hour = getattr(lesson_hours[j], 'Start_hour')
+                    minute = getattr(lesson_hours[j], 'Start_minute')
+
+                    lesson = Lesson(FK_Teacher=Teacher.objects.get(pk=teacher_id),
+                                    FK_Subject=Subject.objects.get(pk=subject_id),
+                                    FK_Class=Class.objects.get(pk=class_id),
+                                    FK_Classroom=Classroom.objects.get(pk=classroom_id),
+                                    Weekday=weekday, Hour=hour, Minute=minute)
+
+                    lessons_to_save.append(lesson)
+
+        class_no = find_class_no(class_id)
+        program = LessonsProgram.objects.filter(Class=class_no)
+        subjects_hours = {}
+        subject_out_of_program = []
+
+        for p in program:
+            subjects_hours[p.Subject.lower()] = p.Hours_no
+
+        for lesson in lessons_to_save:
+            sub = lesson.FK_Subject
+            try:
+                subjects_hours[sub.Subject_name.lower()] -= 1
+            except KeyError:
+                subject_out_of_program.append(sub.Subject_name)
+
+        warnings = []
+        for subject in subjects_hours:
+            if subjects_hours[subject] > 0:
+                warnings.append("Insufficient number of hours for subject: " + subject + ". You need " +
+                                str(subjects_hours[subject]) + " more hours to fulfill core curriculum!")
+            if subjects_hours[subject] < 0:
+                return Response("Too many hours of " + subject + " assigned! You need to remove " +
+                                str(abs(subjects_hours[subject])) + " from plan.",
+                                status=status.HTTP_400_BAD_REQUEST)
+
+        for subject in subject_out_of_program:
+            warnings.append(subject + " is not included in core curriculum!!!")
+
+        for lesson in lessons_to_save:
+            try:
+                lesson.full_clean()
+                lesson.save()
+
+            except ValidationError:
+                return Response("Invalid data for lesson starting: " + str(lesson.Weekday) + ', ' +
+                                str(lesson.Hour) + ':' + str(lesson.Minute) + '!!!',
+                                status=status.HTTP_400_BAD_REQUEST)
+        if len(warnings) == 0:
+            response = {
+                'warning': False,
+                'message': ["Schedule successfully saved!"]
+            }
+        else:
+            response = {
+                'warning': True,
+                'message': warnings
+            }
+        return Response(response, status=status.HTTP_200_OK)
+
+    elif request.method == 'DELETE':
+        deleted = Lesson.objects.filter(FK_Class=_class).delete()
+        return Response("Deleted " + str(deleted[0]) + " lessons.", status=status.HTTP_204_NO_CONTENT)
+
+
 @api_view(['GET', 'POST'])
 def subject_with_color(request):
     if request.method == 'GET':
@@ -183,3 +297,10 @@ def subject_with_color_detail(request, pk):
     elif request.method == 'DELETE':
         subject.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['POST'])
+def tile_validation(request):
+
+    if request.method == 'POST':
+        return Response("Everything is okay (for now). Problems will start later...", status=status.HTTP_200_OK)

@@ -1,5 +1,5 @@
 import random
-from timetable.models import Class
+from timetable.models import Class, LessonHour
 
 COLORS = ['#baffc9', '#ffffba', '#ffdfba', '#ffb3ba', '#bae1ff', '#dac5b3', 'e6f5fb', '#ffdaec', '#fafe92', '#ffb066',
           '#ff9191', '#e679c8', '#f2bbad', '#afdfdb', '#e4b784', '#fcff85', '#f06e9a', '#7d6060', '#a0b395', '#ffcd94']
@@ -57,3 +57,22 @@ def validate_class_no(_class):
     return class_no
 
 
+def find_position_in_schedule(lesson):
+    lesson_hours = LessonHour.objects.all()
+    lesson_no = None
+    weekday = None
+    for hour in lesson_hours:
+        if hour.Start_hour == lesson.Hour and hour.Start_minute == lesson.Minute:
+            lesson_no = hour.Lesson_no
+    if lesson.Weekday == 'mon':
+        weekday = 0
+    if lesson.Weekday == 'tue':
+        weekday = 1
+    if lesson.Weekday == 'wed':
+        weekday = 2
+    if lesson.Weekday == 'thu':
+        weekday = 3
+    if lesson.Weekday == 'fri':
+        weekday = 4
+
+    return weekday, lesson_no
