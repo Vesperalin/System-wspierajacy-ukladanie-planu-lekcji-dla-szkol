@@ -1,5 +1,6 @@
 import ast
 import json
+import math
 import random
 
 from django.core.exceptions import ValidationError
@@ -11,9 +12,7 @@ from django.db.models import Exists, OuterRef
 
 from timetable.models import Classroom
 from timetable.serializer import *
-
-COLORS = ['#baffc9', '#ffffba', '#ffdfba', '#ffb3ba', '#bae1ff', '#dac5b3', 'e6f5fb', '#ffdaec', '#fafe92', '#ffb066',
-          '#ff9191', '#e679c8', '#f2bbad', '#afdfdb', '#e4b784', '#fcff85', '#f06e9a', '#7d6060', '#a0b395', '#ffcd94']
+from timetable.utils import assign_color, find_class_no
 
 
 class ClassroomView(viewsets.ModelViewSet):
@@ -76,6 +75,8 @@ def lessons_plan(request):
         class_id = lesson_info['class']['value']['ID_Class']
         schedule = lesson_info['schedule']
 
+        lessons_to_save = []
+
         for i in range(len(schedule)):
             for j in range(len(schedule[i])):
                 if schedule[i][j] != {}:
@@ -92,19 +93,55 @@ def lessons_plan(request):
                                     FK_Classroom=Classroom.objects.get(pk=classroom_id),
                                     Weekday=weekday, Hour=hour, Minute=minute)
 
-                    try:
-                        lesson.full_clean()
-                        lesson.save()
+                    lessons_to_save.append(lesson)
 
-                    except ValidationError:
-                        return Response("Invalid data for lesson starting: " + str(lesson.Weekday) + ', ' +
-                                        str(lesson.Hour) + ':' + str(lesson.Minute) + '!!!',
-                                        status=status.HTTP_400_BAD_REQUEST)
+        class_no = find_class_no(class_id)
+        program = LessonsProgram.objects.filter(Class=class_no)
+        subjects_hours = {}
+        subject_out_of_program = []
 
-        response = {
-            'warning': False,
-            'message': "Schedule successfully saved!"
-        }
+        for p in program:
+            subjects_hours[p.Subject.lower()] = p.Hours_no
+
+        for lesson in lessons_to_save:
+            sub = lesson.FK_Subject
+            try:
+                subjects_hours[sub.Subject_name.lower()] -= 1
+            except KeyError:
+                subject_out_of_program.append(sub.Subject_name)
+
+        warnings = []
+        for subject in subjects_hours:
+            if subjects_hours[subject] > 0:
+                warnings.append("Insufficient number of hours for subject: " + subject + ". You need " +
+                                str(subjects_hours[subject]) + " more hours to fulfill core curriculum!")
+            if subjects_hours[subject] < 0:
+                return Response("Too many hours of " + subject + " assigned! You need to remove " +
+                                str(abs(subjects_hours[subject])) + " from plan.",
+                                status=status.HTTP_400_BAD_REQUEST)
+
+        for subject in subject_out_of_program:
+            warnings.append(subject + " is not included in core curriculum!!!")
+
+        for lesson in lessons_to_save:
+            try:
+                lesson.full_clean()
+                lesson.save()
+
+            except ValidationError:
+                return Response("Invalid data for lesson starting: " + str(lesson.Weekday) + ', ' +
+                                str(lesson.Hour) + ':' + str(lesson.Minute) + '!!!',
+                                status=status.HTTP_400_BAD_REQUEST)
+        if len(warnings) == 0:
+            response = {
+                'warning': False,
+                'message': ["Schedule successfully saved!"]
+            }
+        else:
+            response = {
+                'warning': True,
+                'message': warnings
+            }
         return Response(response, status=status.HTTP_200_OK)
 
 
@@ -125,15 +162,6 @@ def subject_with_color(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-def assign_color(subject, used_colors):
-    color = random.choice(COLORS)
-    if color in used_colors:
-        assign_color(subject, used_colors)
-    else:
-        subject.Color = color
-        used_colors.append(color)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
