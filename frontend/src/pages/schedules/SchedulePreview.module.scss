@@ -1,7 +1,8 @@
 .wrapper {
   display: flex;
   margin-top: 20px;
-  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   padding-bottom: 40px;
 
   .panel-wrapper {
@@ -70,4 +71,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.button {
+  padding: 10px 15px;
+  margin: 10px 0px;
+  background-color: #deb271;
+  color: #f7f7f7;
+  border-radius: 10px;
+  font-size: 0.95rem;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #cda160;
+  }
 }

@@ -57,6 +57,11 @@ const ClassChoice = () => {
 								Accept
 							</button>
 						</div>
+						<div className={style['button-wrapper']}>
+							<button onClick={() => navigate('/schedules')} className={style.button}>
+								&larr; Back
+							</button>
+						</div>
 						{errorMessage !== '' && <p className={style.error}>{errorMessage}</p>}
 						{selectionError !== '' && <p className={style.error}>{selectionError}</p>}
 					</div>
@@ -67,6 +72,9 @@ const ClassChoice = () => {
 					<NavLink className={style.navlink} to='/add-class'>
 						Add classes
 					</NavLink>
+					<button onClick={() => navigate('/schedules')} className={style.button}>
+						&larr; Back
+					</button>
 				</div>
 			)}
 		</div>

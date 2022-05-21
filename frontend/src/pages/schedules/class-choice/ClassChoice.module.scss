@@ -21,6 +21,11 @@
     padding: 20px;
     border-radius: 8px;
 
+    .button-wrapper {
+      width: 100%;
+      text-align: center;
+    }
+
     p {
       margin-bottom: 10px;
     }
@@ -42,20 +47,6 @@
     -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03) inset;
     box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03) inset;
     margin-bottom: 30px;
-  }
-
-  .button {
-    padding: 10px 15px;
-    margin: 0 5px;
-    background-color: #deb271;
-    color: #f7f7f7;
-    border-radius: 10px;
-    font-size: 0.95rem;
-  }
-
-  .button:hover {
-    cursor: pointer;
-    background-color: #cda160;
   }
 }
 
@@ -96,3 +87,16 @@
   }
 }
 
+.button {
+  padding: 10px 15px;
+  margin: 0 5px;
+  background-color: #deb271;
+  color: #f7f7f7;
+  border-radius: 10px;
+  font-size: 0.95rem;
+}
+
+.button:hover {
+  cursor: pointer;
+  background-color: #cda160;
+}
