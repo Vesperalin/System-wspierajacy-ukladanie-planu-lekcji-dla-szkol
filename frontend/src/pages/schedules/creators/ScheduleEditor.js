@@ -10,22 +10,7 @@ import ScheduleWindow from '../../../components/schedule-window/ScheduleWindow';
 import { getLessonsHours } from '../../../store/schedule-slice';
 import Button from '../../../components/button/Button';
 import Modal from '../../../components/modal/Modal';
-
-const determineDayName = column_number => {
-	if (column_number === 0) return 'Monday';
-	else if (column_number === 1) return 'Tuesday';
-	else if (column_number === 2) return 'Wednesday';
-	else if (column_number === 3) return 'Thursday';
-	else if (column_number === 4) return 'Friday';
-};
-
-const determineHours = (startHour, startMinute, endHour, endMinute) => {
-	const sh = ('0' + startHour).slice(-2);
-	const sm = ('0' + startMinute).slice(-2);
-	const eh = ('0' + endHour).slice(-2);
-	const em = ('0' + endMinute).slice(-2);
-	return `${sh}:${sm}-${eh}:${em}`;
-};
+import { getDayName, getHours } from './ScheduleCreator';
 
 const ScheduleEditor = () => {
 	const chosenSchedule = useSelector(state => state.schedule.chosenSchedule);
@@ -135,14 +120,14 @@ const ScheduleEditor = () => {
 					{chosenSchedule.map((column, column_index) => {
 						return (
 							<div key={column_index}>
-								<p className={style['day-name']}>{determineDayName(column_index)}</p>
+								<p className={style['day-name']}>{getDayName(column_index)}</p>
 								{chosenSchedule[column_index].map((lesson, row_index) => {
 									return (
 										<div key={`${column_index}${row_index}}`}>
 											{column_index === 0 ? (
 												<div className={style['window-with-wrapper']}>
 													<p className={style['lesson-hours']}>
-														{determineHours(
+														{getHours(
 															lessonsHours[row_index].Start_hour,
 															lessonsHours[row_index].Start_minute,
 															lessonsHours[row_index].End_hour,
