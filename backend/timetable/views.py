@@ -305,6 +305,8 @@ def lessons_plan_detail(request, pk):
 
     elif request.method == 'DELETE':
         deleted = Lesson.objects.filter(FK_Class=_class).delete()
+        if deleted[0] == 0:
+            return Response("Lessons to delete not found!", status=status.HTTP_400_BAD_REQUEST)
         return Response("Deleted " + str(deleted[0]) + " lessons.", status=status.HTTP_200_OK)
 
 
