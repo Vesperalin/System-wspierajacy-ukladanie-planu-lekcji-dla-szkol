@@ -15,9 +15,11 @@ const ModalOverlay = props => {
 			</header>
 			<div className={style.body}>{props.children}</div>
 			<footer className={style.actions}>
-				<button onClick={props.onReject} className={style['secondary-button']}>
-					{props.onRejectText}
-				</button>
+				{props.onRejectText !== undefined && (
+					<button onClick={props.onReject} className={style['secondary-button']}>
+						{props.onRejectText}
+					</button>
+				)}
 				<button className={style['primary-button']} onClick={props.onAccept}>
 					{props.onAcceptText}
 				</button>

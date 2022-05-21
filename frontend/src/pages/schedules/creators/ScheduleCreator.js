@@ -9,13 +9,32 @@ import { scheduleSliceActions } from '../../../store/schedule-slice';
 import ScheduleWindow from '../../../components/schedule-window/ScheduleWindow';
 import { getLessonsHours } from '../../../store/schedule-slice';
 import Button from '../../../components/button/Button';
+import Modal from '../../../components/modal/Modal';
+
+const determineDayName = column_number => {
+	if (column_number === 0) return 'Monday';
+	else if (column_number === 1) return 'Tuesday';
+	else if (column_number === 2) return 'Wednesday';
+	else if (column_number === 3) return 'Thursday';
+	else if (column_number === 4) return 'Friday';
+};
+
+const determineHours = (startHour, startMinute, endHour, endMinute) => {
+	const sh = ('0' + startHour).slice(-2);
+	const sm = ('0' + startMinute).slice(-2);
+	const eh = ('0' + endHour).slice(-2);
+	const em = ('0' + endMinute).slice(-2);
+	return `${sh}:${sm}-${eh}:${em}`;
+};
 
 const ScheduleCreator = () => {
 	const chosenSchedule = useSelector(state => state.schedule.chosenSchedule);
 	const lessonsHours = useSelector(state => state.schedule.lessonsHours);
 	const [showEditClassModal, setShowEditClassModal] = useState(false);
 	const [chosenClassForEdit, setChosenClassForEdit] = useState({});
-	const [errorMessage, setErrorMessage] = useState('');
+	const [message, setMessage] = useState([]);
+	const [openWarningModal, setOpenWarningModal] = useState(false);
+	const [openErrorModal, setOpenModalError] = useState(false);
 	const location = useLocation();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -33,44 +52,67 @@ const ScheduleCreator = () => {
 		dispatch(scheduleSliceActions.deleteLessonFromSchedule({ column, row, lesson }));
 	};
 
-	const determineDayName = column_number => {
-		if (column_number === 0) return 'Monday';
-		else if (column_number === 1) return 'Tuesday';
-		else if (column_number === 2) return 'Wednesday';
-		else if (column_number === 3) return 'Thursday';
-		else if (column_number === 4) return 'Friday';
-	};
-
-	const determineHours = (startHour, startMinute, endHour, endMinute) => {
-		const sh = ('0' + startHour).slice(-2);
-		const sm = ('0' + startMinute).slice(-2);
-		const eh = ('0' + endHour).slice(-2);
-		const em = ('0' + endMinute).slice(-2);
-		return `${sh}:${sm}-${eh}:${em}`;
-	};
-
 	const onSaveScheduleHandler = () => {
-		// TODO - handle errors properly
 		axios
 			.post(
 				'http://127.0.0.1:8000/api/lesson_plans/',
 				JSON.stringify({ class: location.state.school_class, schedule: chosenSchedule }),
 			)
-			.then(response => console.log(response))
+			.then(response => navigate('/schedules'))
 			.catch(error => {
-				console.log(error);
-				if (error.response.status === 400) {
-					setErrorMessage(error.response.data.message);
-				} else if (error.response.status === 404) {
-					setErrorMessage(error.response.data.detail);
+				setMessage(error.response.data.message);
+
+				if (error.response.data.warning) {
+					setOpenWarningModal(true);
 				} else {
-					setErrorMessage('Unknown error occurred');
+					setOpenModalError(true);
 				}
 			});
 	};
 
+	const onCloseWarningHandler = () => {
+		setOpenWarningModal(false);
+	};
+
+	const onCloseErrorModal = () => {
+		setOpenModalError(false);
+	};
+
 	return (
 		<div className={style['wrapper']}>
+			{openWarningModal && (
+				<Modal
+					onClick={onCloseWarningHandler}
+					title='Warning!'
+					onAcceptText='I understand'
+					onAccept={onCloseWarningHandler}
+				>
+					<div className={style.modal}>
+						<h2>Plan saved</h2>
+						<h3>Remember to edit this plan later</h3>
+						{message.map((m, index) => {
+							return <p key={index}>{m}</p>;
+						})}
+					</div>
+				</Modal>
+			)}
+			{openErrorModal && (
+				<Modal
+					onClick={onCloseErrorModal}
+					title='Error!'
+					onAcceptText='Edit plan'
+					onRejectText='Cancel'
+					onAccept={onCloseErrorModal}
+					onReject={() => navigate('/schedules')}
+				>
+					<div className={style.modal}>
+						<h2>Plan not saved</h2>
+						{message.map((m, index) => {
+							return <p key={index}>{m}</p>;
+						})}
+					</div>
+				</Modal>
+			)}
 			<div className={style['toolbox-wrapper']}>
 				<Toolbox
 					showEditClassModal={showEditClassModal}
