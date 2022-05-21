@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
@@ -15,8 +15,10 @@ const ScheduleCreator = () => {
 	const lessonsHours = useSelector(state => state.schedule.lessonsHours);
 	const [showEditClassModal, setShowEditClassModal] = useState(false);
 	const [chosenClassForEdit, setChosenClassForEdit] = useState({});
+	const [errorMessage, setErrorMessage] = useState('');
 	const location = useLocation();
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		dispatch(getLessonsHours());
@@ -57,13 +59,13 @@ const ScheduleCreator = () => {
 			.then(response => console.log(response))
 			.catch(error => {
 				console.log(error);
-				// if (error.response.status === 400) {
-				// 	setErrorMessage(error.response.data.message);
-				// } else if (error.response.status === 404) {
-				// 	setErrorMessage(error.response.data.detail);
-				// } else {
-				// 	setErrorMessage('Unknown error occurred');
-				// }
+				if (error.response.status === 400) {
+					setErrorMessage(error.response.data.message);
+				} else if (error.response.status === 404) {
+					setErrorMessage(error.response.data.detail);
+				} else {
+					setErrorMessage('Unknown error occurred');
+				}
 			});
 	};
 
