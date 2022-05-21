@@ -13,6 +13,7 @@ const SchedulePreview = () => {
 	const dispatch = useDispatch();
 	const lessonsHours = useSelector(state => state.schedule.lessonsHours);
 	const [schedule, setSchedule] = useState([]);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		dispatch(getLessonsHours());
@@ -67,6 +68,9 @@ const SchedulePreview = () => {
 						})}
 				</div>
 			</div>
+			<button onClick={() => navigate('/schedules')} className={style.button}>
+				&larr; Back
+			</button>
 		</div>
 	);
 };
