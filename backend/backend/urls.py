@@ -41,4 +41,5 @@ urlpatterns = [
     path('api/subjects_with_colors/', views.subject_with_color),
     path('api/subjects_with_colors/<int:pk>/', views.subject_with_color_detail),
     path('api/tile/', views.tile_validation),
+    path('api/teacher_hours/', views.teachers_hour_validation),
 ]

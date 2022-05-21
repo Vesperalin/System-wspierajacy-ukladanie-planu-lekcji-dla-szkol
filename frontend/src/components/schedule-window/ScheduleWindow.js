@@ -35,7 +35,7 @@ const ScheduleWindow = props => {
 			})
 			.then(response => {
 				axios
-					.post('http://127.0.0.1:8000/api/teacher_hours', {
+					.post('http://127.0.0.1:8000/api/teacher_hours/', {
 						schedule: chosenSchedule,
 						teacher: lesson.teacher,
 					})
