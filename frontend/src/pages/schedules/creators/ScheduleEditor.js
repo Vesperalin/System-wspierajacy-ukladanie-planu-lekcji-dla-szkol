@@ -20,6 +20,7 @@ const ScheduleEditor = () => {
 	const [message, setMessage] = useState([]);
 	const [openWarningModal, setOpenWarningModal] = useState(false);
 	const [openErrorModal, setOpenModalError] = useState(false);
+	const [colors, setColors] = useState([]);
 	const location = useLocation();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -33,6 +34,10 @@ const ScheduleEditor = () => {
 			.catch(error => {
 				console.log(error);
 			});
+
+		axios
+			.get('http://127.0.0.1:8000/api/subjects_with_colors/')
+			.then(response => setColors(response.data));
 	}, [dispatch, location.state.school_class.ID_Class]);
 
 	const onOpenEditClassModalHandler = lesson => {
@@ -111,6 +116,7 @@ const ScheduleEditor = () => {
 					setShowEditClassModal={setShowEditClassModal}
 					chosenClassForEdit={chosenClassForEdit}
 					setChosenClassForEdit={setChosenClassForEdit}
+					subjectsColors={colors}
 				/>
 				<Button text='Save plan' onClick={onSaveScheduleHandler} />
 				<button onClick={() => navigate('/schedules')} className={style.button}>
@@ -151,6 +157,7 @@ const ScheduleEditor = () => {
 																row_index,
 															)}
 														/>
+														subjectsColors={colors}
 													</div>
 												) : (
 													<ScheduleWindow
@@ -164,6 +171,7 @@ const ScheduleEditor = () => {
 															column_index,
 															row_index,
 														)}
+														subjectsColors={colors}
 													/>
 												)}
 											</div>

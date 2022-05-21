@@ -14,6 +14,7 @@ const SchedulePreview = () => {
 	const lessonsHours = useSelector(state => state.schedule.lessonsHours);
 	const [schedule, setSchedule] = useState([]);
 	const navigate = useNavigate();
+	const [colors, setColors] = useState([]);
 
 	useEffect(() => {
 		dispatch(getLessonsHours());
@@ -22,7 +23,15 @@ const SchedulePreview = () => {
 			.get(`http://127.0.0.1:8000/api/lesson_plans/${location.state.school_class.ID_Class}/`)
 			.then(response => setSchedule(response.data))
 			.catch(error => console.log(error));
+
+		axios
+			.get('http://127.0.0.1:8000/api/subjects_with_colors/')
+			.then(response => setColors(response.data));
 	}, [location.state.school_class.ID_Class, dispatch]);
+
+	const getSubjectColor = subject => {
+		return colors.find(element => element.ID_Subject === subject.ID_Subject).Color;
+	};
 
 	return (
 		<div className={style['wrapper']}>
@@ -30,6 +39,7 @@ const SchedulePreview = () => {
 				<h1>{`${location.state.school_class.Class_no} - ${location.state.school_class.Year}`}</h1>
 				<div className={style['plan-wrapper']}>
 					{schedule.length > 0 &&
+						colors.length > 0 &&
 						schedule.map((column, column_index) => {
 							return (
 								<div key={column_index}>
@@ -49,14 +59,20 @@ const SchedulePreview = () => {
 														</p>
 														<div className={style['empty-lesson']}>
 															{Object.keys(lesson).length !== 0 && (
-																<LessonPreviewCard lesson={lesson} />
+																<LessonPreviewCard
+																	lesson={lesson}
+																	color={getSubjectColor(lesson.subject)}
+																/>
 															)}
 														</div>
 													</div>
 												) : (
 													<div className={style['empty-lesson']}>
 														{Object.keys(lesson).length !== 0 && (
-															<LessonPreviewCard lesson={lesson} />
+															<LessonPreviewCard
+																lesson={lesson}
+																color={getSubjectColor(lesson.subject)}
+															/>
 														)}
 													</div>
 												)}

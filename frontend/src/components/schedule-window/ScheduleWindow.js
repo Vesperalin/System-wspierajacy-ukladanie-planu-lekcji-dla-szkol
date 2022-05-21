@@ -80,6 +80,10 @@ const ScheduleWindow = props => {
 		setShowErrorModal(false);
 	};
 
+	const getSubjectColor = subject => {
+		return props.subjectsColors.find(element => element.ID_Subject === subject.ID_Subject).Color;
+	};
+
 	return (
 		<>
 			{showErrorModal && (
@@ -99,6 +103,7 @@ const ScheduleWindow = props => {
 				{Object.keys(props.lesson).length !== 0 && (
 					<LessonCard
 						lesson={props.lesson}
+						color={getSubjectColor(props.lesson.subject)}
 						onOpenEditClassModalHandler={props.onOpenEditClassModalHandler}
 						onDeleteLessonHandler={props.onDeleteLessonHandler}
 					/>

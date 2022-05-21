@@ -15,7 +15,7 @@ const LessonCard = props => {
 	}));
 
 	return (
-		<div className={style['card']} ref={dragRef}>
+		<div className={style['card']} ref={dragRef} style={{ background: props.color }}>
 			<div className={style['upper']}>
 				<p>{props.lesson.subject.Subject_name}</p>
 				<div>
