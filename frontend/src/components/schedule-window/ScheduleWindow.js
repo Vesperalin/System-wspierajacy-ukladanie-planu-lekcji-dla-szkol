@@ -23,57 +23,39 @@ const ScheduleWindow = props => {
 	}));
 
 	const onDropHandler = (id, lesson) => {
-		if (props.ifEditing) {
-			axios
-				.put('http://127.0.0.1:8000/api/tile/', {
-					teacher: lesson.teacher,
-					subject: lesson.subject,
-					classroom: lesson.classroom,
-					row: props.row,
-					column: props.column,
-				})
-				.then(response => {
-					console.log(response);
-					setMessage('');
-					dispatch(
-						scheduleSliceActions.addLessonToSchedule({
-							id: id,
-							column: props.column,
-							row: props.row,
-						}),
-					);
-				})
-				.catch(error => {
-					console.log(error);
-					setMessage(error.response.data);
-					setShowErrorModal(true);
-				});
-		} else {
-			axios
-				.post('http://127.0.0.1:8000/api/tile/', {
-					teacher: lesson.teacher,
-					subject: lesson.subject,
-					classroom: lesson.classroom,
-					row: props.row,
-					column: props.column,
-				})
-				.then(response => {
-					console.log(response);
-					setMessage('');
-					dispatch(
-						scheduleSliceActions.addLessonToSchedule({
-							id: id,
-							column: props.column,
-							row: props.row,
-						}),
-					);
-				})
-				.catch(error => {
-					console.log(error);
-					setMessage(error.response.data);
-					setShowErrorModal(true);
-				});
-		}
+		console.log({
+			teacher: lesson.teacher,
+			subject: lesson.subject,
+			classroom: lesson.classroom,
+			row: props.row,
+			class: props.class,
+			column: props.column,
+		});
+		axios
+			.post('http://127.0.0.1:8000/api/tile/', {
+				teacher: lesson.teacher,
+				subject: lesson.subject,
+				classroom: lesson.classroom,
+				row: props.row,
+				class: props.class,
+				column: props.column,
+			})
+			.then(response => {
+				console.log(response);
+				setMessage('');
+				dispatch(
+					scheduleSliceActions.addLessonToSchedule({
+						id: id,
+						column: props.column,
+						row: props.row,
+					}),
+				);
+			})
+			.catch(error => {
+				console.log(error);
+				setMessage(error.response.data);
+				setShowErrorModal(true);
+			});
 	};
 
 	const onCloseErrorModalHandler = () => {

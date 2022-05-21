@@ -156,9 +156,9 @@ const ScheduleCreator = () => {
 														<ScheduleWindow
 															key={`${column_index}${row_index}}`}
 															lesson={lesson}
+															class={location.state.school_class.value}
 															column={column_index}
 															row={row_index}
-															ifEditing={false}
 															onOpenEditClassModalHandler={onOpenEditClassModalHandler}
 															onDeleteLessonHandler={onDeleteLessonHandler.bind(
 																null,
@@ -172,6 +172,7 @@ const ScheduleCreator = () => {
 													<ScheduleWindow
 														key={`${column_index}${row_index}}`}
 														lesson={lesson}
+														class={location.state.school_class.value}
 														column={column_index}
 														row={row_index}
 														onOpenEditClassModalHandler={onOpenEditClassModalHandler}
