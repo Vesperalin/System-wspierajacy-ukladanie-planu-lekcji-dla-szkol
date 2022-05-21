@@ -46,6 +46,13 @@ class SubjectSerializer(serializers.ModelSerializer):
             raise CustomValidation('Subject with specified name already exists.', 'message', 400)
         return value
 
+    def update(self, instance, validated_data):
+        lessons = Lesson.objects.filter(FK_Class=instance)
+        if len(lessons) == 0:
+            return super().update(instance, validated_data)
+        else:
+            raise CustomValidation('Unable to update subject. This subject has assigned lessons.', 'message', 400)
+
 
 class SubjectWithColorSerializer(serializers.ModelSerializer):
     Subject_name = serializers.CharField()
@@ -59,6 +66,13 @@ class SubjectWithColorSerializer(serializers.ModelSerializer):
         if Subject.objects.filter(Subject_name__iexact=subject_name).exists():
             raise CustomValidation('Subject with specified name already exists.', 'message', 400)
         return value
+    
+    def update(self, instance, validated_data):
+        lessons = Lesson.objects.filter(FK_Class=instance)
+        if len(lessons) == 0:
+            return super().update(instance, validated_data)
+        else:
+            raise CustomValidation('Unable to update subject. This subject has assigned lessons.', 'message', 400)
 
 
 class ClassSerializer(serializers.ModelSerializer):
@@ -80,6 +94,13 @@ class ClassSerializer(serializers.ModelSerializer):
         if not class_no:
             raise CustomValidation('Invalid class name!', 'message', 400)
         return value
+
+    def update(self, instance, validated_data):
+        lessons = Lesson.objects.filter(FK_Class=instance)
+        if len(lessons) == 0:
+            return super().update(instance, validated_data)
+        else:
+            raise CustomValidation('Unable to update class. This class has assigned lessons.', 'message', 400)
 
 
 class LessonsProgramSerializer(serializers.ModelSerializer):
