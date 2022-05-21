@@ -156,8 +156,8 @@ const ScheduleEditor = () => {
 																column_index,
 																row_index,
 															)}
+															subjectsColors={colors}
 														/>
-														subjectsColors={colors}
 													</div>
 												) : (
 													<ScheduleWindow
