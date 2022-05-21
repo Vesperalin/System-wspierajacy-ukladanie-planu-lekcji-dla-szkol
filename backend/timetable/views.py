@@ -1,4 +1,5 @@
 import ast
+from calendar import weekday
 from rest_framework import viewsets, filters, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -61,10 +62,10 @@ class ClassView(viewsets.ModelViewSet):
         lessons = Lesson.objects.filter(FK_Class=_class)
         if len(lessons) == 0:
             _class.delete()
-            return Response("Subject deleted!", status=status.HTTP_200_OK)
+            return Response("Class deleted!", status=status.HTTP_200_OK)
         else:
             return Response("Unable to delete " + _class.Class_no + " - " + str(_class.Year) +
-                            "! This classroom has assigned lessons.", status=status.HTTP_400_BAD_REQUEST)
+                            "! This class has assigned lessons.", status=status.HTTP_400_BAD_REQUEST)
 
 
 class LessonsProgramView(viewsets.ModelViewSet):
@@ -358,8 +359,36 @@ def subject_with_color_detail(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(['POST'])
+@api_view(['POST', 'PUT'])
 def tile_validation(request):
+    request_data = request.data
+    teacher_serializer = TeacherSerializer(request_data['teacher'])
+    classroom_serializer = ClassroomSerializer(request_data['classroom'])
+
+    days = Lesson._meta.get_field('Weekday').choices
+    lesson_hours = LessonHour.objects.all()
+
+    weekday = days[request_data['row']]
+    start_hour = getattr(lesson_hours[request_data['column']], 'Start_hour')
+    start_minute = getattr(lesson_hours[request_data['column']], 'Start_minute')
+
+    teacher_lessons = Lesson.objects.filter(FK_Teacher=teacher_serializer['ID_Teacher'].value).filter(Weekday=weekday[0]).filter(Hour=start_hour).filter(Minute=start_minute)
+    classroom_lessons = Lesson.objects.filter(FK_Classroom=classroom_serializer['Classroom_no'].value).filter(Weekday=weekday[0]).filter(Hour=start_hour).filter(Minute=start_minute)
 
     if request.method == 'POST':
-        return Response("Everything is okay (for now). Problems will start later...", status=status.HTTP_200_OK)
+        if len(teacher_lessons) > 0:
+            return Response("Teacher has already lesson at specified time", status=status.HTTP_400_BAD_REQUEST)
+        
+        if len(classroom_lessons) > 0:
+            return Response("Classroom is taken at specified time", status=status.HTTP_400_BAD_REQUEST)
+
+        return Response("OK", status=status.HTTP_200_OK)
+    
+    if request.method == 'PUT':
+        if len(teacher_lessons) > 1:
+            return Response("Teacher has already lesson at specified time", status=status.HTTP_400_BAD_REQUEST)
+        
+        if len(classroom_lessons) > 1:
+            return Response("Classroom is taken at specified time", status=status.HTTP_400_BAD_REQUEST)
+
+        return Response("OK", status=status.HTTP_200_OK)
