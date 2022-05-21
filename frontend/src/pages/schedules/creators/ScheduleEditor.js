@@ -143,6 +143,7 @@ const ScheduleEditor = () => {
 															lesson={lesson}
 															column={column_index}
 															row={row_index}
+															ifEditing={true}
 															onOpenEditClassModalHandler={onOpenEditClassModalHandler}
 															onDeleteLessonHandler={onDeleteLessonHandler.bind(
 																null,

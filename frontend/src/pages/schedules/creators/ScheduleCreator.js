@@ -152,6 +152,7 @@ const ScheduleCreator = () => {
 															lesson={lesson}
 															column={column_index}
 															row={row_index}
+															ifEditing={false}
 															onOpenEditClassModalHandler={onOpenEditClassModalHandler}
 															onDeleteLessonHandler={onDeleteLessonHandler.bind(
 																null,

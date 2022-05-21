@@ -8,7 +8,7 @@ import deleteImage from '../../assets/delete.png';
 const LessonCard = props => {
 	const [{ isDragging }, dragRef] = useDrag(() => ({
 		type: 'lesson',
-		item: { id: props.lesson.id },
+		item: { lesson: props.lesson },
 		collect: monitor => ({
 			isDragging: !!monitor.isDragging(),
 		}),
