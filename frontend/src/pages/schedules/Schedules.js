@@ -40,8 +40,8 @@ const Schedules = () => {
 		navigate('/choose-class-for-schedule');
 	};
 
-	const onShow = () => {
-		navigate('/preview-schedule');
+	const onShow = school_class => {
+		navigate('/preview-schedule', { state: { school_class: school_class } });
 	};
 
 	const onDelete = school_class => {

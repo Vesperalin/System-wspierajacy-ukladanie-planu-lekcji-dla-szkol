@@ -183,3 +183,6 @@ const ScheduleCreator = () => {
 };
 
 export default ScheduleCreator;
+
+export const getDayName = determineDayName;
+export const getHours = determineHours;
