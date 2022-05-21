@@ -44,6 +44,24 @@ const Schedules = () => {
 		navigate('/preview-schedule');
 	};
 
+	const onDelete = school_class => {
+		axios
+			.delete(`http://127.0.0.1:8000/api/lesson_plans/${school_class.ID_Class}/`)
+			.then(response => {
+				setClasses(prevClasses => {
+					return prevClasses.filter(c => c.ID_Class !== school_class.ID_Class);
+				});
+			})
+			.catch(error => {
+				console.log(error);
+				if (error.response.status === 400) {
+					setErrorMessage(error.response.data);
+				} else {
+					setErrorMessage('Unknown error occurred');
+				}
+			});
+	};
+
 	if (classes.length > 0) {
 		return (
 			<div className={style['table-wrapper']}>
@@ -53,6 +71,7 @@ const Schedules = () => {
 					actions={[
 						['Edit', onEdit],
 						['Show', onShow],
+						['Delete', onDelete],
 					]}
 				/>
 				{errorMessage !== '' && <p className={style.error}>{errorMessage}</p>}

@@ -57,7 +57,7 @@ const ClassForm = props => {
 		<div className={style.content} onSubmit={onSubmitHandler}>
 			<h1>{props.formTitle}</h1>
 			<form>
-				<label htmlFor='class-name'>Class name</label>
+				<label htmlFor='class-name'>Class name (format eg.: Ie)</label>
 				<input
 					id='class-name'
 					type='text'
@@ -82,9 +82,7 @@ const ClassForm = props => {
 					<button className={style.button}>{props.actionText}</button>
 				</div>
 			</form>
-			{props.errorMessage !== '' && (
-				<p className={style.error}>{props.errorMessage}</p>
-			)}
+			{props.errorMessage !== '' && <p className={style.error}>{props.errorMessage}</p>}
 			<button onClick={() => navigate('/classes')} className={style.button}>
 				&larr; Back
 			</button>
