@@ -11,20 +11,60 @@ class ClassroomView(viewsets.ModelViewSet):
     serializer_class = ClassroomSerializer
     queryset = Classroom.objects.all()
 
+    def destroy(self, request, *args, **kwargs):
+        classroom = self.get_object()
+        lessons = Lesson.objects.filter(FK_Classroom=classroom)
+        if len(lessons) == 0:
+            classroom.delete()
+            return Response("Subject deleted!", status=status.HTTP_200_OK)
+        else:
+            return Response("Unable to delete " + classroom.Classroom_no +
+                            "! This classroom has assigned lessons.", status=status.HTTP_400_BAD_REQUEST)
+
 
 class TeacherView(viewsets.ModelViewSet):
     serializer_class = TeacherSerializer
     queryset = Teacher.objects.all()
+
+    def destroy(self, request, *args, **kwargs):
+        teacher = self.get_object()
+        lessons = Lesson.objects.filter(FK_Teacher=teacher)
+        if len(lessons) == 0:
+            teacher.delete()
+            return Response("Teacher deleted!", status=status.HTTP_200_OK)
+        else:
+            return Response("Unable to delete " + teacher.Name + " " + teacher.Surname +
+                            "! This teacher has assigned lessons.", status=status.HTTP_400_BAD_REQUEST)
 
 
 class SubjectView(viewsets.ModelViewSet):
     serializer_class = SubjectSerializer
     queryset = Subject.objects.all()
 
+    def destroy(self, request, *args, **kwargs):
+        subject = self.get_object()
+        lessons = Lesson.objects.filter(FK_Subject=subject)
+        if len(lessons) == 0:
+            subject.delete()
+            return Response("Subject deleted!", status=status.HTTP_200_OK)
+        else:
+            return Response("Unable to delete " + subject.Subject_name +
+                            "! This subject has assigned lessons.", status=status.HTTP_400_BAD_REQUEST)
+
 
 class ClassView(viewsets.ModelViewSet):
     serializer_class = ClassSerializer
     queryset = Class.objects.all()
+
+    def destroy(self, request, *args, **kwargs):
+        _class = self.get_object()
+        lessons = Lesson.objects.filter(FK_Class=_class)
+        if len(lessons) == 0:
+            _class.delete()
+            return Response("Subject deleted!", status=status.HTTP_200_OK)
+        else:
+            return Response("Unable to delete " + _class.Class_no + " - " + str(_class.Year) +
+                            "! This classroom has assigned lessons.", status=status.HTTP_400_BAD_REQUEST)
 
 
 class LessonsProgramView(viewsets.ModelViewSet):
