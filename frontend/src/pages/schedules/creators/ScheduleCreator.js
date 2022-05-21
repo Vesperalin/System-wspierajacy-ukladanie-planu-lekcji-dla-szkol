@@ -72,6 +72,7 @@ const ScheduleCreator = () => {
 
 	const onCloseWarningHandler = () => {
 		setOpenWarningModal(false);
+		navigate('/schedules');
 	};
 
 	const onCloseErrorModal = () => {
