@@ -170,12 +170,14 @@ def lessons_plan(request):
                 'warning': False,
                 'message': ["Schedule successfully saved!"]
             }
+
+            return Response(response, status=status.HTTP_200_OK)
         else:
             response = {
                 'warning': True,
                 'message': warnings
             }
-        return Response(response, status=status.HTTP_200_OK)
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
