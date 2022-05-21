@@ -16,16 +16,6 @@ const scheduleSlice = createSlice({
 		lessonsHours: [],
 	},
 	reducers: {
-		clearSchedule(state) {
-			state.createdLessons = [];
-			state.chosenSchedule = [[], [], [], [], []];
-
-			for (let i = 0; i < state.lessonsHours.length; i++) {
-				for (let j = 0; j < 5; j++) {
-					state.chosenSchedule[j].push({});
-				}
-			}
-		},
 		addLesson(state, action) {
 			const teacher = action.payload.teacher;
 			const subject = action.payload.subject;
@@ -172,6 +162,10 @@ const scheduleSlice = createSlice({
 			const column = action.payload.column;
 			const row = action.payload.row;
 			state.chosenSchedule[column][row] = {};
+		},
+		assignLessonsToPlan(state, action) {
+			state.chosenSchedule = action.payload;
+			state.nextLessonIndex = state.lessonsHours.length + 1;
 		},
 	},
 	extraReducers: {
