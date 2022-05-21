@@ -149,9 +149,12 @@ def lessons_plan(request):
                 warnings.append("Insufficient number of hours for subject: " + subject + ". You need " +
                                 str(subjects_hours[subject]) + " more hours to fulfill core curriculum!")
             if subjects_hours[subject] < 0:
-                return Response("Too many hours of " + subject + " assigned! You need to remove " +
-                                str(abs(subjects_hours[subject])) + " from plan.",
-                                status=status.HTTP_400_BAD_REQUEST)
+                response = {
+                    'warning': False,
+                    'message': ["Too many hours of " + subject + " assigned! You need to remove " +
+                                str(abs(subjects_hours[subject])) + " from plan."]
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         for subject in subject_out_of_program:
             warnings.append(subject + " is not included in core curriculum!!!")
@@ -162,15 +165,17 @@ def lessons_plan(request):
                 lesson.save()
 
             except ValidationError:
-                return Response("Invalid data for lesson starting: " + str(lesson.Weekday) + ', ' +
-                                str(lesson.Hour) + ':' + str(lesson.Minute) + '!!!',
-                                status=status.HTTP_400_BAD_REQUEST)
+                response = {
+                    'warning': False,
+                    'message': ["Invalid data for lesson starting: " + str(lesson.Weekday) + ', ' +
+                                str(lesson.Hour) + ':' + str(lesson.Minute) + '!!!']
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
         if len(warnings) == 0:
             response = {
                 'warning': False,
                 'message': ["Schedule successfully saved!"]
             }
-
             return Response(response, status=status.HTTP_200_OK)
         else:
             response = {
@@ -262,9 +267,12 @@ def lessons_plan_detail(request, pk):
                 warnings.append("Insufficient number of hours for subject: " + subject + ". You need " +
                                 str(subjects_hours[subject]) + " more hours to fulfill core curriculum!")
             if subjects_hours[subject] < 0:
-                return Response("Too many hours of " + subject + " assigned! You need to remove " +
-                                str(abs(subjects_hours[subject])) + " from plan.",
-                                status=status.HTTP_400_BAD_REQUEST)
+                response = {
+                    'warning': False,
+                    'message': ["Too many hours of " + subject + " assigned! You need to remove " +
+                                str(abs(subjects_hours[subject])) + " from plan."]
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         for subject in subject_out_of_program:
             warnings.append(subject + " is not included in core curriculum!!!")
@@ -275,24 +283,29 @@ def lessons_plan_detail(request, pk):
                 lesson.save()
 
             except ValidationError:
-                return Response("Invalid data for lesson starting: " + str(lesson.Weekday) + ', ' +
-                                str(lesson.Hour) + ':' + str(lesson.Minute) + '!!!',
-                                status=status.HTTP_400_BAD_REQUEST)
+                response = {
+                    'warning': False,
+                    'message': ["Invalid data for lesson starting: " + str(lesson.Weekday) + ', ' +
+                                str(lesson.Hour) + ':' + str(lesson.Minute) + '!!!']
+                }
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
         if len(warnings) == 0:
             response = {
                 'warning': False,
                 'message': ["Schedule successfully saved!"]
             }
+            return Response(response, status=status.HTTP_200_OK)
         else:
             response = {
                 'warning': True,
                 'message': warnings
             }
-        return Response(response, status=status.HTTP_200_OK)
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
         deleted = Lesson.objects.filter(FK_Class=_class).delete()
-        return Response("Deleted " + str(deleted[0]) + " lessons.", status=status.HTTP_204_NO_CONTENT)
+        return Response("Deleted " + str(deleted[0]) + " lessons.", status=status.HTTP_200_OK)
 
 
 @api_view(['GET', 'POST'])
