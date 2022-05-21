@@ -35,12 +35,17 @@ const ScheduleCreator = () => {
 	const [message, setMessage] = useState([]);
 	const [openWarningModal, setOpenWarningModal] = useState(false);
 	const [openErrorModal, setOpenModalError] = useState(false);
+	const [colors, setColors] = useState([]);
 	const location = useLocation();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		dispatch(getLessonsHours());
+
+		axios
+			.get('http://127.0.0.1:8000/api/subjects_with_colors/')
+			.then(response => setColors(response.data));
 	}, [dispatch]);
 
 	const onOpenEditClassModalHandler = lesson => {
@@ -72,6 +77,7 @@ const ScheduleCreator = () => {
 
 	const onCloseWarningHandler = () => {
 		setOpenWarningModal(false);
+		navigate('/schedules');
 	};
 
 	const onCloseErrorModal = () => {
@@ -119,32 +125,54 @@ const ScheduleCreator = () => {
 					setShowEditClassModal={setShowEditClassModal}
 					chosenClassForEdit={chosenClassForEdit}
 					setChosenClassForEdit={setChosenClassForEdit}
+					subjectsColors={colors}
 				/>
 				<Button text='Save plan' onClick={onSaveScheduleHandler} />
+				<button onClick={() => navigate('/schedules')} className={style.button}>
+					&larr; Back
+				</button>
 			</div>
 			<div className={style['panel-wrapper']}>
-				<h1>{`${location.state.school_class.value.Class_no} - ${location.state.school_class.value.Year}`}</h1>
-				<div className={style['plan-wrapper']}>
-					{chosenSchedule.map((column, column_index) => {
-						return (
-							<div key={column_index}>
-								<p className={style['day-name']}>{determineDayName(column_index)}</p>
-								{chosenSchedule[column_index].map((lesson, row_index) => {
-									return (
-										<div key={`${column_index}${row_index}}`}>
-											{column_index === 0 ? (
-												<div className={style['window-with-wrapper']}>
-													<p className={style['lesson-hours']}>
-														{determineHours(
-															lessonsHours[row_index].Start_hour,
-															lessonsHours[row_index].Start_minute,
-															lessonsHours[row_index].End_hour,
-															lessonsHours[row_index].End_minute,
-														)}
-													</p>
+				<div className={style['panel']}>
+					<h1>{`${location.state.school_class.value.Class_no} - ${location.state.school_class.value.Year}`}</h1>
+					<div className={style['plan-wrapper']}>
+						{chosenSchedule.map((column, column_index) => {
+							return (
+								<div key={column_index}>
+									<p className={style['day-name']}>{determineDayName(column_index)}</p>
+									{chosenSchedule[column_index].map((lesson, row_index) => {
+										return (
+											<div key={`${column_index}${row_index}}`}>
+												{column_index === 0 ? (
+													<div className={style['window-with-wrapper']}>
+														<p className={style['lesson-hours']}>
+															{determineHours(
+																lessonsHours[row_index].Start_hour,
+																lessonsHours[row_index].Start_minute,
+																lessonsHours[row_index].End_hour,
+																lessonsHours[row_index].End_minute,
+															)}
+														</p>
+														<ScheduleWindow
+															key={`${column_index}${row_index}}`}
+															lesson={lesson}
+															class={location.state.school_class.value}
+															column={column_index}
+															row={row_index}
+															onOpenEditClassModalHandler={onOpenEditClassModalHandler}
+															onDeleteLessonHandler={onDeleteLessonHandler.bind(
+																null,
+																column_index,
+																row_index,
+															)}
+															subjectsColors={colors}
+														/>
+													</div>
+												) : (
 													<ScheduleWindow
 														key={`${column_index}${row_index}}`}
 														lesson={lesson}
+														class={location.state.school_class.value}
 														column={column_index}
 														row={row_index}
 														onOpenEditClassModalHandler={onOpenEditClassModalHandler}
@@ -153,28 +181,16 @@ const ScheduleCreator = () => {
 															column_index,
 															row_index,
 														)}
+														subjectsColors={colors}
 													/>
-												</div>
-											) : (
-												<ScheduleWindow
-													key={`${column_index}${row_index}}`}
-													lesson={lesson}
-													column={column_index}
-													row={row_index}
-													onOpenEditClassModalHandler={onOpenEditClassModalHandler}
-													onDeleteLessonHandler={onDeleteLessonHandler.bind(
-														null,
-														column_index,
-														row_index,
-													)}
-												/>
-											)}
-										</div>
-									);
-								})}
-							</div>
-						);
-					})}
+												)}
+											</div>
+										);
+									})}
+								</div>
+							);
+						})}
+					</div>
 				</div>
 			</div>
 		</div>
@@ -182,3 +198,6 @@ const ScheduleCreator = () => {
 };
 
 export default ScheduleCreator;
+
+export const getDayName = determineDayName;
+export const getHours = determineHours;

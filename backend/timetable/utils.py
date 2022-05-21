@@ -1,8 +1,8 @@
 import random
 from timetable.models import Class, LessonHour
 
-COLORS = ['#baffc9', '#ffffba', '#ffdfba', '#ffb3ba', '#bae1ff', '#dac5b3', 'e6f5fb', '#ffdaec', '#fafe92', '#ffb066',
-          '#ff9191', '#e679c8', '#f2bbad', '#afdfdb', '#e4b784', '#fcff85', '#f06e9a', '#7d6060', '#a0b395', '#ffcd94']
+COLORS = ['#baffc9', '#ffffba', '#E4EFE7', '#ffb3ba', '#bae1ff', '#E4FBFF', '#CCF3EE', '#ffdaec', '#fafe92', '#ffb066',
+          '#FFDCDC', '#CDD0CB', '#D5ECC2', '#afdfdb', '#FDFFBC', '#D7FFFD', '#D9D7F1', '#FEFBE7', '#FFE5B9', '#ffcd94']
 
 
 def assign_color(subject, used_colors):

@@ -8,14 +8,14 @@ import deleteImage from '../../assets/delete.png';
 const LessonCard = props => {
 	const [{ isDragging }, dragRef] = useDrag(() => ({
 		type: 'lesson',
-		item: { id: props.lesson.id },
+		item: { lesson: props.lesson },
 		collect: monitor => ({
 			isDragging: !!monitor.isDragging(),
 		}),
 	}));
 
 	return (
-		<div className={style['card']} ref={dragRef}>
+		<div className={style['card']} ref={dragRef} style={{ background: props.color }}>
 			<div className={style['upper']}>
 				<p>{props.lesson.subject.Subject_name}</p>
 				<div>

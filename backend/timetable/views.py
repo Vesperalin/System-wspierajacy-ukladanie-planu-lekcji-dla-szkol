@@ -19,7 +19,7 @@ class ClassroomView(viewsets.ModelViewSet):
             classroom.delete()
             return Response("Subject deleted!", status=status.HTTP_200_OK)
         else:
-            return Response("Unable to delete " + classroom.Classroom_no +
+            return Response("Unable to delete " + str(classroom.Classroom_no) +
                             "! This classroom has assigned lessons.", status=status.HTTP_400_BAD_REQUEST)
 
 

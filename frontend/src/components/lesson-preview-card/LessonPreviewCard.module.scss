@@ -1,0 +1,19 @@
+.card {
+  background-color: rgba(181, 247, 173, 0.8);
+  border-radius: 10px;
+  font-size: 0.8rem;
+  padding: 7px;
+  margin: 8px 0;
+  width: 90%;
+  max-width: 180px;
+
+  .upper {
+    font-weight: bold;
+  }
+
+  .lower {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

@@ -32,6 +32,10 @@ const SchedulesTable = props => {
 												onClick={() => props.actions[1][1](element)}
 												text={props.actions[1][0]}
 											/>
+											<Button
+												onClick={() => props.actions[2][1](element)}
+												text={props.actions[2][0]}
+											/>
 										</td>
 									</tr>
 								);
