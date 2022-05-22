@@ -381,12 +381,12 @@ def tile_validation(request):
     if request.method == 'POST':
         if len(teacher_lessons) > 0:
             for teacher_lesson in teacher_lessons:
-                if teacher_lesson.FK_Class is not class_serializer:
+                if teacher_lesson.FK_Class.ID_Class != class_serializer['ID_Class'].value:
                     return Response("Teacher has already lesson at specified time", status=status.HTTP_400_BAD_REQUEST)
         
         if len(classroom_lessons) > 0:
             for classroom_lesson in classroom_lessons:
-                if classroom_lesson.FK_Class is not class_serializer:
+                if classroom_lesson.FK_Class.ID_Class != class_serializer['ID_Class'].value:
                     return Response("Classroom is taken at specified time", status=status.HTTP_400_BAD_REQUEST)
 
         return Response("OK", status=status.HTTP_200_OK)
@@ -405,7 +405,7 @@ def teachers_hour_validation(request):
         for i in range(len(schedule)):
             for j in range(len(schedule[i])):
                 if schedule[i][j] != {}:
-                    print('halo' + schedule[i][j])
+                    print(schedule[i][j])
                     if int(schedule[i][j]['teacher']['ID_Teacher']) == int(teacher_serializer['ID_Teacher'].value):
                         print('weszlo')
                         hours_assigned+=1
