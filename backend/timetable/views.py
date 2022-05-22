@@ -301,7 +301,7 @@ def lessons_plan_detail(request, pk):
 
         for teacher in teachers_to_validate:
             hours_assigned = len(Lesson.objects.filter(FK_Teacher=teacher))
-            if hours_assigned > 4:
+            if hours_assigned > 20:
                 warnings.append(f'{teacher.Name} {teacher.Surname} has assigned more than 20 hours per week')
 
         if len(warnings) == 0:
@@ -313,7 +313,7 @@ def lessons_plan_detail(request, pk):
         else:
             response = {
                 'warning': True,
-                'message': warnings
+                'message': list(set(warnings))
             }
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
