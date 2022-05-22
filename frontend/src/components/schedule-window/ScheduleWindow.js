@@ -24,6 +24,14 @@ const ScheduleWindow = props => {
 	}));
 
 	const onDropHandler = (id, lesson) => {
+		console.log({
+			teacher: lesson.teacher,
+			subject: lesson.subject,
+			classroom: lesson.classroom,
+			row: props.row,
+			class: props.class,
+			column: props.column,
+		});
 		axios
 			.post('http://127.0.0.1:8000/api/tile/', {
 				teacher: lesson.teacher,
