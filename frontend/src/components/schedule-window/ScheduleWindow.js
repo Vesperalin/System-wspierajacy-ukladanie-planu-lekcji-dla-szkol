@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useDrop } from 'react-dnd';
 import axios from 'axios';
 
@@ -10,7 +10,6 @@ import { scheduleSliceActions } from '../../store/schedule-slice';
 import Modal from '../modal/Modal';
 
 const ScheduleWindow = props => {
-	const chosenSchedule = useSelector(state => state.schedule.chosenSchedule);
 	const dispatch = useDispatch();
 	const [message, setMessage] = useState();
 	const [showErrorModal, setShowErrorModal] = useState(false);
@@ -24,14 +23,6 @@ const ScheduleWindow = props => {
 	}));
 
 	const onDropHandler = (id, lesson) => {
-		console.log({
-			teacher: lesson.teacher,
-			subject: lesson.subject,
-			classroom: lesson.classroom,
-			row: props.row,
-			class: props.class,
-			column: props.column,
-		});
 		axios
 			.post('http://127.0.0.1:8000/api/tile/', {
 				teacher: lesson.teacher,
@@ -42,26 +33,14 @@ const ScheduleWindow = props => {
 				column: props.column,
 			})
 			.then(response => {
-				axios
-					.post('http://127.0.0.1:8000/api/teacher_hours/', {
-						schedule: chosenSchedule,
-						teacher: lesson.teacher,
-					})
-					.then(response => {
-						console.log(response);
-						setMessage('');
-						dispatch(
-							scheduleSliceActions.addLessonToSchedule({
-								id: id,
-								column: props.column,
-								row: props.row,
-							}),
-						);
-					})
-					.catch(error => {
-						console.log(error);
-						// TODO - modal
-					});
+				setMessage('');
+				dispatch(
+					scheduleSliceActions.addLessonToSchedule({
+						id: id,
+						column: props.column,
+						row: props.row,
+					}),
+				);
 			})
 			.catch(error => {
 				console.log(error);

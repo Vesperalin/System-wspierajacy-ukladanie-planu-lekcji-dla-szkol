@@ -50,6 +50,7 @@ const ScheduleEditor = () => {
 	};
 
 	const onSaveScheduleHandler = () => {
+		console.log(chosenSchedule);
 		axios
 			.put(
 				'http://127.0.0.1:8000/api/lesson_plans/' + location.state.school_class.ID_Class + '/',
