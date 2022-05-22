@@ -4,7 +4,7 @@ import style from './LessonPreviewCard.module.scss';
 
 const LessonPreviewCard = props => {
 	return (
-		<div className={style['card']}>
+		<div className={style['card']} style={{ background: props.color }}>
 			<div className={style['upper']}>
 				<p>{props.lesson.subject.Subject_name}</p>
 			</div>

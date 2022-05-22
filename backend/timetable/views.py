@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from django.db.models import Exists, OuterRef
 from timetable.serializer import *
 from timetable.utils import assign_color, find_class_no, find_position_in_schedule
+import json
 
 
 class ClassroomView(viewsets.ModelViewSet):
@@ -229,6 +230,8 @@ def lessons_plan_detail(request, pk):
 
         lessons_to_save = []
 
+        teachers_to_validate = set()
+
         for i in range(len(schedule)):
             for j in range(len(schedule[i])):
                 if schedule[i][j] != {}:
@@ -246,6 +249,7 @@ def lessons_plan_detail(request, pk):
                                     Weekday=weekday, Hour=hour, Minute=minute)
 
                     lessons_to_save.append(lesson)
+                    teachers_to_validate.add(Teacher.objects.get(pk=teacher_id))
 
         class_no = find_class_no(class_id)
         program = LessonsProgram.objects.filter(Class=class_no)
@@ -278,6 +282,10 @@ def lessons_plan_detail(request, pk):
         for subject in subject_out_of_program:
             warnings.append(subject + " is not included in core curriculum!!!")
 
+        # !Do obgadania z Moniką 
+        deleted = Lesson.objects.filter(FK_Class=_class).delete()
+        # !Do obgadania z Moniką
+
         for lesson in lessons_to_save:
             try:
                 lesson.full_clean()
@@ -291,6 +299,11 @@ def lessons_plan_detail(request, pk):
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
+        for teacher in teachers_to_validate:
+            hours_assigned = len(Lesson.objects.filter(FK_Teacher=teacher))
+            if hours_assigned > 20:
+                warnings.append(f'{teacher.Name} {teacher.Surname} has assigned more than 20 hours per week')
+
         if len(warnings) == 0:
             response = {
                 'warning': False,
@@ -300,7 +313,7 @@ def lessons_plan_detail(request, pk):
         else:
             response = {
                 'warning': True,
-                'message': warnings
+                'message': list(set(warnings))
             }
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
@@ -359,36 +372,33 @@ def subject_with_color_detail(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(['POST', 'PUT'])
+@api_view(['POST'])
 def tile_validation(request):
     request_data = request.data
+    print(request_data)
     teacher_serializer = TeacherSerializer(request_data['teacher'])
     classroom_serializer = ClassroomSerializer(request_data['classroom'])
+    class_serializer = ClassSerializer(request_data['class'])
 
     days = Lesson._meta.get_field('Weekday').choices
     lesson_hours = LessonHour.objects.all()
 
-    weekday = days[request_data['row']]
-    start_hour = getattr(lesson_hours[request_data['column']], 'Start_hour')
-    start_minute = getattr(lesson_hours[request_data['column']], 'Start_minute')
+    weekday = days[request_data['column']]
+    start_hour = getattr(lesson_hours[request_data['row']], 'Start_hour')
+    start_minute = getattr(lesson_hours[request_data['row']], 'Start_minute')
 
     teacher_lessons = Lesson.objects.filter(FK_Teacher=teacher_serializer['ID_Teacher'].value).filter(Weekday=weekday[0]).filter(Hour=start_hour).filter(Minute=start_minute)
     classroom_lessons = Lesson.objects.filter(FK_Classroom=classroom_serializer['Classroom_no'].value).filter(Weekday=weekday[0]).filter(Hour=start_hour).filter(Minute=start_minute)
 
     if request.method == 'POST':
         if len(teacher_lessons) > 0:
-            return Response("Teacher has already lesson at specified time", status=status.HTTP_400_BAD_REQUEST)
+            for teacher_lesson in teacher_lessons:
+                if teacher_lesson.FK_Class.ID_Class != class_serializer['ID_Class'].value:
+                    return Response("Teacher has already lesson at specified time", status=status.HTTP_400_BAD_REQUEST)
         
         if len(classroom_lessons) > 0:
-            return Response("Classroom is taken at specified time", status=status.HTTP_400_BAD_REQUEST)
-
-        return Response("OK", status=status.HTTP_200_OK)
-    
-    if request.method == 'PUT':
-        if len(teacher_lessons) > 1:
-            return Response("Teacher has already lesson at specified time", status=status.HTTP_400_BAD_REQUEST)
-        
-        if len(classroom_lessons) > 1:
-            return Response("Classroom is taken at specified time", status=status.HTTP_400_BAD_REQUEST)
+            for classroom_lesson in classroom_lessons:
+                if classroom_lesson.FK_Class.ID_Class != class_serializer['ID_Class'].value:
+                    return Response("Classroom is taken at specified time", status=status.HTTP_400_BAD_REQUEST)
 
         return Response("OK", status=status.HTTP_200_OK)

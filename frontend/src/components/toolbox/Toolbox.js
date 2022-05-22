@@ -40,6 +40,10 @@ const Toolbox = props => {
 		dispatch(scheduleSliceActions.deleteLesson(lesson));
 	};
 
+	const getSubjectColor = subject => {
+		return props.subjectsColors.find(element => element.ID_Subject === subject.ID_Subject).Color;
+	};
+
 	return (
 		<div className={style['toolbox-wrapper']}>
 			{showAddClassModal && (
@@ -63,6 +67,7 @@ const Toolbox = props => {
 					return (
 						<LessonCard
 							key={lesson.id}
+							color={getSubjectColor(lesson.subject)}
 							lesson={lesson}
 							onOpenEditClassModalHandler={onOpenEditClassModalHandler}
 							onDeleteLessonHandler={onDeleteLessonHandler}
