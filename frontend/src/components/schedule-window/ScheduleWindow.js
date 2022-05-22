@@ -43,7 +43,6 @@ const ScheduleWindow = props => {
 				);
 			})
 			.catch(error => {
-				console.log(error);
 				setMessage(error.response.data);
 				setShowErrorModal(true);
 			});
