@@ -230,6 +230,8 @@ def lessons_plan_detail(request, pk):
 
         lessons_to_save = []
 
+        teachers_to_validate = set()
+
         for i in range(len(schedule)):
             for j in range(len(schedule[i])):
                 if schedule[i][j] != {}:
@@ -247,6 +249,7 @@ def lessons_plan_detail(request, pk):
                                     Weekday=weekday, Hour=hour, Minute=minute)
 
                     lessons_to_save.append(lesson)
+                    teachers_to_validate.add(Teacher.objects.get(pk=teacher_id))
 
         class_no = find_class_no(class_id)
         program = LessonsProgram.objects.filter(Class=class_no)
@@ -279,6 +282,10 @@ def lessons_plan_detail(request, pk):
         for subject in subject_out_of_program:
             warnings.append(subject + " is not included in core curriculum!!!")
 
+        # !Do obgadania z Moniką 
+        deleted = Lesson.objects.filter(FK_Class=_class).delete()
+        # !Do obgadania z Moniką
+
         for lesson in lessons_to_save:
             try:
                 lesson.full_clean()
@@ -291,6 +298,11 @@ def lessons_plan_detail(request, pk):
                                 str(lesson.Hour) + ':' + str(lesson.Minute) + '!!!']
                 }
                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        for teacher in teachers_to_validate:
+            hours_assigned = len(Lesson.objects.filter(FK_Teacher=teacher))
+            if hours_assigned > 4:
+                warnings.append(f'{teacher.Name} {teacher.Surname} has assigned more than 20 hours per week')
 
         if len(warnings) == 0:
             response = {
@@ -389,27 +401,4 @@ def tile_validation(request):
                 if classroom_lesson.FK_Class.ID_Class != class_serializer['ID_Class'].value:
                     return Response("Classroom is taken at specified time", status=status.HTTP_400_BAD_REQUEST)
 
-        return Response("OK", status=status.HTTP_200_OK)
-
-@api_view(['POST'])
-def teachers_hour_validation(request):
-    if request.method == 'POST':
-        teacher_serializer = TeacherSerializer(request.data['teacher'])
-        print(teacher_serializer['ID_Teacher'].value)
-        hours_assigned = len(Lesson.objects.filter(FK_Teacher=teacher_serializer['ID_Teacher'].value))
-
-        keys = request.data.items()
-        lst = list(keys)[0]
-        schedule = lst[1]
-        print(schedule)
-        for i in range(len(schedule)):
-            for j in range(len(schedule[i])):
-                if schedule[i][j] != {}:
-                    print(schedule[i][j])
-                    if int(schedule[i][j]['teacher']['ID_Teacher']) == int(teacher_serializer['ID_Teacher'].value):
-                        print('weszlo')
-                        hours_assigned+=1
-        print(hours_assigned)
-        if hours_assigned > 20:
-            return Response("Teacher has above 20 hours of work per week", status=status.HTTP_400_BAD_REQUEST)
         return Response("OK", status=status.HTTP_200_OK)
