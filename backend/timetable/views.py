@@ -402,3 +402,18 @@ def tile_validation(request):
                     return Response("Classroom is taken at specified time", status=status.HTTP_400_BAD_REQUEST)
 
         return Response("OK", status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def class_program(request):
+    request_data = request.data
+    print(request_data)
+    class_serializer = ClassSerializer(request_data)
+
+    if request.method == 'POST':
+        class_name = class_serializer['Class_no'].value
+        class_number = validate_class_no(class_name)
+        lesson_program = LessonsProgram.objects.filter(Class=class_number)
+
+        return Response(lesson_program, status=status.HTTP_200_OK)
+
