@@ -41,7 +41,7 @@ const ScheduleWindow = props => {
 						row: props.row,
 					}),
 				);
-				// TODO obsługa licznenia podstawy
+				dispatch(scheduleSliceActions.calculateProgram());
 			})
 			.catch(error => {
 				setMessage(error.response.data);

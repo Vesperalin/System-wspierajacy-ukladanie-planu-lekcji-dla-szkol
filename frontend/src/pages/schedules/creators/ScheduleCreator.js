@@ -7,9 +7,10 @@ import Toolbox from '../../../components/toolbox/Toolbox';
 import style from './Creator.module.scss';
 import { scheduleSliceActions } from '../../../store/schedule-slice';
 import ScheduleWindow from '../../../components/schedule-window/ScheduleWindow';
-import { getLessonsHours, getProgram } from '../../../store/schedule-slice';
+import { getLessonsHoursAndProgram } from '../../../store/schedule-slice';
 import Button from '../../../components/button/Button';
 import Modal from '../../../components/modal/Modal';
+import ProgramPanel from '../../../components/program-panel/ProgramPanel';
 
 const determineDayName = column_number => {
 	if (column_number === 0) return 'Monday';
@@ -30,6 +31,7 @@ const determineHours = (startHour, startMinute, endHour, endMinute) => {
 const ScheduleCreator = () => {
 	const chosenSchedule = useSelector(state => state.schedule.chosenSchedule);
 	const lessonsHours = useSelector(state => state.schedule.lessonsHours);
+	const programForClass = useSelector(state => state.schedule.currentProgramForClass);
 	const [showEditClassModal, setShowEditClassModal] = useState(false);
 	const [chosenClassForEdit, setChosenClassForEdit] = useState({});
 	const [message, setMessage] = useState([]);
@@ -41,8 +43,9 @@ const ScheduleCreator = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		dispatch(getLessonsHours());
-		dispatch(getProgram(location.state.school_class));
+		dispatch(getLessonsHoursAndProgram(location.state.school_class));
+		dispatch(scheduleSliceActions.calculateProgram());
+
 		axios
 			.get('http://127.0.0.1:8000/api/subjects_with_colors/')
 			.then(response => setColors(response.data));
@@ -120,6 +123,7 @@ const ScheduleCreator = () => {
 				</Modal>
 			)}
 			<div className={style['toolbox-wrapper']}>
+				<ProgramPanel program={programForClass} />
 				<Toolbox
 					showEditClassModal={showEditClassModal}
 					setShowEditClassModal={setShowEditClassModal}
@@ -127,10 +131,12 @@ const ScheduleCreator = () => {
 					setChosenClassForEdit={setChosenClassForEdit}
 					subjectsColors={colors}
 				/>
-				<Button text='Save plan' onClick={onSaveScheduleHandler} />
-				<button onClick={() => navigate('/schedules')} className={style.button}>
-					&larr; Back
-				</button>
+				<div className={style['button-wrapper']}>
+					<Button text='Save plan' onClick={onSaveScheduleHandler} />
+					<button onClick={() => navigate('/schedules')} className={style.button}>
+						&larr; Back
+					</button>
+				</div>
 			</div>
 			<div className={style['panel-wrapper']}>
 				<div className={style['panel']}>
@@ -193,7 +199,6 @@ const ScheduleCreator = () => {
 					</div>
 				</div>
 			</div>
-			<div>{console.log('a')}</div>
 		</div>
 	);
 };

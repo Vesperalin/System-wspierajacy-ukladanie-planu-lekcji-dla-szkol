@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
-import { getLessonsHours } from '../../store/schedule-slice';
+import { getLessonsHoursAndProgram } from '../../store/schedule-slice';
 
 import style from './SchedulePreview.module.scss';
 import { getDayName, getHours } from './creators/ScheduleCreator';
@@ -17,7 +17,7 @@ const SchedulePreview = () => {
 	const [colors, setColors] = useState([]);
 
 	useEffect(() => {
-		dispatch(getLessonsHours());
+		dispatch(getLessonsHoursAndProgram({ value: location.state.school_class }));
 
 		axios
 			.get(`http://127.0.0.1:8000/api/lesson_plans/${location.state.school_class.ID_Class}/`)
@@ -27,7 +27,7 @@ const SchedulePreview = () => {
 		axios
 			.get('http://127.0.0.1:8000/api/subjects_with_colors/')
 			.then(response => setColors(response.data));
-	}, [location.state.school_class.ID_Class, dispatch]);
+	}, [location.state.school_class.ID_Class, dispatch, location.state.school_class]);
 
 	const getSubjectColor = subject => {
 		return colors.find(element => element.ID_Subject === subject.ID_Subject).Color;
