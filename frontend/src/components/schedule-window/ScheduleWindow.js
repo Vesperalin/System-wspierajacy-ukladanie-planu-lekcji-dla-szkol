@@ -41,6 +41,7 @@ const ScheduleWindow = props => {
 						row: props.row,
 					}),
 				);
+				// TODO obsługa licznenia podstawy
 			})
 			.catch(error => {
 				setMessage(error.response.data);

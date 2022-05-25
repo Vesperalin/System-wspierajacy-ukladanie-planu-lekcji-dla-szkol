@@ -25,6 +25,7 @@ const Toolbox = props => {
 
 	const onDropHandler = item => {
 		dispatch(scheduleSliceActions.revertLessonFromSchedule({ item: item }));
+		// TODO obsługa licznenia podstawy
 	};
 
 	const onOpenAddClassModalHandler = () => {

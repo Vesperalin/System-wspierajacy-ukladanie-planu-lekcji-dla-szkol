@@ -7,7 +7,7 @@ import Toolbox from '../../../components/toolbox/Toolbox';
 import style from './Creator.module.scss';
 import { scheduleSliceActions } from '../../../store/schedule-slice';
 import ScheduleWindow from '../../../components/schedule-window/ScheduleWindow';
-import { getLessonsHours } from '../../../store/schedule-slice';
+import { getLessonsHours, getProgram } from '../../../store/schedule-slice';
 import Button from '../../../components/button/Button';
 import Modal from '../../../components/modal/Modal';
 
@@ -42,11 +42,13 @@ const ScheduleCreator = () => {
 
 	useEffect(() => {
 		dispatch(getLessonsHours());
+		dispatch(getProgram(location.state.school_class));
+		// TODO uruchomic thunka
 
 		axios
 			.get('http://127.0.0.1:8000/api/subjects_with_colors/')
 			.then(response => setColors(response.data));
-	}, [dispatch]);
+	}, [dispatch, location.state.school_class]);
 
 	const onOpenEditClassModalHandler = lesson => {
 		setChosenClassForEdit(lesson);
@@ -193,6 +195,7 @@ const ScheduleCreator = () => {
 					</div>
 				</div>
 			</div>
+			<div>{console.log('a')}</div>
 		</div>
 	);
 };

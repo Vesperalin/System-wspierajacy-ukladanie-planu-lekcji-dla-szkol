@@ -7,6 +7,12 @@ export const getLessonsHours = createAsyncThunk('add-schedule', async () => {
 	});
 });
 
+export const getProgram = createAsyncThunk('add-schedule', async school_class => {
+	return axios.post('http://127.0.0.1:8000/api/class_program/', school_class.value).then(data => {
+		return data;
+	});
+});
+
 const scheduleSlice = createSlice({
 	name: 'schedule',
 	initialState: {
@@ -170,7 +176,7 @@ const scheduleSlice = createSlice({
 	},
 	extraReducers: {
 		[getLessonsHours.pending]: state => {
-			console.log('pending');
+			console.log('pending lessons hours');
 		},
 		[getLessonsHours.fulfilled]: (state, { payload }) => {
 			state.lessonsHours = payload.data;
@@ -183,7 +189,24 @@ const scheduleSlice = createSlice({
 			}
 		},
 		[getLessonsHours.rejected]: state => {
-			console.log('rejected');
+			console.log('rejected lessons hours');
+		},
+		[getProgram.pending]: state => {
+			console.log('pending program for class');
+		},
+		[getProgram.fulfilled]: (state, { payload }) => {
+			state.lessonsHours = payload.data;
+			state.chosenSchedule = [[], [], [], [], []];
+
+			for (let i = 0; i < payload.data.length; i++) {
+				for (let j = 0; j < 5; j++) {
+					state.chosenSchedule[j].push({});
+				}
+			}
+		},
+		[getProgram.rejected]: state => {
+			console.log('rejected program for class');
+			console.log(JSON.stringify(state));
 		},
 	},
 });
