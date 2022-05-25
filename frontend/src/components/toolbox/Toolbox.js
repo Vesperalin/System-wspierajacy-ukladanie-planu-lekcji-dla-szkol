@@ -17,14 +17,14 @@ const Toolbox = props => {
 
 	const [{ isOver }, dropRef] = useDrop(() => ({
 		accept: 'lesson',
-		drop: item => onDropHandler(item.id),
+		drop: item => onDropHandler(item),
 		collect: monitor => ({
 			isOver: !!monitor.isOver(),
 		}),
 	}));
 
-	const onDropHandler = id => {
-		dispatch(scheduleSliceActions.revertLessonFromSchedule({ id: id }));
+	const onDropHandler = item => {
+		dispatch(scheduleSliceActions.revertLessonFromSchedule({ item: item }));
 	};
 
 	const onOpenAddClassModalHandler = () => {

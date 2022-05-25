@@ -61,7 +61,7 @@ const scheduleSlice = createSlice({
 			}
 		},
 		revertLessonFromSchedule(state, action) {
-			const id = action.payload.id;
+			const id = action.payload.item.lesson.id;
 
 			let lessonToMove = undefined;
 
