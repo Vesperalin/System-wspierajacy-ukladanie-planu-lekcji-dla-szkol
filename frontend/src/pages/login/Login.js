@@ -6,15 +6,16 @@ import style from './Login.module.scss';
 const Login = () => {
 	const openGoogleLoginPage = useCallback(() => {
 		const googleAuthUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
-		const redirectUri = 'api/v1/auth/login/google/';
+		const redirectUri = 'auth/login/google/';
 
 		const scope = [
-			'https://www.googleapis.com/auth/userinfo.email'
+			'https://www.googleapis.com/auth/userinfo.email',
+			'https://www.googleapis.com/auth/userinfo.profile'
 		].join(' ');
 
 		const params = {
 			response_type: 'code',
-			client_id: '680389344500-dqirfvbjdkp9n833kmbcbtvar34vr1on.apps.googleusercontent.com',
+			client_id: '178122326241-ga6pmq1c0f6jsa74jnar8mf04okncgnd.apps.googleusercontent.com',
 			redirect_uri: `http://localhost:8000/${redirectUri}`,
 			prompt: 'select_account',
 			access_type: 'offline',
