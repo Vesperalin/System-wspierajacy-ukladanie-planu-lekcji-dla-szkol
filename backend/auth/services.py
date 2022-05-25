@@ -52,8 +52,6 @@ def google_validate_id_token(*, id_token: str) -> bool:
 
 
 def google_get_access_token(*, code: str, redirect_uri: str) -> str:
-    # Reference: https://developers.google.com/identity/protocols/oauth2/web-server#obtainingaccesstokens
-    
     data = {
         'code': code,
         'client_id': settings.GOOGLE_OAUTH2_CLIENT_ID,
@@ -63,10 +61,6 @@ def google_get_access_token(*, code: str, redirect_uri: str) -> str:
     }
 
     response = requests.post(GOOGLE_ACCESS_TOKEN_OBTAIN_URL, data=data)
-
-    print(response.request)
-    print(response.status_code)
-    print(response.json)
 
     if not response.ok:
         raise ValidationError('Failed to obtain access token from Google.')

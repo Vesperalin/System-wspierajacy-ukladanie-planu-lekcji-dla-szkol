@@ -15,7 +15,7 @@ const Login = () => {
 
 		const params = {
 			response_type: 'code',
-			client_id: '178122326241-ga6pmq1c0f6jsa74jnar8mf04okncgnd.apps.googleusercontent.com',
+			client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
 			redirect_uri: `http://localhost:8000/${redirectUri}`,
 			prompt: 'select_account',
 			access_type: 'offline',
