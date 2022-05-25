@@ -106,7 +106,7 @@ class ClassSerializer(serializers.ModelSerializer):
 class LessonsProgramSerializer(serializers.ModelSerializer):
     class Meta:
         model = LessonsProgram
-        fields = ['ID_Lessons_program', 'FK_Class', 'FK_Subject', 'Hours_no']
+        fields = ['ID_Lessons_program', 'Class', 'Subject', 'Hours_no']
 
 
 class LessonSerializer(serializers.ModelSerializer):

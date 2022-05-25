@@ -415,5 +415,6 @@ def class_program(request):
         class_number = validate_class_no(class_name)
         lesson_program = LessonsProgram.objects.filter(Class=class_number)
 
-        return Response(lesson_program, status=status.HTTP_200_OK)
+        serializer = LessonsProgramSerializer(lesson_program, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
