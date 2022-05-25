@@ -7,14 +7,16 @@ import Toolbox from '../../../components/toolbox/Toolbox';
 import style from './Creator.module.scss';
 import { scheduleSliceActions } from '../../../store/schedule-slice';
 import ScheduleWindow from '../../../components/schedule-window/ScheduleWindow';
-import { getLessonsHours } from '../../../store/schedule-slice';
+import { getLessonsHoursAndProgram } from '../../../store/schedule-slice';
 import Button from '../../../components/button/Button';
 import Modal from '../../../components/modal/Modal';
 import { getDayName, getHours } from './ScheduleCreator';
+import ProgramPanel from '../../../components/program-panel/ProgramPanel';
 
 const ScheduleEditor = () => {
 	const chosenSchedule = useSelector(state => state.schedule.chosenSchedule);
 	const lessonsHours = useSelector(state => state.schedule.lessonsHours);
+	const programForClass = useSelector(state => state.schedule.currentProgramForClass);
 	const [showEditClassModal, setShowEditClassModal] = useState(false);
 	const [chosenClassForEdit, setChosenClassForEdit] = useState({});
 	const [message, setMessage] = useState([]);
@@ -26,11 +28,14 @@ const ScheduleEditor = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		dispatch(getLessonsHours());
+		dispatch(getLessonsHoursAndProgram({ value: location.state.school_class }));
 
 		axios
 			.get(`http://127.0.0.1:8000/api/lesson_plans/${location.state.school_class.ID_Class}/`)
-			.then(response => dispatch(scheduleSliceActions.assignLessonsToPlan(response.data)))
+			.then(response => {
+				dispatch(scheduleSliceActions.assignLessonsToPlan(response.data));
+				dispatch(scheduleSliceActions.calculateProgram());
+			})
 			.catch(error => {
 				console.log(error);
 			});
@@ -38,7 +43,7 @@ const ScheduleEditor = () => {
 		axios
 			.get('http://127.0.0.1:8000/api/subjects_with_colors/')
 			.then(response => setColors(response.data));
-	}, [dispatch, location.state.school_class.ID_Class]);
+	}, [dispatch, location.state.school_class, location.state.school_class.ID_Class]);
 
 	const onOpenEditClassModalHandler = lesson => {
 		setChosenClassForEdit(lesson);
@@ -111,6 +116,7 @@ const ScheduleEditor = () => {
 				</Modal>
 			)}
 			<div className={style['toolbox-wrapper']}>
+				<ProgramPanel program={programForClass} />
 				<Toolbox
 					showEditClassModal={showEditClassModal}
 					setShowEditClassModal={setShowEditClassModal}
@@ -118,10 +124,12 @@ const ScheduleEditor = () => {
 					setChosenClassForEdit={setChosenClassForEdit}
 					subjectsColors={colors}
 				/>
-				<Button text='Save plan' onClick={onSaveScheduleHandler} />
-				<button onClick={() => navigate('/schedules')} className={style.button}>
-					&larr; Back
-				</button>
+				<div className={style['button-wrapper']}>
+					<Button text='Save plan' onClick={onSaveScheduleHandler} />
+					<button onClick={() => navigate('/schedules')} className={style.button}>
+						&larr; Back
+					</button>
+				</div>
 			</div>
 			<div className={style['panel-wrapper']}>
 				<div className={style['panel']}>

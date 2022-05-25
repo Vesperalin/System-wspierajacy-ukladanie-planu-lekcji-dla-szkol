@@ -11,12 +11,12 @@ const EditClassModal = props => {
 	const [subjects, setSubjects] = useState([]);
 	const [teachers, setTeachers] = useState([]);
 	const [classrooms, setClassrooms] = useState([]);
+	const [selectedTeacher, setSelectedTeacher] = useState(null);
+	const [selectedSubject, setSelectedSubject] = useState(null);
+	const [selectedClassroom, setSelectedClassroom] = useState(null);
 	const [selectionError, setSelectionError] = useState('');
-	const [selectedTeacher, setSelectedTeacher] = useState({});
-	const [selectedSubject, setSelectedSubject] = useState({});
-	const [selectedClassroom, setSelectedClassroom] = useState({});
-	const dispatch = useDispatch();
 	const setErrorMessage = props.setErrorMessage;
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		axios
@@ -31,6 +31,27 @@ const EditClassModal = props => {
 					setTeachers(responses[1].data);
 					setClassrooms(responses[2].data);
 					setErrorMessage('');
+					const teacher = responses[1].data.find(
+						elem => elem.ID_Teacher === props.chosenClassForEdit.teacher.ID_Teacher,
+					);
+					const subject = responses[0].data.find(
+						elem => elem.ID_Subject === props.chosenClassForEdit.subject.ID_Subject,
+					);
+					const classroom = responses[2].data.find(
+						elem => elem.Classroom_no === props.chosenClassForEdit.classroom.Classroom_no,
+					);
+					setSelectedTeacher({
+						value: teacher.ID_Teacher,
+						label: `${teacher.Name} ${teacher.Surname}`,
+					});
+					setSelectedSubject({
+						value: subject.ID_Subject,
+						label: subject.Subject_name,
+					});
+					setSelectedClassroom({
+						value: classroom.Classroom_no,
+						label: classroom.Classroom_no,
+					});
 				}),
 			)
 			.catch(error => {
@@ -42,7 +63,12 @@ const EditClassModal = props => {
 					setErrorMessage('Unknown error occurred');
 				}
 			});
-	}, [setErrorMessage]);
+	}, [
+		props.chosenClassForEdit.classroom.Classroom_no,
+		props.chosenClassForEdit.subject.ID_Subject,
+		props.chosenClassForEdit.teacher.ID_Teacher,
+		setErrorMessage,
+	]);
 
 	const onCloseModalHandler = () => {
 		props.setShowEditClassModal(false);
@@ -96,31 +122,21 @@ const EditClassModal = props => {
 			onAccept={onEditLessonHandler}
 			onReject={onCloseModalHandler}
 		>
-			<h3>
-				Teacher{' '}
-				<span>
-					(current:{' '}
-					{`${props.chosenClassForEdit.teacher.Name} ${props.chosenClassForEdit.teacher.Surname}`})
-				</span>
-			</h3>
+			<h3>Teacher</h3>
 			<Select
 				className={style.select}
 				value={selectedTeacher}
 				onChange={setSelectedTeacher}
 				options={teachersOptions}
 			/>
-			<h3>
-				Subject <span>(current: {props.chosenClassForEdit.subject.Subject_name})</span>
-			</h3>
+			<h3>Subject</h3>
 			<Select
 				className={style.select}
 				value={selectedSubject}
 				onChange={setSelectedSubject}
 				options={subjectsOptions}
 			/>
-			<h3>
-				Classroom <span>(current: {props.chosenClassForEdit.classroom.Classroom_no})</span>
-			</h3>
+			<h3>Classroom</h3>
 			<Select
 				className={style.select}
 				value={selectedClassroom}

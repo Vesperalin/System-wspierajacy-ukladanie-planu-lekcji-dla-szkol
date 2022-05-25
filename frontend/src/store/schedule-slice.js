@@ -1,10 +1,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-export const getLessonsHours = createAsyncThunk('add-schedule', async () => {
-	return axios.get('http://127.0.0.1:8000/api/lesson_hours/').then(data => {
-		return data;
-	});
+export const getLessonsHoursAndProgram = createAsyncThunk('add-schedule', async school_class => {
+	return axios
+		.all([
+			axios.get('http://127.0.0.1:8000/api/lesson_hours/'),
+			axios.post('http://127.0.0.1:8000/api/class_program/', school_class.value),
+		])
+		.then(
+			axios.spread((...responses) => {
+				return { lessonsHours: responses[0].data, program: responses[1].data };
+			}),
+		)
+		.catch(_ => {});
 });
 
 const scheduleSlice = createSlice({
@@ -14,8 +22,33 @@ const scheduleSlice = createSlice({
 		createdLessons: [],
 		nextLessonIndex: 1,
 		lessonsHours: [],
+		programForClass: [],
+		currentProgramForClass: [],
 	},
 	reducers: {
+		calculateProgram(state) {
+			const tempCurrProgramForClass = {};
+
+			for (let i = 0; i < state.programForClass.length; i++) {
+				tempCurrProgramForClass[state.programForClass[i].Subject] =
+					state.programForClass[i].Hours_no;
+			}
+
+			for (let row = 0; row < state.chosenSchedule.length; row++) {
+				for (let column = 0; column < state.chosenSchedule[row].length; column++) {
+					if (state.chosenSchedule[row][column].subject !== undefined) {
+						if (state.chosenSchedule[row][column].subject.Subject_name in tempCurrProgramForClass) {
+							if (
+								tempCurrProgramForClass[state.chosenSchedule[row][column].subject.Subject_name] > 0
+							) {
+								tempCurrProgramForClass[state.chosenSchedule[row][column].subject.Subject_name]--;
+							}
+						}
+					}
+				}
+			}
+			state.currentProgramForClass = tempCurrProgramForClass;
+		},
 		addLesson(state, action) {
 			const teacher = action.payload.teacher;
 			const subject = action.payload.subject;
@@ -61,7 +94,7 @@ const scheduleSlice = createSlice({
 			}
 		},
 		revertLessonFromSchedule(state, action) {
-			const id = action.payload.id;
+			const id = action.payload.item.lesson.id;
 
 			let lessonToMove = undefined;
 
@@ -80,7 +113,6 @@ const scheduleSlice = createSlice({
 			}
 		},
 		addLessonToSchedule(state, action) {
-			// TODO - nie działa na razie podmienianie - póki co jest zabranianie podmieniania
 			const id = action.payload.id;
 			const column = action.payload.column;
 			const row = action.payload.row;
@@ -110,53 +142,6 @@ const scheduleSlice = createSlice({
 					state.chosenSchedule[column][row] = lessonToMove;
 				}
 			}
-
-			// ! To nie działa - podmienianie
-			/*const id = action.payload.id;
-			const column = action.payload.column;
-			const row = action.payload.row;
-
-			const lessonOnBoard = state.chosenSchedule[column][row];
-
-			if (lessonOnBoard !== undefined && Object.keys(lessonOnBoard).length !== 0) {
-				state.createdLessons.push({
-					teacher: lessonOnBoard.teacher,
-					subject: lessonOnBoard.subject,
-					classroom: lessonOnBoard.classroom,
-					id: lessonOnBoard.id,
-				});
-				state.chosenSchedule[column][row] = {};
-			}
-
-			const lesson = state.createdLessons.filter(l => l.id === id);
-
-			// if element in toolbox
-			if (lesson[0] !== undefined) {
-				state.chosenSchedule[column][row] = lesson[0];
-				state.createdLessons = state.createdLessons.filter(l => l.id !== lesson[0].id);
-			} else {
-				// if element in schedule
-				let lessonInSchedule = undefined;
-
-				for (let i = 0; i < state.chosenSchedule.length; i++) {
-					for (let j = 0; j < state.chosenSchedule[i].length; j++) {
-						if (
-							state.chosenSchedule[i][j] !== undefined &&
-							Object.keys(state.chosenSchedule[i][j]).length !== 0
-						) {
-							if (state.chosenSchedule[i][j].id === id) {
-								lessonInSchedule = state.chosenSchedule[i][j];
-								state.chosenSchedule[i][j] = {};
-							}
-						}
-					}
-				}
-				console.log(JSON.stringify(lessonInSchedule), row, column);
-				state.chosenSchedule[column][row] = lessonInSchedule;
-			}
-
-			//console.log(JSON.stringify(state.chosenSchedule));
-			*/
 		},
 		deleteLessonFromSchedule(state, action) {
 			const column = action.payload.column;
@@ -169,21 +154,27 @@ const scheduleSlice = createSlice({
 		},
 	},
 	extraReducers: {
-		[getLessonsHours.pending]: state => {
-			console.log('pending');
+		[getLessonsHoursAndProgram.pending]: state => {
+			console.log('pending lessons hours and program');
 		},
-		[getLessonsHours.fulfilled]: (state, { payload }) => {
-			state.lessonsHours = payload.data;
+		[getLessonsHoursAndProgram.fulfilled]: (state, { payload }) => {
+			state.lessonsHours = payload.lessonsHours;
 			state.chosenSchedule = [[], [], [], [], []];
 
-			for (let i = 0; i < payload.data.length; i++) {
+			for (let i = 0; i < payload.lessonsHours.length; i++) {
 				for (let j = 0; j < 5; j++) {
 					state.chosenSchedule[j].push({});
 				}
 			}
+
+			state.programForClass = payload.program;
+
+			for (let i = 0; i < payload.program.length; i++) {
+				state.currentProgramForClass[payload.program[i].Subject] = payload.program[i].Hours_no;
+			}
 		},
-		[getLessonsHours.rejected]: state => {
-			console.log('rejected');
+		[getLessonsHoursAndProgram.rejected]: state => {
+			console.log('rejected lessons hours and program');
 		},
 	},
 });

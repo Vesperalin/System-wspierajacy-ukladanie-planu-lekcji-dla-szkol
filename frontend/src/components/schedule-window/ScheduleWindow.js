@@ -41,6 +41,7 @@ const ScheduleWindow = props => {
 						row: props.row,
 					}),
 				);
+				dispatch(scheduleSliceActions.calculateProgram());
 			})
 			.catch(error => {
 				setMessage(error.response.data);
