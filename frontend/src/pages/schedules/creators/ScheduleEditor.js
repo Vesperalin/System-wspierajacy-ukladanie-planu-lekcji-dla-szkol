@@ -7,7 +7,7 @@ import Toolbox from '../../../components/toolbox/Toolbox';
 import style from './Creator.module.scss';
 import { scheduleSliceActions } from '../../../store/schedule-slice';
 import ScheduleWindow from '../../../components/schedule-window/ScheduleWindow';
-import { getLessonsHours } from '../../../store/schedule-slice';
+import { getLessonsHours, getProgram } from '../../../store/schedule-slice';
 import Button from '../../../components/button/Button';
 import Modal from '../../../components/modal/Modal';
 import { getDayName, getHours } from './ScheduleCreator';
@@ -27,7 +27,7 @@ const ScheduleEditor = () => {
 
 	useEffect(() => {
 		dispatch(getLessonsHours());
-		// TODO uruchomic thunka
+		dispatch(getProgram(location.state.school_class));
 
 		axios
 			.get(`http://127.0.0.1:8000/api/lesson_plans/${location.state.school_class.ID_Class}/`)

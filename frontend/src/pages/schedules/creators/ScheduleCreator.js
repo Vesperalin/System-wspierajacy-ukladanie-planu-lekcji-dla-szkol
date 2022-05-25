@@ -43,8 +43,6 @@ const ScheduleCreator = () => {
 	useEffect(() => {
 		dispatch(getLessonsHours());
 		dispatch(getProgram(location.state.school_class));
-		// TODO uruchomic thunka
-
 		axios
 			.get('http://127.0.0.1:8000/api/subjects_with_colors/')
 			.then(response => setColors(response.data));
