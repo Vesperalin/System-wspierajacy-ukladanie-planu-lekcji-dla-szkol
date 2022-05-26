@@ -24,10 +24,12 @@ def jwt_login(*, response: HttpResponse, user: User) -> HttpResponse:
     payload = jwt_payload_handler(user)
     token = jwt_encode_handler(payload)
 
+    print(f'token: {token}')
     if api_settings.JWT_AUTH_COOKIE:
         # Reference: https://github.com/Styria-Digital/django-rest-framework-jwt/blob/master/src/rest_framework_jwt/compat.py#L43
         set_cookie_with_token(response, api_settings.JWT_AUTH_COOKIE, token)
 
+    print(response)
     user_record_login(user=user)
 
     return response
