@@ -70,7 +70,7 @@ class GoogleLoginApi(PublicApiMixin, ApiErrorsMixin, APIView):
         response = redirect("http://127.0.0.1:3000")
         print('hejka')
         response = jwt_login(response=response, user=user)
-        print(user)
+        print(response)
 
         return response
 

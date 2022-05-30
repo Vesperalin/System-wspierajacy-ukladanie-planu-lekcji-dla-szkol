@@ -2,6 +2,11 @@ import React, { useCallback } from 'react'
 import googleLogo from '../../assets/google_logo.png';
 
 import style from './Login.module.scss';
+import OAuth2Login from 'react-simple-oauth2-login';
+
+import { GoogleLogin } from 'react-google-login';
+
+
 
 const Login = () => {
 	const openGoogleLoginPage = useCallback(() => {
@@ -27,9 +32,19 @@ const Login = () => {
 		window.location = `${googleAuthUrl}?${urlParams}`;
 	}, []);
 
+	const onSuccess = response => console.log(response);
+	const onFailure = response => console.error(response);
+	const scope = [
+		'https://www.googleapis.com/auth/userinfo.email',
+		// 'https://www.googleapis.com/auth/userinfo.profile'
+	].join(' ');
+
+	const responseGoogle = (response) => {
+		console.log(response);
+	  }
 	return (
 		<div className={style.wrapper}>
-			<h1>Login</h1>
+			{/* <h1>Login</h1>
 			<div className={style.panel}>
 				<div className={style.action}>
 					<h3>Log in to app:</h3>
@@ -45,7 +60,15 @@ const Login = () => {
 						<p>Sign Up with Google</p>
 					</button>
 				</div>
-			</div>
+			</div> */}
+			<OAuth2Login
+				authorizationUrl="https://accounts.google.com/o/oauth2/v2/auth"
+				responseType="token"
+				clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+				redirectUri="http://localhost:8000/auth/login/google/"
+				scope={scope}
+				onSuccess={onSuccess}
+				onFailure={onFailure} />
 		</div>
 	);
 };
