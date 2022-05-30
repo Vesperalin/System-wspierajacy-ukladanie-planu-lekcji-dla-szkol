@@ -9,26 +9,26 @@ import { useEffect } from 'react';
 import axios from 'axios';
 
 const Navbar = () => {
-	const dispatch = useDispatch();
-	const user = useSelector((state) => state.user.user);
+	// const dispatch = useDispatch();
+	// const user = useSelector((state) => state.user.user);
 
-	const handleLogout = () => {
-		console.log('hejka');
-		axios
-		.post('http://localhost:8000/auth/logout/')
-		.then(response => dispatch(logout()))
-		.catch(error => console.log(error));
-	};
+	// const handleLogout = () => {
+	// 	console.log('hejka');
+	// 	axios
+	// 	.post('http://localhost:8000/auth/logout/')
+	// 	.then(response => dispatch(logout()))
+	// 	.catch(error => console.log(error));
+	// };
 
-	useEffect(() => {
-		if(!user){
-			axios
-			.get('http://localhost:8000/users/me/')
-			.then(response => {
-				dispatch(login({email: response.data.email}))
-			});
-		}
-	}, []);
+	// useEffect(() => {
+	// 	if(!user){
+	// 		axios
+	// 		.get('http://localhost:8000/users/me/')
+	// 		.then(response => {
+	// 			dispatch(login({email: response.data.email}))
+	// 		});
+	// 	}
+	// }, []);
 
 	return (
 		<header className={style.header}>
@@ -53,12 +53,15 @@ const Navbar = () => {
 						<p>Classrooms</p>
 					</NavLink>
 				</nav>
-				{!user && <NavLink className={style.login} to='/login'>
+				<NavLink className={style.login} to='/login'>
+					<p>Login</p>
+				</NavLink>
+				{/* {!user && <NavLink className={style.login} to='/login'>
 					<p>Login</p>
 				</NavLink>}
 				{user && <Button className={style.login} onClick={handleLogout} text='Logout'>
 					<p>Logout</p>
-				</Button>}
+				</Button>} */}
 				
 			</div>
 		</header>
