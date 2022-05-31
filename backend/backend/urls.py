@@ -42,4 +42,6 @@ urlpatterns = [
     path('api/subjects_with_colors/<int:pk>/', views.subject_with_color_detail),
     path('api/tile/', views.tile_validation),
     path('api/class_program/', views.class_program),
+    path('auth/',include(('auth.urls', 'auth'))),
+    path('users/', include(('users.urls', 'users'))),
 ]

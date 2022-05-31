@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
+import datetime
+
 import os
 from pathlib import Path
 
@@ -29,7 +31,6 @@ DEBUG = True
 
 INSTALLED_APPS = [
     'timetable.apps.TimetableConfig',
-    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,6 +39,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.admindocs',
     'corsheaders',
+
+    'django_extensions',
+    'rest_framework',
+    'rest_framework.authtoken',
+
+    'rest_framework_jwt',
+    'rest_framework_jwt.blacklist',
+
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -105,7 +115,8 @@ DATABASES = {
         'NAME': 'school_plan',
         'USER': 'root',
         'PASSWORD': 'password',
-        'HOST': '127.0.0.1',
+        # 'HOST': '127.0.0.1',
+        'HOST': 'db',
         'PORT': '3306',
         'TEST': {
             'NAME': 'test_base',
@@ -150,6 +161,26 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Custom user model
+AUTH_USER_MODEL = 'users.User'
+
+# JWT settings
+JWT_EXPIRATION_DELTA_DEFAULT = 2.628e+6  # 1 month in seconds
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(
+        seconds=2.628e+6,
+    ),
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
+    'JWT_GET_USER_SECRET_KEY': lambda user: user.secret_key,
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'users.selectors.jwt_response_payload_handler',
+    'JWT_AUTH_COOKIE': 'jwt_token',
+    'JWT_AUTH_COOKIE_SAMESITE': 'None'
+}
+
+# Google OAuth2 settings
+GOOGLE_OAUTH2_CLIENT_ID = "178122326241-ga6pmq1c0f6jsa74jnar8mf04okncgnd.apps.googleusercontent.com"
+GOOGLE_OAUTH2_CLIENT_SECRET = "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"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
