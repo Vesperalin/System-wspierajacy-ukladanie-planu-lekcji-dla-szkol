@@ -1,12 +1,13 @@
 import ast
-from calendar import weekday
+import random
+
+from django.db.models import Exists, OuterRef
 from rest_framework import viewsets, filters, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.db.models import Exists, OuterRef
+
 from timetable.serializer import *
 from timetable.utils import assign_color, find_class_no, find_position_in_schedule
-import json
 
 
 class ClassroomView(viewsets.ModelViewSet):
@@ -24,9 +25,36 @@ class ClassroomView(viewsets.ModelViewSet):
                             "! This classroom has assigned lessons.", status=status.HTTP_400_BAD_REQUEST)
 
 
+class TeacherSubjectView(viewsets.ModelViewSet):
+    serializer_class = TeacherSubjectSerializer
+    queryset = Teacher_Subject.objects.all()
+
+
 class TeacherView(viewsets.ModelViewSet):
     serializer_class = TeacherSerializer
     queryset = Teacher.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        subjects = list(Subject.objects.all())
+        if len(subjects) != 0:
+            serializer.save()
+            id_teacher = serializer['ID_Teacher'].value
+            teacher = Teacher.objects.get(pk=id_teacher)
+            n = random.randint(1, len(subjects))
+            chosen_subject = random.sample(subjects, n)
+            for subject in chosen_subject:
+                teacher_subject = Teacher_Subject(FK_Teacher=teacher, FK_Subject=subject)
+                teacher_subject.save()
+            return Response("Teacher added!", status=status.HTTP_200_OK)
+        else:
+            return Response("Unable to add new teacher! You have no subjects!", status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, *args, **kwargs):
         teacher = self.get_object()
@@ -151,12 +179,8 @@ def lessons_plan(request):
                 warnings.append("Insufficient number of hours for subject: " + subject + ". You need " +
                                 str(subjects_hours[subject]) + " more hours to fulfill core curriculum!")
             if subjects_hours[subject] < 0:
-                response = {
-                    'warning': False,
-                    'message': ["Too many hours of " + subject + " assigned! You need to remove " +
-                                str(abs(subjects_hours[subject])) + " from plan."]
-                }
-                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                warnings.append("Too many hours of " + subject + " assigned! You may want to remove " +
+                                str(abs(subjects_hours[subject])) + " from plan.")
 
         for subject in subject_out_of_program:
             warnings.append(subject + " is not included in core curriculum!!!")
@@ -272,12 +296,8 @@ def lessons_plan_detail(request, pk):
                 warnings.append("Insufficient number of hours for subject: " + subject + ". You need " +
                                 str(subjects_hours[subject]) + " more hours to fulfill core curriculum!")
             if subjects_hours[subject] < 0:
-                response = {
-                    'warning': False,
-                    'message': ["Too many hours of " + subject + " assigned! You need to remove " +
-                                str(abs(subjects_hours[subject])) + " from plan."]
-                }
-                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                warnings.append("Too many hours of " + subject + " assigned! You may want to remove " +
+                                str(abs(subjects_hours[subject])) + " from plan.")
 
         for subject in subject_out_of_program:
             warnings.append(subject + " is not included in core curriculum!!!")
@@ -418,3 +438,37 @@ def class_program(request):
         serializer = LessonsProgramSerializer(lesson_program, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+@api_view(['POST'])
+def random_plan(request):
+    request_data = request.data
+    print(request_data)
+    class_serializer = ClassSerializer(request_data)
+
+    if request.method == 'POST':
+        class_name = class_serializer['Class_no'].value
+        class_number = validate_class_no(class_name)
+        lesson_program = LessonsProgram.objects.filter(Class=class_number)
+        tiles = []
+        lesson_program = list(lesson_program)
+        counter = 0
+
+        classrooms = list(Classroom.objects.all())
+
+        for tile in lesson_program:
+            subject_name = tile.Subject
+            hours_no = tile.Hours_no
+            for hour in range(hours_no):
+                teach_sub = list(Teacher_Subject.objects.filter(FK_Subject__Subject_name=subject_name))
+                if len(teach_sub) != 0 and len(classrooms) != 0:
+                    tiles.append({})
+                    rand = random.choice(teach_sub)
+                    teacher_serializer = TeacherSerializer(rand.FK_Teacher)
+                    tiles[counter]['teacher'] = teacher_serializer.data
+                    subject_serializer = SubjectSerializer(rand.FK_Subject)
+                    tiles[counter]['subject'] = subject_serializer.data
+                    classroom_serializer = ClassroomSerializer(random.choice(classrooms))
+                    tiles[counter]['classroom'] = classroom_serializer.data
+                    counter += 1
+
+        return Response(tiles, status=status.HTTP_200_OK)

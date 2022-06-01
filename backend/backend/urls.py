@@ -31,6 +31,7 @@ router.register(r'lesson_programs', views.LessonsProgramView, 'lesson_program')
 router.register(r'lesson_hours', views.LessonHourView, 'lesson_hour')
 router.register(r'classes_lesson', views.ClassWithLessonView, 'class_with_lesson')
 router.register(r'classes_no_lesson', views.ClassWithoutLessonView, 'class_without_lesson')
+router.register(r'teacher_subjects', views.TeacherSubjectView, 'teacher_subject')
 
 
 urlpatterns = [
@@ -41,6 +42,7 @@ urlpatterns = [
     path('api/subjects_with_colors/', views.subject_with_color),
     path('api/subjects_with_colors/<int:pk>/', views.subject_with_color_detail),
     path('api/tile/', views.tile_validation),
+    path('api/random_plan/', views.random_plan),
     path('api/class_program/', views.class_program),
     path('auth/',include(('auth.urls', 'auth'))),
     path('users/', include(('users.urls', 'users'))),

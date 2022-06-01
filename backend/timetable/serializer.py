@@ -119,3 +119,9 @@ class LessonHourSerializer(serializers.ModelSerializer):
     class Meta:
         model = LessonHour
         fields = ['ID_Lesson_hour', 'Lesson_no', 'Start_hour', 'Start_minute', 'End_hour', 'End_minute']
+
+
+class TeacherSubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = ['ID_Teacher_Subject', 'FK_Teacher', 'FK_Subject']
