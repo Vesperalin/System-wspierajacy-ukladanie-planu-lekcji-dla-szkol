@@ -35,11 +35,15 @@ class TeacherView(viewsets.ModelViewSet):
     queryset = Teacher.objects.all()
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        subjects = list(Subject.objects.all())
+        if len(subjects) != 0:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        else:
+            return Response('Unable to add new teacher! You have no subjects!', status=status.HTTP_400_BAD_REQUEST)
 
     def perform_create(self, serializer):
         subjects = list(Subject.objects.all())
@@ -54,7 +58,7 @@ class TeacherView(viewsets.ModelViewSet):
                 teacher_subject.save()
             return Response("Teacher added!", status=status.HTTP_200_OK)
         else:
-            return Response("Unable to add new teacher! You have no subjects!", status=status.HTTP_400_BAD_REQUEST)
+            return Response("Unable to add new teacher! You have no subjects!", status=status.HTTP_404_NOT_FOUND)
 
     def destroy(self, request, *args, **kwargs):
         teacher = self.get_object()
@@ -74,7 +78,11 @@ class SubjectView(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         subject = self.get_object()
         lessons = Lesson.objects.filter(FK_Subject=subject)
-        if len(lessons) == 0:
+        assigned_teachers = Teacher_Subject.objects.filter(FK_Subject=subject)
+        if len(assigned_teachers) != 0:
+            return Response("Unable to delete " + subject.Subject_name +
+                            "! This subject has assigned teachers.", status=status.HTTP_400_BAD_REQUEST)
+        elif len(lessons) == 0:
             subject.delete()
             return Response("Subject deleted!", status=status.HTTP_200_OK)
         else:
