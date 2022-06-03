@@ -19,7 +19,11 @@ const AddClass = () => {
 			.then(response => navigate('/classes'))
 			.catch(error => {
 				if (error.response.status === 400) {
-					setErrorMessage(error.response.data.message);
+					if (error.response.data.message === undefined) {
+						setErrorMessage(error.response.data);
+					} else {
+						setErrorMessage(error.response.data.message);
+					}
 				} else if (error.response.status === 404) {
 					setErrorMessage(error.response.data.detail);
 				} else {

@@ -13,17 +13,18 @@ const EditTeacher = () => {
 
 	const onSubmit = () => {
 		axios
-			.put(
-				`http://127.0.0.1:8000/api/teachers/${location.state.teacher.ID_Teacher}/`,
-				{
-					Name: name,
-					Surname: surname,
-				},
-			)
+			.put(`http://127.0.0.1:8000/api/teachers/${location.state.teacher.ID_Teacher}/`, {
+				Name: name,
+				Surname: surname,
+			})
 			.then(response => navigate('/teachers'))
 			.catch(error => {
 				if (error.response.status === 400) {
-					setErrorMessage(error.response.data.message);
+					if (error.response.data.message === undefined) {
+						setErrorMessage(error.response.data);
+					} else {
+						setErrorMessage(error.response.data.message);
+					}
 				} else if (error.response.status === 404) {
 					setErrorMessage(error.response.data.detail);
 				} else {
