@@ -22,6 +22,12 @@ class Subject(models.Model):
     Color = models.CharField(max_length=10, blank=True, null=True)
 
 
+class Teacher_Subject(models.Model):
+    ID_Teacher_Subject = models.BigAutoField(primary_key=True)
+    FK_Teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    FK_Subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+
+
 class Class(models.Model):
     ID_Class = models.BigAutoField(primary_key=True)
     Class_no = models.CharField(max_length=20)
