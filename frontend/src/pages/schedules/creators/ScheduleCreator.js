@@ -43,7 +43,9 @@ const ScheduleCreator = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		dispatch(getLessonsHoursAndProgram(location.state.school_class));
+		dispatch(
+			getLessonsHoursAndProgram({ school_class: location.state.school_class, isCreator: 1 }),
+		);
 		dispatch(scheduleSliceActions.calculateProgram());
 
 		axios

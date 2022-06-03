@@ -1,15 +1,21 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-export const getLessonsHoursAndProgram = createAsyncThunk('add-schedule', async school_class => {
+export const getLessonsHoursAndProgram = createAsyncThunk('add-schedule', async params => {
 	return axios
 		.all([
 			axios.get('http://127.0.0.1:8000/api/lesson_hours/'),
-			axios.post('http://127.0.0.1:8000/api/class_program/', school_class.value),
+			axios.post('http://127.0.0.1:8000/api/class_program/', params.school_class.value),
+			axios.post('http://127.0.0.1:8000/api/random_plan/', params.school_class.value),
 		])
 		.then(
 			axios.spread((...responses) => {
-				return { lessonsHours: responses[0].data, program: responses[1].data };
+				return {
+					lessonsHours: responses[0].data,
+					program: responses[1].data,
+					randomPlan: responses[2].data,
+					isCreator: params.isCreator === 1 ? true : false,
+				};
 			}),
 		)
 		.catch(_ => {});
@@ -171,6 +177,16 @@ const scheduleSlice = createSlice({
 
 			for (let i = 0; i < payload.program.length; i++) {
 				state.currentProgramForClass[payload.program[i].Subject] = payload.program[i].Hours_no;
+			}
+
+			if (payload.isCreator) {
+				state.createdLessons = payload.randomPlan.map(elem => {
+					const id = state.nextLessonIndex;
+					state.nextLessonIndex += 1;
+					return { ...elem, id: id };
+				});
+			} else {
+				state.createdLessons = [];
 			}
 		},
 		[getLessonsHoursAndProgram.rejected]: state => {
