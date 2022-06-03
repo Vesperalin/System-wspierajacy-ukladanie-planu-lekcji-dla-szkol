@@ -28,7 +28,12 @@ const ScheduleEditor = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		dispatch(getLessonsHoursAndProgram({ value: location.state.school_class }));
+		dispatch(
+			getLessonsHoursAndProgram({
+				school_class: { value: location.state.school_class },
+				isCreator: 2,
+			}),
+		);
 
 		axios
 			.get(`http://127.0.0.1:8000/api/lesson_plans/${location.state.school_class.ID_Class}/`)
@@ -135,23 +140,40 @@ const ScheduleEditor = () => {
 				<div className={style['panel']}>
 					<h1>{`${location.state.school_class.Class_no} - ${location.state.school_class.Year}`}</h1>
 					<div className={style['plan-wrapper']}>
-						{chosenSchedule.map((column, column_index) => {
-							return (
-								<div key={column_index}>
-									<p className={style['day-name']}>{getDayName(column_index)}</p>
-									{chosenSchedule[column_index].map((lesson, row_index) => {
-										return (
-											<div key={`${column_index}${row_index}}`}>
-												{column_index === 0 ? (
-													<div className={style['window-with-wrapper']}>
-														<p className={style['lesson-hours']}>
-															{getHours(
-																lessonsHours[row_index].Start_hour,
-																lessonsHours[row_index].Start_minute,
-																lessonsHours[row_index].End_hour,
-																lessonsHours[row_index].End_minute,
-															)}
-														</p>
+						{lessonsHours.length > 0 &&
+							chosenSchedule.map((column, column_index) => {
+								return (
+									<div key={column_index}>
+										<p className={style['day-name']}>{getDayName(column_index)}</p>
+										{chosenSchedule[column_index].map((lesson, row_index) => {
+											return (
+												<div key={`${column_index}${row_index}}`}>
+													{column_index === 0 ? (
+														<div className={style['window-with-wrapper']}>
+															<p className={style['lesson-hours']}>
+																{getHours(
+																	lessonsHours[row_index].Start_hour,
+																	lessonsHours[row_index].Start_minute,
+																	lessonsHours[row_index].End_hour,
+																	lessonsHours[row_index].End_minute,
+																)}
+															</p>
+															<ScheduleWindow
+																key={`${column_index}${row_index}}`}
+																lesson={lesson}
+																class={location.state.school_class}
+																column={column_index}
+																row={row_index}
+																onOpenEditClassModalHandler={onOpenEditClassModalHandler}
+																onDeleteLessonHandler={onDeleteLessonHandler.bind(
+																	null,
+																	column_index,
+																	row_index,
+																)}
+																subjectsColors={colors}
+															/>
+														</div>
+													) : (
 														<ScheduleWindow
 															key={`${column_index}${row_index}}`}
 															lesson={lesson}
@@ -166,29 +188,13 @@ const ScheduleEditor = () => {
 															)}
 															subjectsColors={colors}
 														/>
-													</div>
-												) : (
-													<ScheduleWindow
-														key={`${column_index}${row_index}}`}
-														lesson={lesson}
-														class={location.state.school_class}
-														column={column_index}
-														row={row_index}
-														onOpenEditClassModalHandler={onOpenEditClassModalHandler}
-														onDeleteLessonHandler={onDeleteLessonHandler.bind(
-															null,
-															column_index,
-															row_index,
-														)}
-														subjectsColors={colors}
-													/>
-												)}
-											</div>
-										);
-									})}
-								</div>
-							);
-						})}
+													)}
+												</div>
+											);
+										})}
+									</div>
+								);
+							})}
 					</div>
 				</div>
 			</div>

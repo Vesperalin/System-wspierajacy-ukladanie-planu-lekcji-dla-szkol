@@ -42,7 +42,14 @@ const Toolbox = props => {
 	};
 
 	const getSubjectColor = subject => {
-		return props.subjectsColors.find(element => element.ID_Subject === subject.ID_Subject).Color;
+		try {
+			const color = props.subjectsColors.find(
+				element => element.ID_Subject === subject.ID_Subject,
+			).Color;
+			return color;
+		} catch (error) {
+			return undefined;
+		}
 	};
 
 	return (
@@ -64,17 +71,19 @@ const Toolbox = props => {
 			)}
 			<Button text='+ Add' onClick={onOpenAddClassModalHandler} />
 			<div className={style['card-wrapper']} ref={dropRef}>
-				{createdLessons.map(lesson => {
-					return (
-						<LessonCard
-							key={lesson.id}
-							color={getSubjectColor(lesson.subject)}
-							lesson={lesson}
-							onOpenEditClassModalHandler={onOpenEditClassModalHandler}
-							onDeleteLessonHandler={onDeleteLessonHandler}
-						/>
-					);
-				})}
+				{props.subjectsColors !== undefined &&
+					props.subjectsColors.length > 0 &&
+					createdLessons.map(lesson => {
+						return (
+							<LessonCard
+								key={lesson.id}
+								color={getSubjectColor(lesson.subject)}
+								lesson={lesson}
+								onOpenEditClassModalHandler={onOpenEditClassModalHandler}
+								onDeleteLessonHandler={onDeleteLessonHandler}
+							/>
+						);
+					})}
 			</div>
 			<div>{errorMessage !== '' && <p>{errorMessage}</p>}</div>
 		</div>

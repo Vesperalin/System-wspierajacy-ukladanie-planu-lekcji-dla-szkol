@@ -116,7 +116,8 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': 'password',
         # 'HOST': '127.0.0.1',
-        'HOST': 'localhost',
+        # 'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': '3306',
         'TEST': {
             'NAME': 'test_base',
