@@ -1,70 +1,47 @@
-import React, { useCallback } from "react";
+import React from "react";
 import googleLogo from "../../assets/google_logo.png";
+import axios from "axios";
 
 import style from "./Login.module.scss";
-import OAuth2Login from "react-simple-oauth2-login";
+import { GoogleLogin } from "react-google-login";
 
 const Login = () => {
-  const openGoogleLoginPage = useCallback(() => {
-    const googleAuthUrl = "https://accounts.google.com/o/oauth2/v2/auth";
-    const redirectUri = "auth/login/google/";
+  const googleLogin = (accesstoken) => {
+    axios
+      .post("http://127.0.0.1:8000/auth/convert-token", {
+        token: accesstoken,
+        backend: "google-oauth2",
+        grant_type: "convert_token",
+        client_id: "j4jCAW1jy3AszyhU6C4fZnPEQybdzAPZnJQacsRt",
+        client_secret:
+          "pbkdf2_sha256$320000$MaxuZZIBNP7TKK9UojIcyZ$hh4Iml+1zdrVS3Z8FdbMB0qcdCM84m3eLBlxw40Xxhs=",
+      })
+      .then((res) => {
+        localStorage.setItem("access_token", res.data.access_token);
+        localStorage.setItem("refresh_token", res.data.refresh_token);
+      });
+  };
+  async function responseGoogle(response) {
+    await googleLogin(response.accessToken);
+    await setTimeout(() => window.location.reload(), 1000);
+  }
 
-    const scope = [
-      "https://www.googleapis.com/auth/userinfo.email",
-      // 'https://www.googleapis.com/auth/userinfo.profile'
-    ].join(" ");
-
-    const params = {
-      response_type: "code",
-      client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
-      redirect_uri: `http://localhost:8000/${redirectUri}`,
-      prompt: "select_account",
-      access_type: "offline",
-      scope,
-    };
-
-    const urlParams = new URLSearchParams(params).toString();
-
-    window.location = `${googleAuthUrl}?${urlParams}`;
-  }, []);
-
-  const onSuccess = (response) => console.log(response);
-  const onFailure = (response) => console.error(response);
-  const scope = [
-    "https://www.googleapis.com/auth/userinfo.email",
-    // 'https://www.googleapis.com/auth/userinfo.profile'
-  ].join(" ");
-
-  const responseGoogle = (response) => {
+  const failureGoogle = (response) => {
     console.log(response);
   };
+
   return (
     <div className={style.wrapper}>
       <h1>Login</h1>
       <div className={style.panel}>
-        <div className={style.action}>
-          <h3>Log in to app:</h3>
-          <button onClick={openGoogleLoginPage}>
-            <img className={style.logo} src={googleLogo} alt="google" />
-            <p>Sign In with Google</p>
-          </button>
-        </div>
-        <div className={style.action}>
-          <h3>Don't have an account? Sign up!</h3>
-          <button>
-            <img className={style.logo} src={googleLogo} alt="google" />
-            <p>Sign Up with Google</p>
-          </button>
-        </div>
+        <GoogleLogin
+          clientId="178122326241-ga6pmq1c0f6jsa74jnar8mf04okncgnd.apps.googleusercontent.com"
+          buttonText="Login"
+          onSuccess={responseGoogle}
+          onFailure={failureGoogle}
+          cookiePolicy={"single_host_origin"}
+        />
       </div>
-      {/* <OAuth2Login
-				authorizationUrl="https://accounts.google.com/o/oauth2/v2/auth"
-				responseType="token"
-				clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-				redirectUri="http://localhost:8000/auth/login/google/"
-				scope={scope}
-				onSuccess={onSuccess}
-				onFailure={onFailure} /> */}
     </div>
   );
 };

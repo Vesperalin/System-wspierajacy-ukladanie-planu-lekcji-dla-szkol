@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from rest_framework import routers
 
 from timetable import views
@@ -29,9 +29,12 @@ router.register(r'classes', views.ClassView, 'class')
 router.register(r'lessons', views.LessonView, 'lesson')
 router.register(r'lesson_programs', views.LessonsProgramView, 'lesson_program')
 router.register(r'lesson_hours', views.LessonHourView, 'lesson_hour')
-router.register(r'classes_lesson', views.ClassWithLessonView, 'class_with_lesson')
-router.register(r'classes_no_lesson', views.ClassWithoutLessonView, 'class_without_lesson')
-router.register(r'teacher_subjects', views.TeacherSubjectView, 'teacher_subject')
+router.register(r'classes_lesson', views.ClassWithLessonView,
+                'class_with_lesson')
+router.register(r'classes_no_lesson',
+                views.ClassWithoutLessonView, 'class_without_lesson')
+router.register(r'teacher_subjects',
+                views.TeacherSubjectView, 'teacher_subject')
 
 
 urlpatterns = [
@@ -44,6 +47,5 @@ urlpatterns = [
     path('api/tile/', views.tile_validation),
     path('api/random_plan/', views.random_plan),
     path('api/class_program/', views.class_program),
-    path('auth/',include(('auth.urls', 'auth'))),
-    path('users/', include(('users.urls', 'users'))),
+    path('auth/', include('drf_social_oauth2.urls', namespace='drf')),
 ]
