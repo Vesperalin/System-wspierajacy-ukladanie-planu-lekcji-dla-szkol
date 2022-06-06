@@ -39,6 +39,7 @@ const Toolbox = props => {
 
 	const onDeleteLessonHandler = lesson => {
 		dispatch(scheduleSliceActions.deleteLesson(lesson));
+		dispatch(scheduleSliceActions.calculateProgram());
 	};
 
 	const getSubjectColor = subject => {
