@@ -54,7 +54,8 @@ class TeacherView(viewsets.ModelViewSet):
             n = random.randint(1, len(subjects))
             chosen_subject = random.sample(subjects, n)
             for subject in chosen_subject:
-                teacher_subject = Teacher_Subject(FK_Teacher=teacher, FK_Subject=subject)
+                teacher_subject = Teacher_Subject(
+                    FK_Teacher=teacher, FK_Subject=subject)
                 teacher_subject.save()
             return Response("Teacher added!", status=status.HTTP_200_OK)
         else:
@@ -125,7 +126,8 @@ class LessonHourView(viewsets.ModelViewSet):
 
 class ClassWithLessonView(viewsets.ReadOnlyModelViewSet):
     serializer_class = ClassSerializer
-    queryset = Class.objects.filter(Exists(Lesson.objects.filter(FK_Class=OuterRef('pk'))))
+    queryset = Class.objects.filter(
+        Exists(Lesson.objects.filter(FK_Class=OuterRef('pk'))))
 
 
 class ClassWithoutLessonView(viewsets.ReadOnlyModelViewSet):
@@ -159,9 +161,11 @@ def lessons_plan(request):
                     minute = getattr(lesson_hours[j], 'Start_minute')
 
                     lesson = Lesson(FK_Teacher=Teacher.objects.get(pk=teacher_id),
-                                    FK_Subject=Subject.objects.get(pk=subject_id),
+                                    FK_Subject=Subject.objects.get(
+                                        pk=subject_id),
                                     FK_Class=Class.objects.get(pk=class_id),
-                                    FK_Classroom=Classroom.objects.get(pk=classroom_id),
+                                    FK_Classroom=Classroom.objects.get(
+                                        pk=classroom_id),
                                     Weekday=weekday, Hour=hour, Minute=minute)
 
                     lessons_to_save.append(lesson)
@@ -244,11 +248,14 @@ def lessons_plan_detail(request, pk):
                 return Response("Lesson position in schedule doesn't exist!", status=status.HTTP_400_BAD_REQUEST)
 
             teacher_serializer = TeacherSerializer(lesson.FK_Teacher)
-            schedule[position[0]][position[1]]['teacher'] = teacher_serializer.data
+            schedule[position[0]][position[1]
+                                  ]['teacher'] = teacher_serializer.data
             subject_serializer = SubjectSerializer(lesson.FK_Subject)
-            schedule[position[0]][position[1]]['subject'] = subject_serializer.data
+            schedule[position[0]][position[1]
+                                  ]['subject'] = subject_serializer.data
             classroom_serializer = ClassroomSerializer(lesson.FK_Classroom)
-            schedule[position[0]][position[1]]['classroom'] = classroom_serializer.data
+            schedule[position[0]][position[1]
+                                  ]['classroom'] = classroom_serializer.data
             schedule[position[0]][position[1]]['id'] = id_counter
             id_counter += 1
         return Response(schedule, status=status.HTTP_200_OK)
@@ -275,13 +282,16 @@ def lessons_plan_detail(request, pk):
                     minute = getattr(lesson_hours[j], 'Start_minute')
 
                     lesson = Lesson(FK_Teacher=Teacher.objects.get(pk=teacher_id),
-                                    FK_Subject=Subject.objects.get(pk=subject_id),
+                                    FK_Subject=Subject.objects.get(
+                                        pk=subject_id),
                                     FK_Class=Class.objects.get(pk=class_id),
-                                    FK_Classroom=Classroom.objects.get(pk=classroom_id),
+                                    FK_Classroom=Classroom.objects.get(
+                                        pk=classroom_id),
                                     Weekday=weekday, Hour=hour, Minute=minute)
 
                     lessons_to_save.append(lesson)
-                    teachers_to_validate.add(Teacher.objects.get(pk=teacher_id))
+                    teachers_to_validate.add(
+                        Teacher.objects.get(pk=teacher_id))
 
         class_no = find_class_no(class_id)
         program = LessonsProgram.objects.filter(Class=class_no)
@@ -310,7 +320,7 @@ def lessons_plan_detail(request, pk):
         for subject in subject_out_of_program:
             warnings.append(subject + " is not included in core curriculum!!!")
 
-        # !Do obgadania z Moniką 
+        # !Do obgadania z Moniką
         deleted = Lesson.objects.filter(FK_Class=_class).delete()
         # !Do obgadania z Moniką
 
@@ -330,7 +340,8 @@ def lessons_plan_detail(request, pk):
         for teacher in teachers_to_validate:
             hours_assigned = len(Lesson.objects.filter(FK_Teacher=teacher))
             if hours_assigned > 20:
-                warnings.append(f'{teacher.Name} {teacher.Surname} has assigned more than 20 hours per week')
+                warnings.append(
+                    f'{teacher.Name} {teacher.Surname} has assigned more than 20 hours per week')
 
         if len(warnings) == 0:
             response = {
@@ -415,15 +426,17 @@ def tile_validation(request):
     start_hour = getattr(lesson_hours[request_data['row']], 'Start_hour')
     start_minute = getattr(lesson_hours[request_data['row']], 'Start_minute')
 
-    teacher_lessons = Lesson.objects.filter(FK_Teacher=teacher_serializer['ID_Teacher'].value).filter(Weekday=weekday[0]).filter(Hour=start_hour).filter(Minute=start_minute)
-    classroom_lessons = Lesson.objects.filter(FK_Classroom=classroom_serializer['Classroom_no'].value).filter(Weekday=weekday[0]).filter(Hour=start_hour).filter(Minute=start_minute)
+    teacher_lessons = Lesson.objects.filter(FK_Teacher=teacher_serializer['ID_Teacher'].value).filter(
+        Weekday=weekday[0]).filter(Hour=start_hour).filter(Minute=start_minute)
+    classroom_lessons = Lesson.objects.filter(FK_Classroom=classroom_serializer['Classroom_no'].value).filter(
+        Weekday=weekday[0]).filter(Hour=start_hour).filter(Minute=start_minute)
 
     if request.method == 'POST':
         if len(teacher_lessons) > 0:
             for teacher_lesson in teacher_lessons:
                 if teacher_lesson.FK_Class.ID_Class != class_serializer['ID_Class'].value:
                     return Response("Teacher has already lesson at specified time", status=status.HTTP_400_BAD_REQUEST)
-        
+
         if len(classroom_lessons) > 0:
             for classroom_lesson in classroom_lessons:
                 if classroom_lesson.FK_Class.ID_Class != class_serializer['ID_Class'].value:
@@ -467,7 +480,8 @@ def random_plan(request):
             subject_name = tile.Subject
             hours_no = tile.Hours_no
             for hour in range(hours_no):
-                teach_sub = list(Teacher_Subject.objects.filter(FK_Subject__Subject_name=subject_name))
+                teach_sub = list(Teacher_Subject.objects.filter(
+                    FK_Subject__Subject_name=subject_name))
                 if len(teach_sub) != 0 and len(classrooms) != 0:
                     tiles.append({})
                     rand = random.choice(teach_sub)
@@ -475,7 +489,8 @@ def random_plan(request):
                     tiles[counter]['teacher'] = teacher_serializer.data
                     subject_serializer = SubjectSerializer(rand.FK_Subject)
                     tiles[counter]['subject'] = subject_serializer.data
-                    classroom_serializer = ClassroomSerializer(random.choice(classrooms))
+                    classroom_serializer = ClassroomSerializer(
+                        random.choice(classrooms))
                     tiles[counter]['classroom'] = classroom_serializer.data
                     counter += 1
 

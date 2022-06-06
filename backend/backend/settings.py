@@ -9,10 +9,14 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-import datetime
 
 import os
 from pathlib import Path
+
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
@@ -22,10 +26,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-8+oex)k30j==ap%#c@0(%v77j8#t50*b5ys^x6u7k3=_#ialg7'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost'
+]
 
 # Application definition
 
@@ -37,17 +46,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.admindocs',
     'corsheaders',
-
-    'django_extensions',
     'rest_framework',
-    'rest_framework.authtoken',
-
-    'rest_framework_jwt',
-    'rest_framework_jwt.blacklist',
-
-    'users',
+    'oauth2_provider',
+    'social_django',
+    'drf_social_oauth2',
 ]
 
 MIDDLEWARE = [
@@ -67,23 +70,15 @@ DEFAULT_PERMISSION_CLASSES = [
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-ALLOWED_HOSTS = [
-    '*'
-]
-
-CORS_ORIGIN_WHITELIST = [
-     'http://localhost:3000',
-     'http://localhost:8000'
-]
-
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000'
-]
-
-CORS_ALLOW_ALL_ORIGINS = True
-
 REST_FRAMEWORK = {
     'NON_FIELD_ERRORS_KEY': 'message',
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'drf_social_oauth2.authentication.SocialAuthentication',
+    ),
 }
 
 ROOT_URLCONF = 'backend.urls'
@@ -99,10 +94,18 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'drf_social_oauth2.backends.DjangoOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
@@ -115,9 +118,9 @@ DATABASES = {
         'NAME': 'school_plan',
         'USER': 'root',
         'PASSWORD': 'password',
-        # 'HOST': '127.0.0.1',
+        'HOST': '127.0.0.1',
         # 'HOST': 'localhost',
-        'HOST': 'db',
+        # 'HOST': 'db',
         'PORT': '3306',
         'TEST': {
             'NAME': 'test_base',
@@ -163,25 +166,16 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Custom user model
-AUTH_USER_MODEL = 'users.User'
-
-# JWT settings
-JWT_EXPIRATION_DELTA_DEFAULT = 2.628e+6  # 1 month in seconds
-JWT_AUTH = {
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(
-        seconds=2.628e+6,
-    ),
-    'JWT_AUTH_HEADER_PREFIX': 'JWT',
-    'JWT_GET_USER_SECRET_KEY': lambda user: user.secret_key,
-    'JWT_RESPONSE_PAYLOAD_HANDLER': 'users.selectors.jwt_response_payload_handler',
-    'JWT_AUTH_COOKIE': 'jwt_token',
-    'JWT_AUTH_COOKIE_SAMESITE': 'None'
-}
-
 # Google OAuth2 settings
-GOOGLE_OAUTH2_CLIENT_ID = "178122326241-ga6pmq1c0f6jsa74jnar8mf04okncgnd.apps.googleusercontent.com"
-GOOGLE_OAUTH2_CLIENT_SECRET = "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"
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
+
+SOCIAL_AUTH_USER_FIELDS = ['email', 'username', 'first_name', 'password']
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

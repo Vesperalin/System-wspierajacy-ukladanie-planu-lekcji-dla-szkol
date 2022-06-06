@@ -1,20 +1,20 @@
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
-import { getLessonsHoursAndProgram } from '../../store/schedule-slice';
+import { useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
+import { getLessonsHoursAndProgram } from "../../store/schedule-slice";
 
-import style from './SchedulePreview.module.scss';
-import { getDayName, getHours } from './creators/ScheduleCreator';
-import LessonPreviewCard from '../../components/lesson-preview-card/LessonPreviewCard';
+import style from "./SchedulePreview.module.scss";
+import { getDayName, getHours } from "./creators/ScheduleCreator";
+import LessonPreviewCard from "../../components/lesson-preview-card/LessonPreviewCard";
 
 const SchedulePreview = () => {
-	const location = useLocation();
-	const dispatch = useDispatch();
-	const lessonsHours = useSelector(state => state.schedule.lessonsHours);
-	const [schedule, setSchedule] = useState([]);
-	const navigate = useNavigate();
-	const [colors, setColors] = useState([]);
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const lessonsHours = useSelector((state) => state.schedule.lessonsHours);
+  const [schedule, setSchedule] = useState([]);
+  const navigate = useNavigate();
+  const [colors, setColors] = useState([]);
 
 	useEffect(() => {
 		dispatch(
@@ -24,19 +24,26 @@ const SchedulePreview = () => {
 			}),
 		);
 
-		axios
-			.get(`http://127.0.0.1:8000/api/lesson_plans/${location.state.school_class.ID_Class}/`)
-			.then(response => setSchedule(response.data))
-			.catch(error => console.log(error));
+    axios
+      .get(
+        `http://127.0.0.1:8000/api/lesson_plans/${location.state.school_class.ID_Class}/`
+      )
+      .then((response) => setSchedule(response.data))
+      .catch((error) => console.log(error));
 
-		axios
-			.get('http://127.0.0.1:8000/api/subjects_with_colors/')
-			.then(response => setColors(response.data));
-	}, [location.state.school_class.ID_Class, dispatch, location.state.school_class]);
+    axios
+      .get("http://127.0.0.1:8000/api/subjects_with_colors/")
+      .then((response) => setColors(response.data));
+  }, [
+    location.state.school_class.ID_Class,
+    dispatch,
+    location.state.school_class,
+  ]);
 
-	const getSubjectColor = subject => {
-		return colors.find(element => element.ID_Subject === subject.ID_Subject).Color;
-	};
+  const getSubjectColor = (subject) => {
+    return colors.find((element) => element.ID_Subject === subject.ID_Subject)
+      .Color;
+  };
 
 	return (
 		<div className={style['wrapper']}>
