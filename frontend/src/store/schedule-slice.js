@@ -2,24 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 export const getLessonsHoursAndProgram = createAsyncThunk('add-schedule', async params => {
-	// try {
-	// 	const lessonsHoursResponse = await axios.get('http://127.0.0.1:8000/api/lesson_hours/');
-	// 	const classProgramResponse = await axios.post(
-	// 		'http://127.0.0.1:8000/api/class_program/',
-	// 		params.school_class.value,
-	// 	);
-	// 	const randomPlanResponse = axios.post(
-	// 		'http://127.0.0.1:8000/api/random_plan/',
-	// 		params.school_class.value,
-	// 	);
-
-	// 	console.log(lessonsHoursResponse, classProgramResponse, randomPlanResponse);
-	// } catch (error) {
-	// 	console.log(error);
-	// }
-
-	// return 'ji';
-
 	return axios
 		.all([
 			axios.get('http://127.0.0.1:8000/api/lesson_hours/'),
