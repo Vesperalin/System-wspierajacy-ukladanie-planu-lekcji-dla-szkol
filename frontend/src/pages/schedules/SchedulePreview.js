@@ -17,7 +17,12 @@ const SchedulePreview = () => {
 	const [colors, setColors] = useState([]);
 
 	useEffect(() => {
-		dispatch(getLessonsHoursAndProgram({ value: location.state.school_class }));
+		dispatch(
+			getLessonsHoursAndProgram({
+				school_class: { value: location.state.school_class },
+				isCreator: 2,
+			}),
+		);
 
 		axios
 			.get(`http://127.0.0.1:8000/api/lesson_plans/${location.state.school_class.ID_Class}/`)
@@ -40,6 +45,7 @@ const SchedulePreview = () => {
 				<div className={style['plan-wrapper']}>
 					{schedule.length > 0 &&
 						colors.length > 0 &&
+						lessonsHours.length > 0 &&
 						schedule.map((column, column_index) => {
 							return (
 								<div key={column_index}>

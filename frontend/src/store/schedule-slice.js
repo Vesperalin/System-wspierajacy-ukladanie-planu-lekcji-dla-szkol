@@ -2,6 +2,24 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 export const getLessonsHoursAndProgram = createAsyncThunk('add-schedule', async params => {
+	// try {
+	// 	const lessonsHoursResponse = await axios.get('http://127.0.0.1:8000/api/lesson_hours/');
+	// 	const classProgramResponse = await axios.post(
+	// 		'http://127.0.0.1:8000/api/class_program/',
+	// 		params.school_class.value,
+	// 	);
+	// 	const randomPlanResponse = axios.post(
+	// 		'http://127.0.0.1:8000/api/random_plan/',
+	// 		params.school_class.value,
+	// 	);
+
+	// 	console.log(lessonsHoursResponse, classProgramResponse, randomPlanResponse);
+	// } catch (error) {
+	// 	console.log(error);
+	// }
+
+	// return 'ji';
+
 	return axios
 		.all([
 			axios.get('http://127.0.0.1:8000/api/lesson_hours/'),
@@ -18,7 +36,9 @@ export const getLessonsHoursAndProgram = createAsyncThunk('add-schedule', async 
 				};
 			}),
 		)
-		.catch(_ => {});
+		.catch(error => {
+			return error;
+		});
 });
 
 const scheduleSlice = createSlice({
@@ -29,7 +49,7 @@ const scheduleSlice = createSlice({
 		nextLessonIndex: 1,
 		lessonsHours: [],
 		programForClass: [],
-		currentProgramForClass: [],
+		currentProgramForClass: {},
 	},
 	reducers: {
 		calculateProgram(state) {
@@ -164,6 +184,8 @@ const scheduleSlice = createSlice({
 			console.log('pending lessons hours and program');
 		},
 		[getLessonsHoursAndProgram.fulfilled]: (state, { payload }) => {
+			console.log(payload);
+
 			state.lessonsHours = payload.lessonsHours;
 			state.chosenSchedule = [[], [], [], [], []];
 
@@ -176,7 +198,10 @@ const scheduleSlice = createSlice({
 			state.programForClass = payload.program;
 
 			for (let i = 0; i < payload.program.length; i++) {
-				state.currentProgramForClass[payload.program[i].Subject] = payload.program[i].Hours_no;
+				const index = payload.program[i].Subject;
+				const value = payload.program[i].Hours_no;
+
+				state.currentProgramForClass[index] = value;
 			}
 
 			if (payload.isCreator) {
