@@ -14,7 +14,7 @@ const Login = () => {
         token: accesstoken,
         backend: "google-oauth2",
         grant_type: "convert_token",
-        client_id: process.env.REACT_APP_CLIENT_ID,
+        client_id: "j4jCAW1jy3AszyhU6C4fZnPEQybdzAPZnJQacsRt",
         client_secret:
           "pbkdf2_sha256$320000$MaxuZZIBNP7TKK9UojIcyZ$hh4Iml+1zdrVS3Z8FdbMB0qcdCM84m3eLBlxw40Xxhs=",
       })

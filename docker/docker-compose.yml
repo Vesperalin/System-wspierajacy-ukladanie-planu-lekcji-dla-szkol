@@ -15,30 +15,30 @@ services:
       - '3306'
     volumes:
       - school-plan:/var/lib/mysql
-  # backend:
-  #   restart: always
-  #   container_name: backend
-  #   command : bash -c "python manage.py migrate &&
-  #                     python manage.py runserver 0.0.0.0:8000"
-  #   build:
-  #     context: ../backend/
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "8000:8000"
-  #   depends_on:
-  #     - db
-  # frontend:
-  #   restart: always
-  #   command : npm start
-  #   container_name: frontend
-  #   build:
-  #     context: ../frontend/
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "3000:3000"
-  #   stdin_open: true
-  #   depends_on:
-  #     - backend
+  backend:
+    restart: always
+    container_name: backend
+    command : bash -c "python manage.py migrate &&
+                      python manage.py runserver 0.0.0.0:8000"
+    build:
+      context: ../backend/
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+  frontend:
+    restart: always
+    command : npm start
+    container_name: frontend
+    build:
+      context: ../frontend/
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    depends_on:
+      - backend
 
 volumes:
   school-plan:

@@ -95,9 +95,11 @@ const Schedules = () => {
     return (
       <div className={style["spinner-wrapper"]}>
         <p>None of the class has plan</p>
-        <NavLink className={style.navlink} to="/choose-class-for-schedule">
-          Add plan for class
-        </NavLink>
+        {checkLogin && (
+          <NavLink className={style.navlink} to="/choose-class-for-schedule">
+            Add plan for class
+          </NavLink>
+        )}
       </div>
     );
   }

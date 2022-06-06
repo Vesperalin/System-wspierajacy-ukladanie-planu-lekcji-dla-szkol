@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = 's&%*d@-&jvsbdx^brf_mcyacmqet9z=iy5(ic1o$(dni%6@6a3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -118,9 +118,9 @@ DATABASES = {
         'NAME': 'school_plan',
         'USER': 'root',
         'PASSWORD': 'password',
-        'HOST': '127.0.0.1',
+        # 'HOST': '127.0.0.1',
         # 'HOST': 'localhost',
-        # 'HOST': 'db',
+        'HOST': 'db',
         'PORT': '3306',
         'TEST': {
             'NAME': 'test_base',
@@ -167,8 +167,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Google OAuth2 settings
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '178122326241-ga6pmq1c0f6jsa74jnar8mf04okncgnd.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 
 SOCIAL_AUTH_USER_FIELDS = ['email', 'username', 'first_name', 'password']
 
