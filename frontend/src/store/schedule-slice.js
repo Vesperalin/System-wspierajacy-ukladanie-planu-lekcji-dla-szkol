@@ -18,7 +18,9 @@ export const getLessonsHoursAndProgram = createAsyncThunk('add-schedule', async 
 				};
 			}),
 		)
-		.catch(_ => {});
+		.catch(error => {
+			return error;
+		});
 });
 
 const scheduleSlice = createSlice({
@@ -29,7 +31,7 @@ const scheduleSlice = createSlice({
 		nextLessonIndex: 1,
 		lessonsHours: [],
 		programForClass: [],
-		currentProgramForClass: [],
+		currentProgramForClass: {},
 	},
 	reducers: {
 		calculateProgram(state) {
@@ -164,6 +166,8 @@ const scheduleSlice = createSlice({
 			console.log('pending lessons hours and program');
 		},
 		[getLessonsHoursAndProgram.fulfilled]: (state, { payload }) => {
+			console.log(payload);
+
 			state.lessonsHours = payload.lessonsHours;
 			state.chosenSchedule = [[], [], [], [], []];
 
@@ -176,7 +180,10 @@ const scheduleSlice = createSlice({
 			state.programForClass = payload.program;
 
 			for (let i = 0; i < payload.program.length; i++) {
-				state.currentProgramForClass[payload.program[i].Subject] = payload.program[i].Hours_no;
+				const index = payload.program[i].Subject;
+				const value = payload.program[i].Hours_no;
+
+				state.currentProgramForClass[index] = value;
 			}
 
 			if (payload.isCreator) {

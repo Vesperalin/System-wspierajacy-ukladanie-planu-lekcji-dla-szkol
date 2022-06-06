@@ -60,6 +60,7 @@ const ScheduleCreator = () => {
 
 	const onDeleteLessonHandler = (column, row, lesson) => {
 		dispatch(scheduleSliceActions.deleteLessonFromSchedule({ column, row, lesson }));
+		dispatch(scheduleSliceActions.calculateProgram());
 	};
 
 	const onSaveScheduleHandler = () => {

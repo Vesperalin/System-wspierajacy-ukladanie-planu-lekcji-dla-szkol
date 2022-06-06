@@ -64,11 +64,10 @@ const ScheduleEditor = () => {
     setShowEditClassModal(true);
   };
 
-  const onDeleteLessonHandler = (column, row, lesson) => {
-    dispatch(
-      scheduleSliceActions.deleteLessonFromSchedule({ column, row, lesson })
-    );
-  };
+	const onDeleteLessonHandler = (column, row, lesson) => {
+		dispatch(scheduleSliceActions.deleteLessonFromSchedule({ column, row, lesson }));
+		dispatch(scheduleSliceActions.calculateProgram());
+	};
 
   const onSaveScheduleHandler = () => {
     axios

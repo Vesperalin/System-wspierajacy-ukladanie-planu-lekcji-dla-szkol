@@ -16,8 +16,13 @@ const SchedulePreview = () => {
   const navigate = useNavigate();
   const [colors, setColors] = useState([]);
 
-  useEffect(() => {
-    dispatch(getLessonsHoursAndProgram({ value: location.state.school_class }));
+	useEffect(() => {
+		dispatch(
+			getLessonsHoursAndProgram({
+				school_class: { value: location.state.school_class },
+				isCreator: 2,
+			}),
+		);
 
     axios
       .get(
@@ -40,65 +45,63 @@ const SchedulePreview = () => {
       .Color;
   };
 
-  return (
-    <div className={style["wrapper"]}>
-      <div className={style["panel-wrapper"]}>
-        <h1>{`${location.state.school_class.Class_no} - ${location.state.school_class.Year}`}</h1>
-        <div className={style["plan-wrapper"]}>
-          {schedule.length > 0 &&
-            colors.length > 0 &&
-            lessonsHours.length > 0 &&
-            schedule.map((column, column_index) => {
-              return (
-                <div key={column_index}>
-                  <p className={style["day-name"]}>
-                    {getDayName(column_index)}
-                  </p>
-                  {schedule[column_index].map((lesson, row_index) => {
-                    return (
-                      <div key={`${column_index}${row_index}}`}>
-                        {column_index === 0 ? (
-                          <div className={style["window-with-wrapper"]}>
-                            <p className={style["lesson-hours"]}>
-                              {getHours(
-                                lessonsHours[row_index].Start_hour,
-                                lessonsHours[row_index].Start_minute,
-                                lessonsHours[row_index].End_hour,
-                                lessonsHours[row_index].End_minute
-                              )}
-                            </p>
-                            <div className={style["empty-lesson"]}>
-                              {Object.keys(lesson).length !== 0 && (
-                                <LessonPreviewCard
-                                  lesson={lesson}
-                                  color={getSubjectColor(lesson.subject)}
-                                />
-                              )}
-                            </div>
-                          </div>
-                        ) : (
-                          <div className={style["empty-lesson"]}>
-                            {Object.keys(lesson).length !== 0 && (
-                              <LessonPreviewCard
-                                lesson={lesson}
-                                color={getSubjectColor(lesson.subject)}
-                              />
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              );
-            })}
-        </div>
-      </div>
-      <button onClick={() => navigate("/schedules")} className={style.button}>
-        &larr; Back
-      </button>
-    </div>
-  );
+	return (
+		<div className={style['wrapper']}>
+			<div className={style['panel-wrapper']}>
+				<h1>{`${location.state.school_class.Class_no} - ${location.state.school_class.Year}`}</h1>
+				<div className={style['plan-wrapper']}>
+					{schedule.length > 0 &&
+						colors.length > 0 &&
+						lessonsHours.length > 0 &&
+						schedule.map((column, column_index) => {
+							return (
+								<div key={column_index}>
+									<p className={style['day-name']}>{getDayName(column_index)}</p>
+									{schedule[column_index].map((lesson, row_index) => {
+										return (
+											<div key={`${column_index}${row_index}}`}>
+												{column_index === 0 ? (
+													<div className={style['window-with-wrapper']}>
+														<p className={style['lesson-hours']}>
+															{getHours(
+																lessonsHours[row_index].Start_hour,
+																lessonsHours[row_index].Start_minute,
+																lessonsHours[row_index].End_hour,
+																lessonsHours[row_index].End_minute,
+															)}
+														</p>
+														<div className={style['empty-lesson']}>
+															{Object.keys(lesson).length !== 0 && (
+																<LessonPreviewCard
+																	lesson={lesson}
+																	color={getSubjectColor(lesson.subject)}
+																/>
+															)}
+														</div>
+													</div>
+												) : (
+													<div className={style['empty-lesson']}>
+														{Object.keys(lesson).length !== 0 && (
+															<LessonPreviewCard
+																lesson={lesson}
+																color={getSubjectColor(lesson.subject)}
+															/>
+														)}
+													</div>
+												)}
+											</div>
+										);
+									})}
+								</div>
+							);
+						})}
+				</div>
+			</div>
+			<button onClick={() => navigate('/schedules')} className={style.button}>
+				&larr; Back
+			</button>
+		</div>
+	);
 };
 
 export default SchedulePreview;
