@@ -1,0 +1,96 @@
+.wrapper {
+	display: flex;
+	margin-top: 20px;
+	justify-content: center;
+	padding-bottom: 40px;
+
+	.toolbox-wrapper {
+		flex-basis: 18%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.panel-wrapper {
+		flex-basis: 78%;
+		display: flex;
+		flex-direction: column;
+		
+		.panel {
+			background-color: #fff;
+			border-radius: 10px;
+			padding: 20px 20px 40px 20px;
+			box-shadow: 0px 0px 15px -13px rgba(0, 0, 0, 0.71);
+			-webkit-box-shadow: 0px 0px 15px -13px rgba(0, 0, 0, 0.71);
+		}
+
+		.plan-wrapper{
+			padding-top: 20px;
+			display: flex;
+			justify-content: center;
+
+			.day-name {
+				text-align: center;
+				font-weight: bold;
+				margin-bottom: 10px;
+			}
+
+			.window-with-wrapper {
+				position: relative;
+		
+				.lesson-hours {
+					font-size: 0.6rem;
+					transform: rotate(-90deg);
+					-webkit-transform: rotate(-90deg);
+					-moz-transform: rotate(-90deg);
+					-ms-transform: rotate(-90deg);
+					-o-transform: rotate(-90deg);
+					position: absolute;
+					top: 40%;
+					left: -20%;
+				}
+			}
+		}
+		
+		h1 {
+			font-size: 1.6rem;
+		}
+	}
+}
+
+.modal {
+	margin: 15px 30px;
+	text-align: center;
+
+	h3 {
+		width: 100%;
+		text-align: center;
+		margin-bottom: 10px;
+	}
+
+	p {
+		margin: 10px;
+		width: 100%;
+		text-align: left;
+	}
+}
+
+.button-wrapper {
+display: flex;
+justify-content: space-between;
+align-items: center;
+
+.button {
+		padding: 10px 15px;
+		margin: 20px 0px;
+		background-color: #deb271;
+		color: #f7f7f7;
+		border-radius: 10px;
+		font-size: 0.95rem;
+
+		&:hover {
+			cursor: pointer;
+			background-color: #cda160;
+		}
+	}
+}
