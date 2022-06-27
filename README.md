@@ -1,4 +1,4 @@
-# Application supporting schedules creating in primary schools
+# Application supporting creating schedules in primary schools
 
 Application supports schedules creating for classes in primary schools. It prevents from: putting different classes in the same classroom at the same time, assigning two classes to one teacher at the same time and assigning two classes to one class at the same time. App enables to: create, edit, delete and show plans for classes. It also has Google authentication, that mimics behavior of SSO in organizations (only authorized people can create, edit and delete plans).
 
@@ -17,6 +17,7 @@ Application supports schedules creating for classes in primary schools. It preve
     * prevents from putting different classes in the same classroom
     * prevents from assigning two classes to one teacher at the same time
     * prevents from assigning two classes to one class at the same time
+    * when creating plan, it provides starting classes for given class based on its core curriculum
 * CRUD operations for teachers at school
     * create, edit and delete only for authorized users
 * CRUD operations for subjects at school
