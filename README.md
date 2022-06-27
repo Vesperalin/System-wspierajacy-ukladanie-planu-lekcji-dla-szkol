@@ -31,25 +31,25 @@ Application supports schedules creating for classes in primary schools. It preve
 ## Technologies
 
 <div>
-  <div style="display: flex;">
+  <div style="display: flex; align-items: center;">
     <span style="margin-right: 10px;">
        <img src="./repo-assets/react.png" alt="Employee data" title="React">
     </span>
    React
   </div>
-  <div style="display: flex;">
+  <div style="display: flex; align-items: center;">
     <span style="margin-right: 10px;">
        <img src="./repo-assets/django.png" alt="Employee data" title="Django">
     </span>
    Django
   </div>
-  <div style="display: flex;">
+  <div style="display: flex; align-items: center;">
     <span style="margin-right: 10px;">
        <img src="./repo-assets/mysql.png" alt="Employee data" title="MySQL">
     </span>
    MySQL
   </div>
-  <div style="display: flex;">
+  <div style="display: flex; align-items: center;">
     <span style="margin-right: 10px;">
        <img src="./repo-assets/docker.png" alt="Employee data" title="Docker">
     </span>
