@@ -32,27 +32,19 @@ Application supports schedules creating for classes in primary schools. It preve
 
 <div>
   <div style="display: flex; align-items: center;">
-    <span style="margin-right: 10px;">
-       <img src="./repo-assets/react.png" alt="Employee data" title="React">
-    </span>
+    <img style="display: inline-block; margin-right: 10px" src="./repo-assets/react.png" alt="Employee data" title="React">
    React
   </div>
   <div style="display: flex; align-items: center;">
-    <span style="margin-right: 10px;">
-       <img src="./repo-assets/django.png" alt="Employee data" title="Django">
-    </span>
+    <img style="display: inline-block; margin-right: 10px" src="./repo-assets/django.png" alt="Employee data" title="Django">
    Django
   </div>
   <div style="display: flex; align-items: center;">
-    <span style="margin-right: 10px;">
-       <img src="./repo-assets/mysql.png" alt="Employee data" title="MySQL">
-    </span>
+    <img style="display: inline-block; margin-right: 10px" src="./repo-assets/mysql.png" alt="Employee data" title="MySQL">
    MySQL
   </div>
   <div style="display: flex; align-items: center;">
-    <span style="margin-right: 10px;">
-       <img src="./repo-assets/docker.png" alt="Employee data" title="Docker">
-    </span>
+    <img style="display: inline-block; margin-right: 10px" src="./repo-assets/docker.png" alt="Employee data" title="Docker">
    Docker
   </div>
 </div>
