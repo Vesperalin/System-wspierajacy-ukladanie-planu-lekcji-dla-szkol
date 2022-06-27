@@ -51,8 +51,10 @@ Application supports schedules creating for classes in primary schools. It preve
 </div>
 
 ## Preview
-
-TODO
+![web app preview](./repo-assets/main-page.png)
+![schedule preview](./repo-assets/schedule-preview.png)
+![schedule planning](./repo-assets/schedule-planning.png)
+![schedule verifaction](./repo-assets/schedule-verification.png)
 
 ## Authors
 
